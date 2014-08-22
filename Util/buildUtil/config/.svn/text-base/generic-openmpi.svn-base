@@ -1,0 +1,6 @@
+ifeq ($(MPIHOME),)
+    MPIHOME := /usr/local/openmpi/latest
+endif
+DEFS := $(DEFS) -DOMPI_SKIP_MPICXX
+INCLUDES := $(INCLUDES) -I$(MPIHOME)/include
+MPLIB = $(call libtmpl,$(MPIHOME)/lib) -lmpi -lmpi_f77

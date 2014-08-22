@@ -1,0 +1,42 @@
+# Makefile addition for powerpc_darwin architecture/OS.
+STATIC_LIB_EXT := a
+SHARED_LIB_EXT := so
+
+override NODEP := 1
+override NOSHARED := 1
+
+DEFS := $(DEFS) -DFORT_LC_US -D_SCOREC_NewCompiler -DUNIX
+libtmpl = -L$(1) 
+ifdef INSURE
+  # No insure for this archos yet
+  CC := 
+  CXX :=
+else
+  CC := xlc -q64
+  CXX := xlC -q64
+endif
+FC := xlf -q64
+GLINKER := $(CXX)
+HAS_TEMP_REP := 0
+DEPFLAG := -MM
+ifeq ($(VERS),opt)
+  CFLAGS := -O4 -qarch=ppc64 $(CFLAGS)
+  CXXFLAGS := -O4 -qarch=ppc64 $(CFLAGS)
+  FFLAGS := -O4 -qarch=ppc64 $(CFLAGS)
+else
+  CFLAGS := -g -Wall $(CFLAGS)
+  CXXFLAGS := -g -Wall $(CXXFLAGS)
+  FFLAGS := -g -Wall $(FFLAGS)
+endif
+ifeq ($(ISEXECUTABLE),)
+   ifeq ($(NOSHARED),1)
+      REALAR := ar -cru 
+   else
+      REALAR := $(GLINKER) -shared -o 
+      CFLAGS := -fPIC $(CFLAGS)
+      CXXFLAGS := -fPIC  $(CXXFLAGS)
+      FFLAGS := -fPIC $(FFLAGS)
+   endif
+else
+      REALAR := $(GLINKER) -o 
+endif

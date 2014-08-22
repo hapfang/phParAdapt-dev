@@ -1,0 +1,92 @@
+Version 1.0 added support in the standard Makefile (make.common) for
+automated testing of a module.
+
+The idea is that, after building the library, one can ask for the compilation
+and running of sample code supposed to test specific functionality of the
+module. 
+
+The two targets that have been defined are 'check' and 'checkO' with 'checkO'
+doing the same checks as 'check' but with optimization. A standard 
+build-n-test run would then be:
+
+gmake setup NODEP=1
+gmake 
+gmake VERS=opt
+gmake check
+gmake checkO
+
+============================================================
+Results
+~~~~~~~
+
+The testing run will print information on what it is doing. Additionnaly, any
+compilation error/warning will be printed. 
+Here's the output from a sample module:
+
+# gmake check
+* Entering test/1
+--- Compiling main.cc
+Executing... Tested OK.
+   OK
+* Entering test/2
+--- Compiling main.cc
+Executing... Tested OK.
+   OK
+* Entering test/3
+--- Compiling main.cc
+Executing... Tested OK.
+   OK
+
+
+============================================================
+Test case troubleshooting
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+There are times when compiling and running only one test case at a time is
+a good thing, like when developping a new test case or finding a bug 
+shown by one of the test cases. A Makefile target has been configured for this:
+
+gmake checkone DIR='test/3'
+
+will compile and execute only the test case in the subdirectory '3' of the test
+directory.
+
+============================================================
+Configuration
+~~~~~~~~~~~~~
+
+To make a module support the automated testing feature, there needs to
+exist a directory called 'test' in the main directory. In that directory, each
+subdirectory (except the one named 'CVS') is considered to be a test case.
+
+Each test case must be made of one and only one source file, called 'main.cc'
+(for a C++ test code - replace .cc by .c or .f as appropriate). 
+
+The 'check' Make target will then iterate over all the test cases, compile
+them using the standard INCLUDES and DEFS as the main module, use all the
+dependencies of the main module (plus the module itself). Then make will
+run the created executable. The executable will be deleted when a 'make clean'
+will be executed.
+
+Please note that each test case must be independant, i.e. must not required 
+anything on the command line or standard input. It must also exit with a result
+code greater then 0 in case of a problem, or 0 if everything is all right.
+
+Addendum: 
+	It is now possible to add compilation flags, defines, libraries, etc
+specific to a test case. One only has to create a file called 'Makefile.include'
+in the test case directory. That file is going to be included by the main
+Makefile and any variable defined in that file is going to be used. The format
+is the same as the main module Makefile.
+
+============================================================
+Purify support
+~~~~~~~~~~~~~~
+
+It is now possible to run test cases with Purify. Simply add 'PURIFY=1' on the
+gmake command line and the generated binaries will be instrumented. 
+Purify will put instrumented libraries in a directory called 'purify-cache' in
+the user's home directory. If developping with varying architectures/OS versions,
+it may be necessary to clean that cache on a regular basis.
+
+

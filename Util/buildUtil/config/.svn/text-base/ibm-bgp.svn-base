@@ -1,0 +1,65 @@
+# Makefile addition for BG/P architecture/OS.
+
+DEFS := $(DEFS) -DIBM -DUNIX
+PURIFYCMD := purify -cache-dir=$(HOME)/purify-cache
+INSURECMD := insure -o
+STATIC_LIB_EXT := a
+SHARED_LIB_EXT := so
+
+libtmpl = -L$(1)
+CC := /bgsys/drivers/ppcfloor/comm/bin/mpixlc
+CXX := /bgsys/drivers/ppcfloor/comm/bin/mpixlcxx
+FC := /bgsys/drivers/ppcfloor/comm/bin/mpixlf90 
+
+### BGP_PATH = /bgl/BlueLight/ppcfloor/bglsys
+
+# Include and Libraries  
+
+### INC_PATH = -I$(BGP_PATH)/include 
+### LIB_PATH = -L$(BGP_PATH)/lib 
+### LIBS_MPI = $(LIB_PATH) -lmpich.rts -lmsglayer.rts -lrts.rts -ldevices.rts  
+
+### ADDLIB := $(ADDLIB) $(LIBS_MPI)
+
+#LIB_PATHM = -L/opt/ibmmath/essl/4.2/lib 
+#LIBS_MATH = $(LIB_PATHM) -lesslbg
+
+#ADDLIB := $(ADDLIB) $(LIBS_MATH)
+
+#LIB_PATHC = -L/bgl/BlueLight/ppcfloor/blrts-gnu/powerpc-bgl-blrts-gnu/lib 
+#LIBS_C = $(LIB_PATHC) -lrt -lc
+
+#ADDLIB := $(ADDLIB) $(LIBS_C)
+
+# Flags  
+
+OPT_FLAGS = -O3 -qstrict -qarch=450d -qtune=450 
+CFLAGS := $(CFLAGS) $(INC_PATH) 
+CXXFLAGS := $(CXXFLAGS) $(INC_PATH) 
+FFLAGS :=   $(FFLAGS) $(INC_PATH)
+
+CFLAGS := -qcpluscmt $(CFLAGS)
+FFLAGS := $(FFLAGS)
+CXXFLAGS := -qcpluscmt $(CXXFLAGS)
+
+AS_TEMP_REP := 0
+DEPFLAG := -qmakedep -qsyntaxonly
+ifeq ($(VERS),opt)
+  CFLAGS := $(OPT_FLAGS) $(CFLAGS)
+  FFLAGS :=   $(OPT_FLAGS) $(FFLAGS)
+  CXXFLAGS :=  $(OPT_FLAGS) $(CXXFLAGS)
+else
+  CFLAGS := -g -qfullpath -qcheck   $(CFLAGS)
+  FFLAGS := -g -qfullpath -qcheck -qsigtrap $(FFLAGS)
+  CXXFLAGS := -g -qfullpath -qcheck  $(CXXFLAGS)
+endif
+ifeq ($(ISEXECUTABLE),)
+   ifeq ($(NOSHARED),1)
+      REALAR := ar -crv 
+   else
+      REALAR := $(CXX) -G -qmkshrobj -o
+   endif
+else
+      REALAR := $(CXX) -o
+endif
+

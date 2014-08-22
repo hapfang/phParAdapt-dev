@@ -1,0 +1,16 @@
+export CC := mpichxlc
+export CXX := mpichxlC
+export CFLAGS := -g 
+export CXXFLAGS := -g 
+export CDEPFLAGS := -M
+export CXXDEPFLAGS := -M
+export RANLIB := strip
+export DEFINES := -DIBM -DDEBUG -DFORT_LC
+ifeq ($(VERS),opt)
+  export CFLAGS := -O 
+  export CXXFLAGS := -O 
+  export DEFINES := -DIBM -DIBM -DFORT_LC
+endif
+
+PARALLELINC := -I/campus/math/mpich/1.0.12/rs_aix41/include
+MORECFLAGS := $(MORECFLAGS) -DMPI

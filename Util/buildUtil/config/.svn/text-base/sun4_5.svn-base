@@ -1,0 +1,48 @@
+# Makefile addition for sun4_5 architecture/OS.
+
+DEFS := $(DEFS) -DSUN4 -DFORT_LC_US -D_SCOREC_NewCompiler -DUNIX
+STATIC_LIB_EXT := a
+SHARED_LIB_EXT := so
+
+# Note: we want the '-R' option even for nonshared executable, because
+# the linker always prefers shared lib. The other option would be to specify
+# '-static' but then even the libc would be statically linked -> bad.
+libtmpl = -L$(1) -R$(1)
+LDFLAGS := $(LDFLAGS) -xildoff -xtarget=ultra -xarch=v8plusa
+# List of system libraries required for mpich2 parallel env.
+MPICH2_SYS_LIBS := -lthread -lsocket -lnsl -lrt -laio 
+ifdef INSURE
+  CC := insure cc
+  CXX := insure CC
+else
+  CC := cc
+  CXX := CC
+endif
+FC := f90
+HAS_TEMP_REP := 1
+DEPFLAG := -xM1
+CFLAGS := -xtarget=ultra -xarch=v8plusa $(CFLAGS)
+FFLAGS := -xtarget=ultra -xarch=v8plusa $(FFLAGS)
+CXXFLAGS := -xtarget=ultra -xarch=v8plusa $(CXXFLAGS)
+ifeq ($(VERS),opt)
+  CFLAGS := -xO3 $(CFLAGS)
+  FFLAGS := -xO3 $(FFLAGS)
+  CXXFLAGS := -xO3 $(CXXFLAGS)
+else
+  CFLAGS := -g +w $(CFLAGS)
+  FFLAGS := -g $(FFLAGS)
+  CXXFLAGS := -g +w $(CXXFLAGS)
+endif
+ifeq ($(ISEXECUTABLE),)
+   ifeq ($(NOSHARED),1)
+      REALAR := $(CXX) -xar -xtarget=ultra -xarch=v8plusa -o 
+   else
+      REALAR := $(CXX) -G -xtarget=ultra -xarch=v8plusa -o 
+      CFLAGS := -KPIC  $(CFLAGS)
+      FFLAGS := -KPIC  $(FFLAGS)
+      CXXFLAGS := -KPIC $(CXXFLAGS)
+   endif
+else
+      REALAR := $(CXX) -xtarget=ultra -xarch=v8plusa -o 
+endif
+

@@ -1,0 +1,36 @@
+SCOREC build system README 
+
+
+The following is assumed:
+- each developer will do their development in a directory given by the
+  variable $DEVROOT
+- all components of SCOREC software will be installed in a systemwide
+  directory set by the variable $DISTROOT
+
+All the code in the system is organized as follows:
+$DEVROOT/$SUBSYSNAME/$MODULENAME
+
+where:
+  DEVROOT = common root directory of all development software
+  SUBSYSNAME = subsystem name that the module belongs to
+  MODULENAME = the name of the module
+
+You *must* set DEVROOT before you can do anything. It is suggested
+that you set it up in one of your start up files.
+
+Set DISTROOT to a location where the software will be installed (this
+isn't really needed if you will just be using the software from the
+build directory)
+
+Note 1: It is generaly accepted that DEVROOT will be configured as $HOME/develop
+	in fact, the DEVROOT is automatically configured like on SCOREC workstations
+	that unless the user explecitely modifies his environment.
+
+Note 2: The DISTROOT is only necessary if the user plans to do a 'make install'.
+
+Note 3: The 'standard' subsystem names currently in use are:
+		Util		random utilities modules
+		Meshing		modules used to generate/modify meshes
+		Applications		End-user standalone applications
+		Trellis		Trellis framework modules
+		phasta		???

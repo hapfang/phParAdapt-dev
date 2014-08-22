@@ -1,0 +1,394 @@
+# This file contains all the common building rules for all the modules.
+# See README.module for instruction on how to create a Makefile for
+# a module that uses these common targets.
+
+# TODO: Document PRECOMPILE which is executed before 
+
+# Define ARCHOS right now so that it can be used in Makefile.include files.
+ifndef ARCHOS
+        ARCHOS := $(shell $(DEVROOT)/Util/buildUtil/getarch)
+endif
+
+# Load directory-specific makefile
+dirspecfile := $(wildcard ./Makefile.include)
+ifneq ($(dirspecfile),)
+  include ./Makefile.include
+endif
+
+include $(DEVROOT)/Util/buildUtil/make.initial
+
+# Add dependencies to include and link flags. Also add self to include flags.
+INCLUDES := $(INCLUDES) $(addsuffix /include,$(addprefix -I$(DEVROOT)/,$(DEPS)))
+INCLUDES += -I$(BASEDIR)/../include
+depsdir := $(addsuffix /lib/$(ARCHOS),$(addprefix $(DEVROOT)/,$(DEPS)))
+ifdef FQLIBS
+	reallibs := $(FQLIBS)
+else
+	reallibs := $(addsuffix $(QUAL),$(addsuffix $(PQUAL),$(addsuffix $(INSQUAL),$(LIBS))))
+endif
+
+ifeq ($(ISEXECUTABLE),1)
+   ifeq ($(NOSHARED),1)
+     ifneq ($(ARCHOS),x86_cygwin)
+      LDFLAGS := $(shell perl $(DEVROOT)/Util/buildUtil/static.pl "$(depsdir)" "$(addsuffix ".a",$(addprefix lib,$(reallibs)))" ) \
+      		$(shell perl $(DEVROOT)/Util/buildUtil/static.pl "$(depsdir)" "$(addsuffix ".a",$(addprefix lib,$(reallibs)))" ) \
+		$(LDFLAGS) 
+     endif
+     LDFLAGS := $(LDFLAGS) $(ADDLIB) $(MPLIB)
+   else
+      LDFLAGS := $(foreach dir,$(depsdir),$(call libtmpl,$(dir))) \
+		$(addprefix -l,$(reallibs)) \
+		$(LDFLAGS) $(ADDLIB) $(MPLIB) 
+   endif
+else
+   LDFLAGS := 
+endif
+
+
+# LIBNAME is the name the library/executable will have. 
+# By default it's the same as the module name.
+ifeq ($(OUTNAME),)
+  OUTNAME := $(MODULENAME)
+endif
+
+# Substitution magic, let's find the interesting files
+dirs2 := $(subst :, ,$(dirs))
+
+tempcxx := $(foreach dir,$(dirs2),$(wildcard $(dir)/*.cc))
+tempc := $(foreach dir,$(dirs2),$(wildcard $(dir)/*.c))
+tempf := $(foreach dir,$(dirs2),$(wildcard $(dir)/*.f))
+tempf2 := $(foreach dir,$(dirs2),$(wildcard $(dir)/*.F))
+hdrs := $(foreach dir,$(dirs2),$(wildcard $(dir)/*.h))
+inchdrs := $(addprefix ../$(MODULENAME)/,$(hdrs))
+srcscxx := $(notdir $(tempcxx))
+srcsc := $(notdir $(tempc))
+srcsf3:= $(notdir $(tempf))
+srcsf2 := $(notdir $(tempf2))
+srcsf := $(filter-out $(mods),$(srcsf3))
+hdrsfiles := $(notdir $(hdrs))
+objs := $(srcscxx:.cc=.o) $(srcsc:.c=.o) $(mods:.f=.o) $(srcsf:.f=.o) $(srcsf2:.F=.o)
+obj2 := $(addprefix obj/$(ARCHOSQ)/,$(objs))
+VPATH := $(dirs)
+
+# Find what are the test directories
+testdirsexp := $(foreach dir,$(testdirs),$(filter-out $(dir)/CVS,$(wildcard $(dir)/*)))
+
+# create a variable that will be used to create the Requires File
+REQ := $(addsuffix "\n", $(DEPS))
+
+MODROOT := $(BASEDIR)/..
+
+#check if the includes for the module are setup yet, if not we don't
+#include the dependency files at the end
+#modincs := $(wildcard $(MODROOT)/include/*.h)
+
+# Determine what the output filename is going to be
+ifeq ($(ISEXECUTABLE),1)
+   OUTFILE := $(MODROOT)/bin/$(ARCHOS)/$(OUTNAME)$(PQUAL)$(QUAL)$(INSQUAL)
+else
+  ifeq ($(NOSHARED),1)
+     OUTFILE := $(MODROOT)/lib/$(ARCHOS)/lib$(OUTNAME)$(PQUAL)$(INSQUAL)$(QUAL).$(STATIC_LIB_EXT)
+  else
+     OUTFILE := $(MODROOT)/lib/$(ARCHOS)/lib$(OUTNAME)$(PQUAL)$(INSQUAL)$(QUAL).$(SHARED_LIB_EXT)
+  endif
+endif
+OUTFILEBASE := $(dir $(OUTFILE))
+
+# Public header files
+ifeq ($(INSTHEADERS),)
+  INSTHEADERS := $(inchdrs)
+endif
+
+ifeq ($(PUBHEADERS),)
+  PUBHEADERS := $(inchdrs)
+endif
+
+# force rebuild of executable even if up-to-date
+ifeq ($(PURIFY),1)
+.PHONY: $(OUTFILE)
+endif
+.PHONY: PRECOMPILE
+$(OUTFILE) :: $(OUTFILEBASE) obj/$(ARCHOSQ) $(PRECOMPILE)
+
+$(OUTFILE) :: $(obj2)
+	@echo ---Linking Phase---
+	$(REALAR)$@ $^ $(wildcard cxx_repository/*.o) $(LDFLAGS) $(SED)
+
+ifeq ($(QUIET),1)
+.SILENT:
+endif
+%.o: %.f
+	@echo "--- Compiling" $<
+	$(FC) $(FFLAGS) $(FDEFS) $(INCLUDES) ${CTOOBJ}$< ${OBJOUT}$@
+%.o: %.F
+	@echo "--- Compiling" $<
+	$(FC) $(FFLAGS) $(FDEFS) $(INCLUDES)  -c $< -o $@
+obj/$(ARCHOSQ)/%.o : %.f 
+	@echo "--- Compiling" $<
+	@if test ! -d obj; then mkdir obj; fi;
+	@if test ! -d obj/$(ARCHOSQ); then mkdir obj/$(ARCHOSQ); fi;
+	$(FC) $(FFLAGS) $(FDEFS) $(INCLUDES)  ${CTOOBJ}$< ${OBJOUT}$@
+obj/$(ARCHOSQ)/%.o : %.F 
+	@echo "--- Compiling" $<
+	@if test ! -d obj; then mkdir obj; fi;
+	@if test ! -d obj/$(ARCHOSQ); then mkdir obj/$(ARCHOSQ); fi;
+	$(FC) $(FFLAGS) $(FDEFS) $(INCLUDES)  -c $< -o $@
+%.o: %.cc
+	@echo "--- Compiling" $<
+	$(CXX) $(CXXFLAGS) $(DEFS) $(INCLUDES)  ${CTOOBJ}$< ${OBJOUT}$@ 
+obj/$(ARCHOSQ)/%.o : %.cc 
+	@echo "--- Compiling" $<
+	@if test ! -d obj; then mkdir obj; fi;
+	@if test ! -d obj/$(ARCHOSQ); then mkdir obj/$(ARCHOSQ); fi;
+	$(CXX) $(CXXFLAGS) $(DEFS) $(INCLUDES)  ${CTOOBJ}$< ${OBJOUT}$@ 
+%.o: %.c
+	@echo "--- Compiling" $<
+	$(CC) $(CFLAGS) $(DEFS) $(INCLUDES)  ${CTOOBJ}$< ${OBJOUT}$@ 
+obj/$(ARCHOSQ)/%.o: %.c
+	@echo "--- Compiling" $<
+	@if test ! -d obj; then mkdir obj; fi;
+	@if test ! -d obj/$(ARCHOSQ); then mkdir obj/$(ARCHOSQ); fi;
+	$(CC) $(CFLAGS) $(DEFS) $(INCLUDES)  ${CTOOBJ}$< ${OBJOUT}$@ 
+%: %.cc
+	@echo "--- Compiling" $<
+	$(CXX) $(CXXFLAGS) $(DEFS) $(INCLUDES) $< ${OBJOUT}$@ $(LDFLAGS)
+%: %.c
+	@echo "--- Compiling" $<
+	$(CC) $(CFLAGS) $(DEFS) $(INCLUDES)  $< ${OBJOUT}$@ $(LDFLAGS)
+# Dependency creation
+.%.d: %.cc
+	@echo updating dependency for $<
+	@$(CXX) $(DEPFLAG) $(INCLUDES) $(DEFS) $< \
+	| sed 's/$*\.cc /&\\\n /' | sed 's/$*\.o/obj\/$(ARCHOSQ)\/&/' | egrep -v "/opt" | egrep -v "/usr/local" > $@
+
+.%.d: %.c
+	@echo updating dependency for $<
+	@$(CC) $(DEPFLAG) $(INCLUDES) $(DEFS) $< \
+	| sed 's/$*\.c /&\\\n /' | sed 's/$*\.o/obj\/$(ARCHOSQ)\/&/' | egrep -v "/opt" | egrep -v "/usr/local" > $@
+
+%.u: %.cc
+	@echo updating dependency for $<
+	@$(CXX) $(DEPFLAG) $(INCLUDES) $(DEFS) $< 
+
+%.u: %.c
+	@echo updating dependency for $<
+	@$(CC) $(DEPFLAG) $(INCLUDES) $(DEFS) $< 
+
+.PHONY: doc
+doc :: $(MODROOT)/doc doxygen.config
+	@echo "Generating documentation (may take some time)..."
+	@doxygen doxygen.config
+
+.PHONY: install
+install :: installsetup
+	-echo " "$(REQ) > $(INSTROOT)/Requires
+	ifeq ($ISEXECUTABLE,1)
+	  cp $(OUTFILE) $(INSTBIN)
+	else
+	  cp $(PUBHEADERS) $(INSTINC)
+	  cp $(OUTFILE) $(INSTLIB)
+	endif
+	-cp $(MODROOT)/lib/$(ARCHOS)/*.o $(INSTLIB)
+	-cp Changes $(INSTROOT)
+	-chmod -R g+rx $(INSTROOT)
+
+.PHONY: setup
+setup :: $(OUTFILEBASE) incs obj/$(ARCHOSQ)
+
+.PHONY: incs
+ifeq (${CP_INSTEAD_OF_LN},1)
+incs : $(MODROOT)/include
+	-cd $(MODROOT)/include; cp $(INSTHEADERS) .
+else
+incs : $(MODROOT)/include
+	-cd $(MODROOT)/include; ln -s $(INSTHEADERS) .
+endif
+
+obj/$(ARCHOSQ) :
+	-mkdir -p $@
+
+$(MODROOT)/include :
+	-mkdir $@
+
+$(MODROOT)/doc :
+	-mkdir $@
+
+$(MODROOT)/bin :
+	-mkdir $@
+
+$(MODROOT)/lib/$(ARCHOS) :
+	-mkdir -p $@
+
+$(MODROOT)/bin/$(ARCHOS) :
+	-mkdir -p $@
+
+# for install 
+.PHONY: installsetup
+installsetup : $(INSTROOT) $(INSTINC) $(INSTLIB)
+
+$(INSTROOT) :
+	-mkdir -p $(INSTROOT)
+	chmod g+rx $(INSTROOT)
+
+$(INSTINC) :
+	-mkdir -p $(INSTINC)
+	chmod g+rx $(INSTINC)
+
+$(INSTLIB) :
+	-mkdir -p $(INSTLIB)
+	chmod g+rx $(INSTLIB)
+
+$(INSTBIN) :
+	-mkdir -p $(INSTBIN)
+	chmod g+rx $(INSTBIN)
+
+.PHONY: clean realclean distclean nuke
+clean::
+	-rm -r -f obj/$(ARCHOSQ) $(addsuffix /SunWS_cache,$(testdirsexp)) \
+		$(addsuffix /main,$(testdirsexp)) so_locations *.mod *.pdb
+
+realclean:: clean
+	-rm .??*.d
+
+nuke:: realclean
+	-rm $(OUTFILE)
+
+distclean:: realclean
+	-rm -r $(MODROOT)/include
+	-rm -r $(MODROOT)/lib
+	-rm -r $(MODROOT)/doc
+	-rm -r $(MODROOT)/bin
+	-rm -r obj
+
+# Target for automated checking. All test cases need to be in test/x directories
+# where 'x' is a character string. All test cases need to be made of a single
+# source file called main.EXT where 'EXT' is the language standard extention.
+# Right now are supported: .c .cc .f .F
+# The main file will be compiled, linked and executed. It needs to return a result
+# code != 0 in case of error, and if possible output something meaningful to stdout.
+
+.PHONY: check checkO checkone
+
+check:
+	@ORIG=`pwd`; \
+	for dir in $(testdirsexp); do \
+	   echo "* Entering $$dir"; \
+	   cd $$dir; \
+	   rm -rf main; \
+	   $(MAKE) -s -f ../../Makefile main DEPS='$(DEPS) $(MODULEPATH)/$(NVERS)' \
+		ISEXECUTABLE=1 LIBS='$(LIBS) $(OUTNAME)' \
+		VERS=$(VERS) NODEP=1 QUIET=1 2>/dev/null; \
+	   if [ $$? -ne 0 ]; then exit 1; fi; \
+	   printf "%s" "Executing... "; \
+	   ./main; \
+	   RSLT=$$?; \
+	   if [ $$RSLT -ne 0 ]; then exit 1; fi; \
+	   echo "   OK"; \
+	   cd $$ORIG; \
+	done
+
+checkO:
+	$(MAKE) check VERS=opt
+
+checkone:
+	echo "* Entering $(DIR)"; \
+	cd $(DIR); \
+	rm -rf main; \
+	$(MAKE) -f ../../Makefile main DEPS='$(DEPS) $(MODULEPATH)/$(NVERS)' \
+	ISEXECUTABLE=1 LIBS='$(LIBS) $(OUTNAME)' \
+	$(VERS) NODEP=1 QUIET=0; \
+	if [ $$? -ne 0 ]; then exit 1; fi; \
+	echo "current buildUtil version does not run executable, modify ${DEVROOT}/Util/make.common to change this"; \
+	#./main; \
+	RSLT=$$?; \
+	if [ $$RSLT -ne 0 ]; then exit 1; fi; \
+
+# Generation of doxygen config file
+doxygen.config: 
+	@echo "Generating doxygen.config..."; \
+	touch doxygen.config; \
+	echo "# Automatically generated by buildUtil " >> doxygen.config; \
+	echo "PROJECT_NAME           = $(MODULENAME)" >> doxygen.config; \
+	echo "OUTPUT_DIRECTORY	= $(MODROOT)/doc" >> doxygen.config; \
+	echo "OUTPUT_LANGUAGE        = English" >> doxygen.config; \
+	echo "INPUT                  = $(dirs2)" >> doxygen.config; \
+	echo "FILE_PATTERNS          = *.h *.c *.cc" >> doxygen.config; \
+	echo "EXTRACT_ALL            = YES" >> doxygen.config; \
+	echo "EXTRACT_PRIVATE        = NO" >> doxygen.config; \
+	echo "EXTRACT_STATIC         = NO" >> doxygen.config; \
+	echo "ALWAYS_DETAILED_SEC    = NO" >> doxygen.config; \
+	echo "FULL_PATH_NAMES        = NO" >> doxygen.config; \
+	echo "INTERNAL_DOCS          = NO" >> doxygen.config; \
+	echo "CLASS_DIAGRAMS         = YES" >> doxygen.config; \
+	echo "SOURCE_BROWSER         = NO" >> doxygen.config; \
+	echo "INLINE_SOURCES         = NO" >> doxygen.config; \
+	echo "STRIP_CODE_COMMENTS    = YES" >> doxygen.config; \
+	echo "CASE_SENSE_NAMES       = YES" >> doxygen.config; \
+	echo "SHORT_NAMES            = NO" >> doxygen.config; \
+	echo "HIDE_SCOPE_NAMES       = NO" >> doxygen.config; \
+	echo "VERBATIM_HEADERS       = NO" >> doxygen.config; \
+	echo "SHOW_INCLUDE_FILES     = YES" >> doxygen.config; \
+	echo "JAVADOC_AUTOBRIEF      = NO" >> doxygen.config; \
+	echo "INHERIT_DOCS           = YES" >> doxygen.config; \
+	echo "INLINE_INFO            = YES" >> doxygen.config; \
+	echo "SORT_MEMBER_DOCS       = YES" >> doxygen.config; \
+	echo "DISTRIBUTE_GROUP_DOC   = NO" >> doxygen.config; \
+	echo "TAB_SIZE               = 4" >> doxygen.config; \
+	echo "GENERATE_TODOLIST      = YES" >> doxygen.config; \
+	echo "GENERATE_TESTLIST      = YES" >> doxygen.config; \
+	echo "GENERATE_BUGLIST       = YES" >> doxygen.config; \
+	echo "MAX_INITIALIZER_LINES  = 30" >> doxygen.config; \
+	echo "OPTIMIZE_OUTPUT_FOR_C  = NO" >> doxygen.config; \
+	echo "SHOW_USED_FILES        = YES" >> doxygen.config; \
+	echo "QUIET                  = YES" >> doxygen.config; \
+	echo "WARNINGS               = YES" >> doxygen.config; \
+	echo "WARN_IF_UNDOCUMENTED   = YES" >> doxygen.config; \
+	echo "RECURSIVE              = NO" >> doxygen.config; \
+	echo "FILTER_SOURCE_FILES    = NO" >> doxygen.config; \
+	echo "ALPHABETICAL_INDEX     = YES" >> doxygen.config; \
+	echo "COLS_IN_ALPHA_INDEX    = 2" >> doxygen.config; \
+	echo "GENERATE_HTML          = YES" >> doxygen.config; \
+	echo "HTML_ALIGN_MEMBERS     = YES" >> doxygen.config; \
+	echo "GENERATE_HTMLHELP      = NO" >> doxygen.config; \
+	echo "GENERATE_CHI           = NO" >> doxygen.config; \
+	echo "BINARY_TOC             = NO" >> doxygen.config; \
+	echo "TOC_EXPAND             = NO" >> doxygen.config; \
+	echo "DISABLE_INDEX          = NO" >> doxygen.config; \
+	echo "ENUM_VALUES_PER_LINE   = 4" >> doxygen.config; \
+	echo "GENERATE_TREEVIEW      = NO" >> doxygen.config; \
+	echo "TREEVIEW_WIDTH         = 250" >> doxygen.config; \
+	echo "GENERATE_LATEX         = YES" >> doxygen.config; \
+	echo "COMPACT_LATEX          = NO" >> doxygen.config; \
+	echo "PAPER_TYPE             = letter" >> doxygen.config; \
+	echo "PDF_HYPERLINKS         = YES" >> doxygen.config; \
+	echo "USE_PDFLATEX           = YES" >> doxygen.config; \
+	echo "LATEX_BATCHMODE        = YES" >> doxygen.config; \
+	echo "GENERATE_RTF           = NO" >> doxygen.config; \
+	echo "GENERATE_MAN           = NO" >> doxygen.config; \
+	echo "MAN_LINKS              = YES" >> doxygen.config; \
+	echo "ENABLE_PREPROCESSING   = YES" >> doxygen.config; \
+	echo "MACRO_EXPANSION        = NO" >> doxygen.config; \
+	echo "EXPAND_ONLY_PREDEF     = NO" >> doxygen.config; \
+	echo "SEARCH_INCLUDES        = YES" >> doxygen.config; \
+	echo "ALLEXTERNALS           = NO" >> doxygen.config; \
+	echo "HAVE_DOT               = YES" >> doxygen.config; \
+	echo "CLASS_GRAPH            = YES" >> doxygen.config; \
+	echo "COLLABORATION_GRAPH    = YES" >> doxygen.config; \
+	echo "INCLUDE_GRAPH          = YES" >> doxygen.config; \
+	echo "INCLUDED_BY_GRAPH      = YES" >> doxygen.config; \
+	echo "GRAPHICAL_HIERARCHY    = YES" >> doxygen.config; \
+	echo "MAX_DOT_GRAPH_WIDTH    = 1024" >> doxygen.config; \
+	echo "MAX_DOT_GRAPH_HEIGHT   = 1024" >> doxygen.config; \
+	echo "GENERATE_LEGEND        = YES" >> doxygen.config; \
+	echo "DOT_CLEANUP            = YES" >> doxygen.config; \
+	echo "SEARCHENGINE           = NO" >> doxygen.config; 
+
+# Include auto-generated dependency files.
+ifeq ($(NODEP),)
+  ifeq ($(ARCHOS),ibm_5)
+      include $(addprefix ./, $(srcscxx:.cc=.u) $(srcsc:.c=.u))
+  else
+      include $(addprefix .,$(srcscxx:.cc=.d) $(srcsc:.c=.d))
+  endif
+endif
+

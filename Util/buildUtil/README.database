@@ -1,0 +1,7 @@
+From the Changes file:
+
+  added support to compile a library that connects to Oracle database.
+  Basically the gmake utility now understands DATABASE=something
+  as an argument. That something can be OTL_ODBC, OTL_ORA7, OTL_ORA8
+  at the current time. -ok
+

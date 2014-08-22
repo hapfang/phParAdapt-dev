@@ -1,0 +1,14 @@
+export CC := cc
+export CXX := CC
+export CFLAGS := -n32 -mips4 -r10000 -fullwarn -g -D_SCOREC_NewCompiler
+export CXXFLAGS := -n32 -mips4 -r10000 -g -D_SCOREC_NewCompiler
+export CDEPFLAGS := -M
+export CXXDEPFLAGS := -M
+export RANLIB := ls
+export REALAR := CC -ar -o
+export DEFINES := -DSGI -DDEBUG -DFORT_LC_US -Dtypename=
+ifeq ($(VERS),opt)
+  CFLAGS := -n32 -mips4 -r10000 -O2 -D_SCOREC_NewCompiler
+  CXXFLAGS := -n32 -mips4 -r10000 -O2 -D_SCOREC_NewCompiler
+   export DEFINES := -DSGI -DFORT_LC_US -Dtypename=
+endif

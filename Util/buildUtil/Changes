@@ -1,0 +1,304 @@
+Version 1.1
+~~~~~~~~~~~
+* Preliminary support for F90 modules -cd
+* Merged Anil Karanam's changes for F90 modules, alpha_osf and cygwin support. -cd
+
+* Added command torun insure on binary linking. It replaces
+  purify when doing PURIFY=1. -cd
+* tagged as v1_1_8  8/23/2002 -cd
+
+* Added config file for HP-UX using the GCC suite. -cd
+* Updated hp_11 config file to use aCC instead of CC -cd
+* tagged as v1_1_7  8/14/2002 -cd
+
+* Updated link flags for mpich2 under  Sun
+* Updated optimization flags for various platforms
+* Added support for native MPI under SGI
+* tagged as v1_1_6 6/20/2002 -cd
+
+* When compiling a static executable with NOSHARED=1, we need to include twice the static
+  libraries because of cyclic dependencies. This is done by calling twice the static.pl
+  script. -cd
+* tagged as v1_1_5 6/4/2002 -cd
+
+* Changed MODULENAME for OUTNAME in the LIBS variable for check targets. Caused to link
+  with standard version of library when specified SIM=1. -cd
+* tagged as v1_1_4 6/03/2002 -cd
+
+* Fixed sun4_5 configuration file to use the -xtarget option also for linking. -cd
+* tagged as v1_1_3 4/25/2002 -cd
+
+* Retired some obsolete config files. -cd
+* Made library extension configuration, because HP-UX use '.sl' instead
+  of '.so'. -cd
+* tagged as v1_1_2 4/5/2002 -cd
+
+* Updated getarch to support HP-UX version 11. -cd
+* Added config file hp_11. -cd
+* Fixed a few typos. -cd
+* tagged as v1_1_1 4/2/2002 -cd
+
+* Made changes to support new CVS repository. Modules now no longer
+have the version number in their path. -cd
+* Fixed make.common to work better for parallel executables. -cd
+* tagged as v1_1_0  3/11/2002 -cd
+
+Version 1.0
+~~~~~~~~~~~
+* Added the 'FC' variable to config profiles to specify the Fortran compiler. -cd
+* Added a configuration for using the Intel compilers under Linux. It is
+  called 'x86_linux-icc'. -cd
+* Updated make.common to use the $(FC) variable instead of $(F77). -cd
+* Made 'doc' a multi-rule target. -cd
+* tagged as v1_0_28  9/21/2001 -cd
+
+* Added the 'doc' target that invoques doxygen to generate documentation. By
+  default, the make.common will generate a doxygen.config file and call doxygen
+  to build LaTeX and HTML documentation, that will be stored in MODULE_ROOT/doc
+  directory. -cd
+* tagged as v1_0_27 9/12/2001 -cd
+
+* Added a license file. The file contain the current SCOREC open source license.
+  The file should NOT be part of any module UNLESS it is desired to make it
+  open source. This decision is not to be taken lightly and should be approved
+  by the director of SCOREC. -cd
+* Updated makefiles to put compiled object file in qualified directories. This
+  allows to concurently keep meshSim and non-meshSim version of objects around,
+  which is useful for debugging. meshim mode is the default and use C interface
+  to be drop-in compatible with other mesh database like AOMD. If the user
+  specifies SCOREC_MESH=1, then the C++ interface to the SCOREC Mesh database
+  should be used. -cd
+* tagged as v1_0_26 9/4/2001 -cd
+
+* Changed some rules (setup, clean) from ':' to '::' to be able to add
+  commands to them in module makefile. -cd
+* tagged as v1_0_25 8/23/2001 -cd
+
+* Fixed the target check and checkone. They were broken in version 1.0.21 when
+  the full path was given when calling gmake recursively. Now doing checks works
+  only in the DEVROOT, but users can still compile a module anywhere. -cd
+* Fixed sun4_5-gcc libtmpl macro. Failed to link properly as we were not providing
+  the right link flag. -cd
+* Fixed config files to add system libraries required for mpich2. The libraries
+  are specified in the archos-specific config file in MPICH2_SYS_LIBS. -cd
+* tagged as v1_0_24 8/16/2001 -cd
+
+* Created config file generic-sunmpi to use the Sun HPC ClusterTools MPI 
+  implementation. Instead of mpCC etc, it tries to add itself all the required
+  flags. -cd
+* Updated generic-mpich2 to add itself all the required flags instead of
+  calling mpiCC. -cd
+* tagged as v1_0_23 8/14/2001 -cd
+
+* Removed GCC support from config file sun4_5 and sun4_5-64. -cd
+* Created config file sun4_5-gcc for using GCC under Solaris. -cd
+* tagged as v1_0_22 8/09/2001 -cd
+
+* Modified makefiles so that the module to compile do not have to rest in
+  the DEVROOT hierarchy. DEVROOT is used to access dependencies, but the current
+  module's files are based on the current directories:
+	../bin		executables
+	../include	include file links
+	../lib		libraries
+* tagged as v1_0_21 7/13/2001 -cd
+
+* Updated x86_linux libtmpl for proper linking under Linux. -cd
+* tagged as v1_0_20 7/03/2001 -cd
+
+* Removed the '-dalign' from the Sun Workshop configuration as it was dramatically
+  increasing the memory usage of some programs (by up to 300% in some cases) for little
+  performance gain. -cd
+* tagged as v1_0_19 6/26/2001 -cd
+
+* Added support for cygwin environment under Windows. ARCHOS is x86_cygwin. -cd
+  (Patch by J-F Remacle) At this time, cygwin doesn't produce shared 
+  libraries.
+* Cleaned-up a bit various config file. -cd
+* tagged as v1_0_18 4/24/2001 -cd
+
+* Updated make.common to not pre-qualify libraries in the check and checkone rules.
+  The prequalification when testing in optimized mode caused double-qualification
+  for the tested library (as in afHeatTransfer-O-O ). -cd
+* tagged as v1_0_17 4/10/2001 -cd
+
+* Updated README files. -cd
+* Things to document:
+	Makefile.include
+	ARCHOS
+	INCLUDES
+	DEPS
+	LDFLAGS
+	OUTNAME
+	dirs
+	ISEXECUTABLE
+	NOSHARED
+	QUIET
+	NODEP
+	ADDLIB
+	FQLIBS
+	LIBS
+	make targets check / checkone
+* Updated config/sun4_5 and config/sun4_5-64 to build proper static 
+  libraries. -cd
+* Updated config/sgi_6 and config/sgi_6-64 to build proper static 
+  libraries. -cd
+* Updated make.common so that you can specify NOSHARED=1 when building an 
+  application to force linking statically with SCOREC libraries. This is an
+  all-or-nothing option, it bypasses the standard linker algorithm by 
+  fully specifying the library filenames. It also requires perl as 
+  /usr/local/bin/perl. If it is located elsewhere, update the first line
+  of static.pl -cd
+* tagged as v1_0_16  01/25/2001 -cd
+
+* Added config generic-mpich2 for mpich version 1.2.1 installed in 
+  /usr/local/mpich/1.2.1/MPICOMM -cd
+* Note that by default the C++ bindings for MPI are not included. -cd
+* Fixed obscure in make.common when updating dependency files could cause
+  problems when two files had similar names: a dot wasn't escaped in the sed
+  regex. -cd
+* tagged as v1_0_15  10/18/2000 -cd
+
+* Now we can purify a ISEXECUTABLE module by defining PURIFY=1 -cd
+* Ported fix to sgi_6-64 (see below) -cd
+* Fixed a bug in sgi_6 where the standard lib wasn't used if
+  ISEXECUTABLE was set to 1 (missing LANG:std flag) -ok
+* tagged as v1_0_14   10/09/2000 -ok
+
+* Added a $(SED) at the end of the linking phase of executable for MAGI. -cd
+* tagged as v1_0_13 9/25/2000 -cd
+
+* Removed '+w' from FFLAGS on Sun. -cd
+* Added a call to getarch at the beginning of make.common so that we can
+  use that information in Makefile.include files. -cd
+* Added xarch flag to sun4_5-64 configuration file. -cd
+* tagged as v1_0_12  9/08/2000 -cd
+
+* Removed occurences of hard-coded 'sun4_5' in make.common, and replaced with
+  ARCHOS. Caused problem in the creation of auto-dependency files. -cd
+* Changes to config files to support executable module compilation. -cd
+* Updated make.common to include 'Makefile.include' before make.initial to be
+  able to specify things there like the PARALLEL variable for test cases. -cd
+* tagged as v1_0_11  9/06/2000 -cd
+
+* Added flag '-ptused' for the SGI C++ compiler to fix an error with 
+  template instantiation. (from Ottmar Klaas) -cd
+* Changed link command from 'ld' to 'CC' on sgi_6* to fix .init section
+  of .so files. -cd
+* tagged as v1_0_10  8/31/2000 -cd
+
+* make.TrellisModules is not needed anymore. Removed it from this
+  version of buildUtil -ok
+* tagged as v1_0_9  8/30/2000 -ok
+
+* Changed link command from 'ld' to 'CC' on sun4_5 to fix .init section
+  of .so files. -cd
+* The above may cause us to no longer need to link with the obj files in
+  SunWS_cache dir. This needs to be tested. -cd
+* Added a flag PURIFY=1 which will cause all generated executables to be 
+  purify instrumented. -cd
+* tagged as v1_0_8 8/30/2000 -cd
+
+* Fixed error on Sun when the module didn't have any template and Make
+  would try to link with unexisting files in SunWS_cache. -cd
+* tagged as v1_0_7 8/24/2000 -cd
+
+* Fixed a typo in make.initial causing BUILDSYS to not be defined. -cd
+* Moved the following ARCHOS configuration to obsolete directory:
+    sgi_mips4 sun4_4 sun4H_5 
+  also created a configuration for Sun SPARC V9 64 bit as sun4_5-64  -cd
+* Modified qualification of libraries. Now the libraries specified in the LIBS
+  are only expanded for the OPT QUAL. The user must add the '-mpich' and 
+  other DBQUAL where needed. -cd
+* If a module defines FQLIBS, and LIBS is not used at all and FQLIBS is used 
+  instead WITH NO QUAL EXPANSION AT ALL. -cd
+* Added FFLAGS to standard configs for Fortran optimization/debugging. -cd
+* Modified order of CFLAGS & al to allow user to override standard settings. -cd
+* tagged as v1_0_6 8/21/2000 -cd
+
+* Made 'checkone' more verbose, and 'check' less so. -cd
+* Moved around LDFLAGS for when we link with static 3rd party libs. -cd
+* Was not linking with libraries with the same qualification
+  (PQUAL, DBQUAL, QUAL) triple. Fixed.  -cd
+* tagged as v1_0_5  8/17/2000 -cd
+
+* Added 'checkone' target to check only one test case. -cd
+* Fixed dependencies on 'check' targets. -cd
+* Tagged as v1_0_4 8/17/2000 -cd
+
+* Forgot to add DEFS to C dependency generator. -cd
+* Make testdirs name configurable. -cd
+* No longer 'sort -u' dependencies because under Linux they are reordered,
+  cause syntax errors. -cd
+* Tagged as v1_0_3  8/16/2000 -cd
+
+* Fixed config/x86_linux to make depend files less verbose. -cd
+* Fixed make.common to prevent error under Linux. -cd
+* SGI now defaults to n32 binary interface. sgi_6-n32 config file remove. -cd
+* SGI now also defaults to mips3 instruction set, compatible with the
+  MIPS R4000 and up CPUs. This makes some advanced instructions available. -cd
+* make.common now read a file named 'Makefile.include' in the current
+  directory and takes it into account. It can be used to add
+  defines, libraries, flags, etc specific to a test case. -cd
+* Updated config file for sgi_6-64 ARCHOS. -cd
+* module-specific Makefile can now have at setup target too for
+  module-specific setup tasks such as set up of test cases. -cd
+* Tagged as v1_0_2  8/15/2000 -cd
+
+* Added README.testing and README.GNU documents. -cd
+* Updated make.common, make testing less verbose. -cd
+* Changed the way test binaires are cleaned up. Keep the binaries around
+  in case we want to run them by hand. -cd
+* Library failed to make on Sun with C-only module. -cd
+* Tagged as v1_0_1  8/14/2000 -cd
+
+* Updated and spell-checked the documentation. -cd
+* Updated the building process to make it more intelligent. -cd
+* Adapted the 0.4 process to make it applicable even to executable modules,
+  not just library modules. -cd
+* Try to build shared libraries for all platforms instead of just for Sun. -cd
+
+
+version 0.4
+___________
+* Fixed a bug that prevented fortran files that end on .F to compile
+* Tagges as v0_4_4  8/7/2000 -ok
+
+* Fixed a typo in the make.TrellisModules file
+* Eliminated -lmodel from the MESHLIB variable
+* Tagged as v0_4_3  8/02/2000 -ok
+
+* Added the following targets: 
+	sgi_mips4: uses n32 format, mips4 architecture with R10000 CPU target.
+		   Required for Pro/Engineer 2000i sgi_mips4 target.
+	x86_linux: Linux running on Intel with gcc/g++ with i686 optimization
+* Updated 'getarch' to define the new Linux target. The new SGI target is never
+  selected automatically, it's too special purpose.
+* Tagged as v0_4_2  8/01/2000 -cd
+
+* added support to compile a library that connects to Oracle database.
+  Basically the gmake utility now understands DATABASE=something
+  as an argument. That something can be OTL_ODBC, OTL_ORA7, OTL_ORA8
+  at the current time. -ok
+* tagged as v0_4_1  6/12/2000 -ok
+
+* sgi_6 has been moved to sgi_6-o32, sgi_6-n32 is now sgi_6. The reason
+  for this is that SGI doesn't recommend to use the o32 version anymore.
+  The highly recommend to use n32 or n64.
+* Both, the n32 and the n64 version have gotten the flag -LANG:std to 
+  acctivate the full namespace std according to the C++ standard
+* Both, the n32 and the n64 version recognice the typename keyword now
+  so that the corresponding define variable was eliminated
+* buildutil builds now shared libraries as a default. Non shared libraries
+  can be built using the NOSHARED=1 option
+* Changes were made to acknowledge the fact that Sun changed the strategy
+  on template handling. The old Template.DB repository doesn't exist anymore.
+  It's now called SunWS_cache (and behaves a bit different)
+* .o files are now kept around. Due to the fact that the Sun compiler 5.0 is
+  about a factor of 5 slower then the 4.2 version it seems to be reasonable
+  to sacrifice space for the time.
+* buildutil can now compile files ending with .f and .F
+* buildUtil recognizes the keyword QUIET. If it is set the output stream
+  will be written to out.compile, and the errors will be written to error.compile.
+  e.g. : gmake executable QUIET=1
+* a new module make.TrellisModules predefines plenty of variables that should
+  get rid of a lot of clutter in the makefiles. See e.g. heatTrans/test/1/Makefile

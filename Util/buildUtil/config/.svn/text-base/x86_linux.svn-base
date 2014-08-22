@@ -1,0 +1,39 @@
+# Makefile addition for x86_linux architecture/OS.
+STATIC_LIB_EXT := a
+SHARED_LIB_EXT := so
+
+DEFS := $(DEFS) -DLINUX -DFORT_LC_US -D_SCOREC_NewCompiler -DUNIX
+libtmpl = -L$(1) -Wl,-rpath,$(1)
+ifdef INSURE
+  CC := insure cc
+  CXX := insure CC
+else
+  CC := mpicc
+  CXX := mpicxx
+endif
+FC := mpif90
+GLINKER := $(CXX)
+HAS_TEMP_REP := 0
+DEPFLAG := -MM
+ifeq ($(VERS),opt)
+  CFLAGS := -O4 $(CFLAGS)
+  CXXFLAGS := -O4 $(CXXFLAGS)
+  FFLAGS := -O4 $(FFLAGS)
+else
+  CFLAGS := -g -Wall $(CFLAGS)
+  CXXFLAGS := -g -Wall $(CXXFLAGS)
+  FFLAGS := -g -Wall $(FFLAGS)
+endif
+ifeq ($(ISEXECUTABLE),)
+   ifeq ($(NOSHARED),1)
+      REALAR := ar -cru 
+   else
+      REALAR := $(GLINKER) -shared -o 
+      CFLAGS := -fPIC $(CFLAGS)
+      CXXFLAGS := -fPIC  $(CXXFLAGS)
+      FFLAGS := -fPIC $(FFLAGS)
+   endif
+else
+      REALAR := $(GLINKER) -o
+endif
+

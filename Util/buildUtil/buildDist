@@ -1,0 +1,28 @@
+#!/bin/sh
+
+echo building distribution from configuration file $1
+
+base=`pwd`
+
+#mkdir tarfiles
+
+cat $1 | while read subsys module major minor fix
+do
+  cd $base
+  tag=v${major}_${minor}_${fix}
+  echo exporting $moddir with tag $tag
+  cvs export -r $tag $subsys/$module > $base/$module.error 2>&1
+  if [ $? -ne 0 ]
+  then
+    echo "**** ERROR : export of $moddir with tag $tag failed"
+    echo "**** cvs error messages in $module.error" 
+  else
+    rm $base/$module.error
+    cd $base
+    #tarfile=$module$vers.$fix.tar
+    #echo making tar file $tarfile
+    #tar cf $tarfile $srcdir
+    #gzip $tarfile
+    #mv $tarfile.gz tarfiles
+  fi
+done

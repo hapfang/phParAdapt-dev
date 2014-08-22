@@ -1,0 +1,5 @@
+ifeq ($(MPIHOME),)
+    MPIHOME :=/usr/lpp/ppe.poe/include
+endif
+INCLUDES := $(INCLUDES) -I$(MPIHOME)/include
+MPLIB = $(call libtmpl,$(MPIHOME)/lib) -lmpi_r

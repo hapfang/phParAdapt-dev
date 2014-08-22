@@ -1,0 +1,2 @@
+DEFS := $(DEFS) -DMPI -DMPIPP_H
+MPLIB = -lmpi

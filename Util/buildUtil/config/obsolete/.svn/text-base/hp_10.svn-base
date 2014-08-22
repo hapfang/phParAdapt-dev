@@ -1,0 +1,17 @@
+export CC := cc
+export CXX := CC
+export CFLAGS := -g -Ae 
+export CXXFLAGS := -g -Aa +a1 
+export CDEPFLAGS := -M
+export CXXDEPFLAGS := -M
+export TEMP_REP := 
+export TEMP_REP_DIR := ptrepository
+export RANLIB := ranlib
+export DEFINES := -DHP -DDEBUG -DFORT_LC_US
+ifeq ($(VERS),opt)
+  export CFLAGS := -O -Ae 
+  export CXXFLAGS := -O -Aa 
+  export DEFINES := -DIBM -DHP -DFORT_LC_US
+endif
+export TEMP_INST := CC -pts -pth $(CXXFLAGS) $(DEFINES) $(INCDIR) *.o
+

@@ -1,0 +1,41 @@
+# Makefile addition for x86_64_linux architecture/OS.
+# It uses PGI compilers
+
+STATIC_LIB_EXT := a
+SHARED_LIB_EXT := so
+
+DEFS := $(DEFS) -DLINUX
+libtmpl = -L$(1) -Wl,-rpath,$(1)
+
+CC := pgcc
+CXX := pgCC 
+FC := pgf90
+
+HAS_TEMP_REP := 0
+
+CXXFLAGS := $(CXXFLAGS)
+CFLAGS := $(CFLAGS)
+FFLAGS := $(FFLAGS)
+DEPFLAG := -M $(DEPFLAGS)
+
+ifeq ($(VERS),opt)
+  CFLAGS := -w -fastsse -O3 $(CFLAGS)
+  CXXFLAGS := -w -fastsse -O3 $(CXXFLAGS)
+  FFLAGS := -w -fastsse -O3 $(FFLAGS)
+else
+  CFLAGS := -g $(CFLAGS)
+  CXXFLAGS := -g $(CXXFLAGS)
+  FFLAGS := -g $(FFLAGS)
+endif
+ifeq ($(ISEXECUTABLE),)
+   ifeq ($(NOSHARED),1)
+      REALAR := ar -cru 
+   else
+      REALAR := $(CXX) -shared -o 
+      CFLAGS := -fPIC $(CFLAGS)
+      CXXFLAGS := -KPIC  $(CXXFLAGS)
+      FFLAGS := -KPIC $(FFLAGS)
+   endif
+else
+      REALAR := $(CXX) -o
+endif

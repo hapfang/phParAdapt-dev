@@ -1,0 +1,35 @@
+STATIC_LIB_EXT := lib
+SHARED_LIB_EXT := dll
+DEFS := $(DEFS) -DCYGWIN -DFORT_LC_US -D_SCOREC_NewCompiler -DWIN32
+BASEDIR =$(shell cygpath -w -m $(shell pwd))
+CTOOBJ :=-c 
+OBJOUT :=-Fo
+libtmpl = -L$(1) -rpath $(1)
+
+CC := CL.EXE -nologo -TC
+CXX := CL.EXE -nologo -TP
+FC := ifort.EXE
+HAS_TEMP_REP := 0
+TEMP_REP := 
+TEMP_REP_DIR := 
+CP_INSTEAD_OF_LN := 1
+override NODEP := 1
+override NOSHARED := 1
+FFLAGS := /W0 /cm /w95 /4L80
+ifeq ($(VERS),opt)
+  CFLAGS := /Zi /W3 /MD $(CFLAGS)
+  CXXFLAGS := /Zi /W3 /MD /GX $(CXXFLAGS)
+  FFLAGS := /O2 /MD $(FFLAGS)
+  DEFS := $(DEFS) /Dintel
+else
+  CFLAGS := /Zi /MD /Od $(CFLAGS)
+  CXXFLAGS := /Zi /MD /Od /EHsc $(CXXFLAGS)
+  FFLAGS := /Zi /MD $(FFLAGS)
+  DEFS := $(DEFS) -D_DEBUG /Dintel
+endif
+ifeq ($(ISEXECUTABLE),)
+  export RANLIB := lib /OUT:
+  export REALAR := lib /OUT:
+else
+      REALAR := link /LARGEADDRESSAWARE /VERBOSE:LIB /NODEFAULTLIB:libc.lib /NODEFAULTLIB:libcmt.lib /NODEFAULTLIB:libcd.lib /NODEFAULTLIB:libcmtd.lib /NODEFAULTLIB:msvcrtd.lib /INCREMENTAL:NO /NOLOGO /MACHINE:IX86 -subsystem:console /OUT:
+endif

@@ -1,0 +1,71 @@
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/buildutil/!svn/ver/284/trunk/config/obsolete
+END
+hp_9
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/buildutil/!svn/ver/284/trunk/config/obsolete/hp_9
+END
+sp2-mpich
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/buildutil/!svn/ver/284/trunk/config/obsolete/sp2-mpich
+END
+sgi32n-mpich
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/buildutil/!svn/ver/284/trunk/config/obsolete/sgi32n-mpich
+END
+sgi32-mpich
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/buildutil/!svn/ver/284/trunk/config/obsolete/sgi32-mpich
+END
+sun4H_5
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/buildutil/!svn/ver/284/trunk/config/obsolete/sun4H_5
+END
+hp_10
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/buildutil/!svn/ver/284/trunk/config/obsolete/hp_10
+END
+sp2-mpi
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/buildutil/!svn/ver/284/trunk/config/obsolete/sp2-mpi
+END
+ibm_4
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/buildutil/!svn/ver/284/trunk/config/obsolete/ibm_4
+END
+sgi64-mpich
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/buildutil/!svn/ver/284/trunk/config/obsolete/sgi64-mpich
+END
+sun4_4
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/buildutil/!svn/ver/284/trunk/config/obsolete/sun4_4
+END
+sgi_mips4
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/buildutil/!svn/ver/284/trunk/config/obsolete/sgi_mips4
+END

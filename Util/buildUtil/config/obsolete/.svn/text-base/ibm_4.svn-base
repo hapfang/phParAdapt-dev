@@ -1,0 +1,15 @@
+export CC := xlc
+export CXX := xlC
+export CFLAGS := -g 
+export CXXFLAGS := -g 
+export CDEPFLAGS := -M
+export CXXDEPFLAGS := -M
+export RANLIB := strip
+export REALAR := ar cr
+export DEFINES := -DIBM -DDEBUG -DFORT_LC
+ifeq ($(VERS),opt)
+  export CFLAGS := -O 
+  export CXXFLAGS := -O 
+  export DEFINES := -DIBM -DIBM -DFORT_LC
+endif
+

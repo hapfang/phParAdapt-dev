@@ -1,0 +1,797 @@
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/phasta/!svn/ver/2457/phParAdapt/branches/Simmetrix
+END
+EssentialBC.cc
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/phasta/!svn/ver/2427/phParAdapt/branches/Simmetrix/EssentialBC.cc
+END
+Vorticity.cc
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/phasta/!svn/ver/2432/phParAdapt/branches/Simmetrix/Vorticity.cc
+END
+SmoothWallField.cc
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/phasta/!svn/ver/2427/phParAdapt/branches/Simmetrix/SmoothWallField.cc
+END
+bits.c
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/phasta/!svn/ver/2427/phParAdapt/branches/Simmetrix/bits.c
+END
+setSizeFieldUsingHessians.cc
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/phasta/!svn/ver/2432/phParAdapt/branches/Simmetrix/setSizeFieldUsingHessians.cc
+END
+SPEBC.h
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/phasta/!svn/ver/2427/phParAdapt/branches/Simmetrix/SPEBC.h
+END
+InitialCondition.cc
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/phasta/!svn/ver/2425/phParAdapt/branches/Simmetrix/InitialCondition.cc
+END
+WallStress.cc
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/phasta/!svn/ver/2432/phParAdapt/branches/Simmetrix/WallStress.cc
+END
+phPartitionCallbacks.h
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/phasta/!svn/ver/2427/phParAdapt/branches/Simmetrix/phPartitionCallbacks.h
+END
+bits.h
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/phasta/!svn/ver/2427/phParAdapt/branches/Simmetrix/bits.h
+END
+buildSystem.cc
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/phasta/!svn/ver/2427/phParAdapt/branches/Simmetrix/buildSystem.cc
+END
+MeshSimInternal.h
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/phasta/!svn/ver/2427/phParAdapt/branches/Simmetrix/MeshSimInternal.h
+END
+shapeFunction.h
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/phasta/!svn/ver/2427/phParAdapt/branches/Simmetrix/shapeFunction.h
+END
+setPeriodic.cc
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/phasta/!svn/ver/2427/phParAdapt/branches/Simmetrix/setPeriodic.cc
+END
+writeMEDITHessians.cc
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/phasta/!svn/ver/2425/phParAdapt/branches/Simmetrix/writeMEDITHessians.cc
+END
+markingStrategy.cc
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/phasta/!svn/ver/2451/phParAdapt/branches/Simmetrix/markingStrategy.cc
+END
+configure.ac
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/phasta/!svn/ver/2424/phParAdapt/branches/Simmetrix/configure.ac
+END
+phReadWrite.h
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/phasta/!svn/ver/2427/phParAdapt/branches/Simmetrix/phReadWrite.h
+END
+commuHessiansFromPatch.cc
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/phasta/!svn/ver/2427/phParAdapt/branches/Simmetrix/commuHessiansFromPatch.cc
+END
+getNSHGTOT.cc
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/phasta/!svn/ver/2427/phParAdapt/branches/Simmetrix/getNSHGTOT.cc
+END
+SPEBC.cc
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/phasta/!svn/ver/2427/phParAdapt/branches/Simmetrix/SPEBC.cc
+END
+callback.cc
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/phasta/!svn/ver/2452/phParAdapt/branches/Simmetrix/callback.cc
+END
+BCInflowFaceInfo.cc
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/phasta/!svn/ver/2427/phParAdapt/branches/Simmetrix/BCInflowFaceInfo.cc
+END
+genILWork.cc
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/phasta/!svn/ver/2425/phParAdapt/branches/Simmetrix/genILWork.cc
+END
+GEN_data.cc
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/phasta/!svn/ver/2427/phParAdapt/branches/Simmetrix/GEN_data.cc
+END
+elementGradient.cc
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/phasta/!svn/ver/2425/phParAdapt/branches/Simmetrix/elementGradient.cc
+END
+R_edges.cc
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/phasta/!svn/ver/2427/phParAdapt/branches/Simmetrix/R_edges.cc
+END
+link
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/phasta/!svn/ver/2427/phParAdapt/branches/Simmetrix/link
+END
+EnsaParameters.cc
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/phasta/!svn/ver/2427/phParAdapt/branches/Simmetrix/EnsaParameters.cc
+END
+mesh_interface.h
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/phasta/!svn/ver/2425/phParAdapt/branches/Simmetrix/mesh_interface.h
+END
+genblock.cc
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/phasta/!svn/ver/2427/phParAdapt/branches/Simmetrix/genblock.cc
+END
+setSizeFieldCombined.cc
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/phasta/!svn/ver/2432/phParAdapt/branches/Simmetrix/setSizeFieldCombined.cc
+END
+func.h
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/phasta/!svn/ver/2426/phParAdapt/branches/Simmetrix/func.h
+END
+face_extraction.cc
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/phasta/!svn/ver/2425/phParAdapt/branches/Simmetrix/face_extraction.cc
+END
+write_restart.cc
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/phasta/!svn/ver/2427/phParAdapt/branches/Simmetrix/write_restart.cc
+END
+Input.cc
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/phasta/!svn/ver/2444/phParAdapt/branches/Simmetrix/Input.cc
+END
+PeriodicBC.cc
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/phasta/!svn/ver/2427/phParAdapt/branches/Simmetrix/PeriodicBC.cc
+END
+SmoothErrorIndicators.cc
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/phasta/!svn/ver/2425/phParAdapt/branches/Simmetrix/SmoothErrorIndicators.cc
+END
+elementGradient.cc_safe
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/phasta/!svn/ver/2427/phParAdapt/branches/Simmetrix/elementGradient.cc_safe
+END
+PeriodicBC.h
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/phasta/!svn/ver/2427/phParAdapt/branches/Simmetrix/PeriodicBC.h
+END
+SmoothHessians.cc
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/phasta/!svn/ver/2425/phParAdapt/branches/Simmetrix/SmoothHessians.cc
+END
+myAttribute.cc
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/phasta/!svn/ver/2427/phParAdapt/branches/Simmetrix/myAttribute.cc
+END
+EnsaArrays.h
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/phasta/!svn/ver/2427/phParAdapt/branches/Simmetrix/EnsaArrays.h
+END
+NaturalBC.cc
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/phasta/!svn/ver/2427/phParAdapt/branches/Simmetrix/NaturalBC.cc
+END
+ThickAdapt.cc
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/phasta/!svn/ver/2432/phParAdapt/branches/Simmetrix/ThickAdapt.cc
+END
+EnsaParameters.h
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/phasta/!svn/ver/2427/phParAdapt/branches/Simmetrix/EnsaParameters.h
+END
+NaturalBC.h
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/phasta/!svn/ver/2427/phParAdapt/branches/Simmetrix/NaturalBC.h
+END
+readErrorFromRestart.cc
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/phasta/!svn/ver/2427/phParAdapt/branches/Simmetrix/readErrorFromRestart.cc
+END
+R_entitiesAdapt.cc
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/phasta/!svn/ver/2427/phParAdapt/branches/Simmetrix/R_entitiesAdapt.cc
+END
+transformToScalarErrorVal.cc
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/phasta/!svn/ver/2425/phParAdapt/branches/Simmetrix/transformToScalarErrorVal.cc
+END
+INSTALL
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/phasta/!svn/ver/2424/phParAdapt/branches/Simmetrix/INSTALL
+END
+attachIBC.cc
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/phasta/!svn/ver/2444/phParAdapt/branches/Simmetrix/attachIBC.cc
+END
+InterpolateSolution.cc
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/phasta/!svn/ver/2427/phParAdapt/branches/Simmetrix/InterpolateSolution.cc
+END
+gradientsFromPatch.cc
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/phasta/!svn/ver/2425/phParAdapt/branches/Simmetrix/gradientsFromPatch.cc
+END
+partitionMesh.cc
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/phasta/!svn/ver/2427/phParAdapt/branches/Simmetrix/partitionMesh.cc
+END
+M_writeVTKFile.cc
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/phasta/!svn/ver/2427/phParAdapt/branches/Simmetrix/M_writeVTKFile.cc
+END
+hessiansFromSolution.cc
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/phasta/!svn/ver/2425/phParAdapt/branches/Simmetrix/hessiansFromSolution.cc
+END
+setup.cc
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/phasta/!svn/ver/2425/phParAdapt/branches/Simmetrix/setup.cc
+END
+reorder.cc
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/phasta/!svn/ver/2427/phParAdapt/branches/Simmetrix/reorder.cc
+END
+InitialCondition.h
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/phasta/!svn/ver/2427/phParAdapt/branches/Simmetrix/InitialCondition.h
+END
+commuSmoothSize.cc
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/phasta/!svn/ver/2427/phParAdapt/branches/Simmetrix/commuSmoothSize.cc
+END
+SizeLimit.cc
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/phasta/!svn/ver/2432/phParAdapt/branches/Simmetrix/SizeLimit.cc
+END
+globalInfo.cc
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/phasta/!svn/ver/2427/phParAdapt/branches/Simmetrix/globalInfo.cc
+END
+Solution.h
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/phasta/!svn/ver/2427/phParAdapt/branches/Simmetrix/Solution.h
+END
+phReadWrite.cc
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/phasta/!svn/ver/2425/phParAdapt/branches/Simmetrix/phReadWrite.cc
+END
+return_vertices.cc
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/phasta/!svn/ver/2425/phParAdapt/branches/Simmetrix/return_vertices.cc
+END
+mdb2phasta.cc
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/phasta/!svn/ver/2426/phParAdapt/branches/Simmetrix/mdb2phasta.cc
+END
+Makefile.am
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/phasta/!svn/ver/2424/phParAdapt/branches/Simmetrix/Makefile.am
+END
+debug.cc
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/phasta/!svn/ver/2427/phParAdapt/branches/Simmetrix/debug.cc
+END
+commuOldMeshSize.cc
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/phasta/!svn/ver/2427/phParAdapt/branches/Simmetrix/commuOldMeshSize.cc
+END
+setupGlobalTasks.cc
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/phasta/!svn/ver/2436/phParAdapt/branches/Simmetrix/setupGlobalTasks.cc
+END
+Eigen.h
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/phasta/!svn/ver/2427/phParAdapt/branches/Simmetrix/Eigen.h
+END
+parallel.h
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/phasta/!svn/ver/2427/phParAdapt/branches/Simmetrix/parallel.h
+END
+allpart.cc
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/phasta/!svn/ver/2427/phParAdapt/branches/Simmetrix/allpart.cc
+END
+attachData.h
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/phasta/!svn/ver/2427/phParAdapt/branches/Simmetrix/attachData.h
+END
+commuMaxLocalPartLocError.cc
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/phasta/!svn/ver/2427/phParAdapt/branches/Simmetrix/commuMaxLocalPartLocError.cc
+END
+printBC.cc
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/phasta/!svn/ver/2427/phParAdapt/branches/Simmetrix/printBC.cc
+END
+assignGlobalVars.cc
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/phasta/!svn/ver/2444/phParAdapt/branches/Simmetrix/assignGlobalVars.cc
+END
+commuSmoothHessians.cc
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/phasta/!svn/ver/2427/phParAdapt/branches/Simmetrix/commuSmoothHessians.cc
+END
+commuSmoothDir.cc
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/phasta/!svn/ver/2427/phParAdapt/branches/Simmetrix/commuSmoothDir.cc
+END
+VolSim.cc
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/phasta/!svn/ver/2427/phParAdapt/branches/Simmetrix/VolSim.cc
+END
+myAttribute.h
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/phasta/!svn/ver/2427/phParAdapt/branches/Simmetrix/myAttribute.h
+END
+commuFix4SolutionTransfer.cc
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/phasta/!svn/ver/2427/phParAdapt/branches/Simmetrix/commuFix4SolutionTransfer.cc
+END
+V_Hessian.cc
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/phasta/!svn/ver/2427/phParAdapt/branches/Simmetrix/V_Hessian.cc
+END
+procArgs.cc
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/phasta/!svn/ver/2425/phParAdapt/branches/Simmetrix/procArgs.cc
+END
+hessiansFromPatch.cc
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/phasta/!svn/ver/2425/phParAdapt/branches/Simmetrix/hessiansFromPatch.cc
+END
+main.cc
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/phasta/!svn/ver/2439/phParAdapt/branches/Simmetrix/main.cc
+END
+R_entitiesBdry.cc
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/phasta/!svn/ver/2427/phParAdapt/branches/Simmetrix/R_entitiesBdry.cc
+END
+setIsotropicSizeField.cc
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/phasta/!svn/ver/2453/phParAdapt/branches/Simmetrix/setIsotropicSizeField.cc
+END
+attachPeriodicBC.cc
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/phasta/!svn/ver/2427/phParAdapt/branches/Simmetrix/attachPeriodicBC.cc
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/phasta/!svn/ver/2438/phParAdapt/branches/Simmetrix/Makefile
+END
+writeRestartHessians.cc
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/phasta/!svn/ver/2427/phParAdapt/branches/Simmetrix/writeRestartHessians.cc
+END
+maxLocalPartLocError.cc
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/phasta/!svn/ver/2427/phParAdapt/branches/Simmetrix/maxLocalPartLocError.cc
+END
+commuBCInflowFaceInfo.cc
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/phasta/!svn/ver/2427/phParAdapt/branches/Simmetrix/commuBCInflowFaceInfo.cc
+END
+processErrorAG.cc
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/phasta/!svn/ver/2454/phParAdapt/branches/Simmetrix/processErrorAG.cc
+END
+SmoothSize.cc
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/phasta/!svn/ver/2427/phParAdapt/branches/Simmetrix/SmoothSize.cc
+END
+partMeshBypass.cc
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/phasta/!svn/ver/2427/phParAdapt/branches/Simmetrix/partMeshBypass.cc
+END
+switchAdapt_Preproc.cc
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/phasta/!svn/ver/2455/phParAdapt/branches/Simmetrix/switchAdapt_Preproc.cc
+END
+R_entities.cc
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/phasta/!svn/ver/2425/phParAdapt/branches/Simmetrix/R_entities.cc
+END
+localInfo.cc
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/phasta/!svn/ver/2426/phParAdapt/branches/Simmetrix/localInfo.cc
+END
+InverseMap.cc
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/phasta/!svn/ver/2456/phParAdapt/branches/Simmetrix/InverseMap.cc
+END
+fix4SolutionTransfer.cc
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/phasta/!svn/ver/2427/phParAdapt/branches/Simmetrix/fix4SolutionTransfer.cc
+END
+lin2quad.cc
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/phasta/!svn/ver/2427/phParAdapt/branches/Simmetrix/lin2quad.cc
+END
+readBC.cc
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/phasta/!svn/ver/2427/phParAdapt/branches/Simmetrix/readBC.cc
+END
+writeRestartFiles.cc
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/phasta/!svn/ver/2427/phParAdapt/branches/Simmetrix/writeRestartFiles.cc
+END
+phParAdapt.h
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/phasta/!svn/ver/2425/phParAdapt/branches/Simmetrix/phParAdapt.h
+END
+InitBCinput.cc
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/phasta/!svn/ver/2427/phParAdapt/branches/Simmetrix/InitBCinput.cc
+END
+processError.cc
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/phasta/!svn/ver/2427/phParAdapt/branches/Simmetrix/processError.cc
+END
+BoundaryCondition.cc
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/phasta/!svn/ver/2425/phParAdapt/branches/Simmetrix/BoundaryCondition.cc
+END
+writeNCorp.cc
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/phasta/!svn/ver/2425/phParAdapt/branches/Simmetrix/writeNCorp.cc
+END
+procSize.cc
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/phasta/!svn/ver/2427/phParAdapt/branches/Simmetrix/procSize.cc
+END
+phPartitionCallbacks.cc
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/phasta/!svn/ver/2427/phParAdapt/branches/Simmetrix/phPartitionCallbacks.cc
+END
+Input.h
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/phasta/!svn/ver/2444/phParAdapt/branches/Simmetrix/Input.h
+END
+readErrorFiles.cc
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/phasta/!svn/ver/2427/phParAdapt/branches/Simmetrix/readErrorFiles.cc
+END
+printInfo.cc
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/phasta/!svn/ver/2427/phParAdapt/branches/Simmetrix/printInfo.cc
+END
+phrase.cc
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/phasta/!svn/ver/2427/phParAdapt/branches/Simmetrix/phrase.cc
+END
+restart.cc
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/phasta/!svn/ver/2426/phParAdapt/branches/Simmetrix/restart.cc
+END
+writeEnsaFiles.cc
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/phasta/!svn/ver/2444/phParAdapt/branches/Simmetrix/writeEnsaFiles.cc
+END
+setManualSizeField.cc
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/phasta/!svn/ver/2432/phParAdapt/branches/Simmetrix/setManualSizeField.cc
+END
+adapt.cc
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/phasta/!svn/ver/2457/phParAdapt/branches/Simmetrix/adapt.cc
+END
+BoundaryCondition.h
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/phasta/!svn/ver/2427/phParAdapt/branches/Simmetrix/BoundaryCondition.h
+END
+EssentialBC.h
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/phasta/!svn/ver/2425/phParAdapt/branches/Simmetrix/EssentialBC.h
+END
+attachData.cc
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/phasta/!svn/ver/2425/phParAdapt/branches/Simmetrix/attachData.cc
+END
+ccfunc.h
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/phasta/!svn/ver/2426/phParAdapt/branches/Simmetrix/ccfunc.h
+END
+tagEntitiesForRefinement.cc
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/phasta/!svn/ver/2425/phParAdapt/branches/Simmetrix/tagEntitiesForRefinement.cc
+END
+elementHessian.cc
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/phasta/!svn/ver/2427/phParAdapt/branches/Simmetrix/elementHessian.cc
+END
+EnsaArrays.cc
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/phasta/!svn/ver/2444/phParAdapt/branches/Simmetrix/EnsaArrays.cc
+END
+getData.cc
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/phasta/!svn/ver/2427/phParAdapt/branches/Simmetrix/getData.cc
+END
+partitionMeshToLBForAdaptivity.cc
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/phasta/!svn/ver/2427/phParAdapt/branches/Simmetrix/partitionMeshToLBForAdaptivity.cc
+END
+commuGradientsFromPatch.cc
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/phasta/!svn/ver/2427/phParAdapt/branches/Simmetrix/commuGradientsFromPatch.cc
+END
+UserWeight.cc
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/phasta/!svn/ver/2427/phParAdapt/branches/Simmetrix/UserWeight.cc
+END
+Eigen.cc
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/phasta/!svn/ver/2425/phParAdapt/branches/Simmetrix/Eigen.cc
+END

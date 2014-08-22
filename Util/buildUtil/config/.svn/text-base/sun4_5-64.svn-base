@@ -1,0 +1,39 @@
+# Makefile addition for sun4_5 64bit architecture/OS.
+
+# Note: right now, the GCC installed on our machines doesn't support 64 bit
+STATIC_LIB_EXT := a
+SHARED_LIB_EXT := so
+
+DEFS := $(DEFS) -DSUN4 -DFORT_LC_US -D_SCOREC_NewCompiler -DUNIX
+libtmpl = -L$(1) -R$(1)
+LDFLAGS := $(LDFLAGS) -xildoff -xtarget=ultra3 -xarch=v9b
+
+CC := cc
+CXX := CC
+FC := f90
+HAS_TEMP_REP := 1
+DEPFLAG := -xM1
+CFLAGS := -xtarget=ultra3 -xarch=v9b $(CFLAGS)
+FFLAGS := -xtarget=ultra3 -xarch=v9b $(FFLAGS)
+CXXFLAGS := -xtarget=ultra3 -xarch=v9b $(CXXFLAGS)
+ifeq ($(VERS),opt)
+  CFLAGS := -xO3 $(CFLAGS)
+  CXXFLAGS := -xO3 $(CXXFLAGS)
+  FFLAGS := -xO3 $(FFLAGS)
+else
+  CFLAGS := -g +w $(CFLAGS)
+  FFLAGS := -g $(FFLAGS)
+  CXXFLAGS := -g +w $(CXXFLAGS)
+endif
+ifeq ($(ISEXECUTABLE),)
+   ifeq ($(NOSHARED),1)
+      REALAR := $(CXX) -xtarget=ultra3 -xarch=v9b -xar -o 
+   else
+      REALAR := $(CXX) -xtarget=ultra3 -xarch=v9b -G -o 
+      CFLAGS := -xcode=pic32 $(CFLAGS)
+      FFLAGS := -xcode=pic32 $(CFLAGS)
+      CXXFLAGS := -xcode=pic32 $(CXXFLAGS)
+   endif
+else
+      REALAR := $(CXX) -xtarget=ultra3 -xarch=v9b -o 
+endif

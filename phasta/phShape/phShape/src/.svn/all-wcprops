@@ -1,0 +1,143 @@
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svn/phasta/!svn/ver/1440/phShape/trunk/src
+END
+Bn.c
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/phasta/!svn/ver/722/phShape/trunk/src/Bn.c
+END
+EnDrv2.c
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/phasta/!svn/ver/722/phShape/trunk/src/EnDrv2.c
+END
+FnDrv2.c
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/phasta/!svn/ver/722/phShape/trunk/src/FnDrv2.c
+END
+parDrv.cc
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/phasta/!svn/ver/910/phShape/trunk/src/parDrv.cc
+END
+shapeFuncInternals.h
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/phasta/!svn/ver/919/phShape/trunk/src/shapeFuncInternals.h
+END
+En.c
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/phasta/!svn/ver/722/phShape/trunk/src/En.c
+END
+blendDrv.cc
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/phasta/!svn/ver/919/phShape/trunk/src/blendDrv.cc
+END
+Fn.c
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/phasta/!svn/ver/722/phShape/trunk/src/Fn.c
+END
+setQueryP.cc
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/phasta/!svn/ver/910/phShape/trunk/src/setQueryP.cc
+END
+modeShape.cc
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/phasta/!svn/ver/910/phShape/trunk/src/modeShape.cc
+END
+shapeFunction.cc
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/phasta/!svn/ver/910/phShape/trunk/src/shapeFunction.cc
+END
+BnDrv.c
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/phasta/!svn/ver/722/phShape/trunk/src/BnDrv.c
+END
+shapeFunction.h
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/phasta/!svn/ver/722/phShape/trunk/src/shapeFunction.h
+END
+cequal.cc
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/phasta/!svn/ver/919/phShape/trunk/src/cequal.cc
+END
+newshape.cc
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/phasta/!svn/ver/910/phShape/trunk/src/newshape.cc
+END
+EnDrv.c
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/phasta/!svn/ver/722/phShape/trunk/src/EnDrv.c
+END
+FnDrv.c
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/phasta/!svn/ver/722/phShape/trunk/src/FnDrv.c
+END
+modeShapeDrv.cc
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/phasta/!svn/ver/910/phShape/trunk/src/modeShapeDrv.cc
+END
+localIndex.cc
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/phasta/!svn/ver/1440/phShape/trunk/src/localIndex.cc
+END
+blendDrv2.cc
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/phasta/!svn/ver/919/phShape/trunk/src/blendDrv2.cc
+END
+blend.cc
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/phasta/!svn/ver/910/phShape/trunk/src/blend.cc
+END
+shpDrv2.cc
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/phasta/!svn/ver/910/phShape/trunk/src/shpDrv2.cc
+END
+BnDrv2.c
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/phasta/!svn/ver/722/phShape/trunk/src/BnDrv2.c
+END

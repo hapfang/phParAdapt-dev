@@ -1,0 +1,11 @@
+ifeq ($(MPIHOME),)
+  MPIHOME := /usr/local/mpich/1.1.1
+endif
+ifeq ($(MPICOMM),)
+  MPICOMM := ch_shmem
+endif
+PARALLELINC := -I$(MPIHOME)/include
+MORECFLAGS := $(MORECFLAGS) -DMPI
+TARCH := IRIXN32
+CC := $(MPIHOME)/lib/$(TARCH)/$(MPICOMM)/mpicc
+CXX := $(MPIHOME)/lib/$(TARCH)/$(MPICOMM)/mpiCC

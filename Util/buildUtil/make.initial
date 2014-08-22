@@ -1,0 +1,87 @@
+# Sets up everything for a given arch. and parallel env
+# important things that are set are:
+#  QUAL - qualifier for optimized libraries (e.g. -O)
+#  PQUAL - qualifier for parallel libraires (e.g. -mpi or -mpich)
+#  DATABASE - qualifier for database connection 
+#      currently supported: OTL library with options:
+#      gmake DATABASE=OTL_ODBC  // for ODBC
+#      gmake DaTABASE=OTL_ORA7   // for Oracle 7
+#      gmake DATABASE=OTL_ORA8  // for Oracle 8
+#  CC - c compiler
+#  CXX - c++ compiler
+#  ARCHOS - arch. os combination
+#  ARCHOSQ - fully qualified arch. os
+#  CFLAGS  - C specific compiler flags
+#  CXXFLAGS - C++ specific compiler flags
+#  FFLAGS - Fortran specific compiler flags
+#  DEFS   - non-language specific compiler flags (like 'defines')
+#  INCLUDES 
+#  LDFLAGS - Linker flags for executable creation - non-language specific
+
+# Version of the buildUtil library - 
+#	should find a way to prevent having it everywhere.
+
+# Make sure what the default shell is.
+SHELL := /bin/sh
+
+# Should find a way to warn if ARCHOS is already defined
+#    ARCHOS defines the architecture/OS in use, which corresponds to a 
+#    configuration file.
+#    The 'getarch' script returns the default archos for the current machine.
+ifndef ARCHOS
+        ARCHOS := $(shell $(DEVROOT)/Util/buildUtil/getarch)
+endif
+
+# This is the current directory
+BASEDIR := $(shell pwd)
+
+# Configure standard installation paths
+INSTROOT := $(DISTROOT)/$(SUBSYSNAME)/$(MODULENAME)/
+INSTINC := $(INSTROOT)/include
+INSTLIB := $(INSTROOT)/lib/$(ARCHOS)
+INSTBIN := $(INSTROOT)/bin/$(ARCHOS)
+
+MODULEPATH = $(SUBSYSNAME)/$(MODULENAME)
+
+# Define the 'VERS' variable to make an optimzed version.
+ifeq ($(VERS),opt)
+  QUAL := -O
+  DEFS := $(DEFS) -DNDEBUG
+else
+  DEFS := $(DEFS) -DDEBUG
+endif
+
+ifeq ($(BUILDSYS),)
+  BUILDSYS := generic
+endif
+
+#if PARALLEL is set then we need to do the right things
+ifneq ($(PARALLEL),)
+  SYSPAR := $(BUILDSYS)-$(PARALLEL)
+  PQUAL := -$(PARALLEL)
+  DEFS := $(DEFS) -DPARALLEL
+else
+  DEFS := $(DEFS) -DSERIAL
+endif
+
+#if Insure is used...
+ifdef INSURE
+  INSQUAL := -insured
+endif
+
+
+# Define the Qualified ArchOS string
+ARCHOSQ := $(ARCHOS)$(PQUAL)$(INSQUAL)$(QUAL)
+
+# Load architecture and parallel specific config files
+include $(DEVROOT)/Util/buildUtil/config/$(ARCHOS)
+ifneq ($(PARALLEL),)
+  include $(DEVROOT)/Util/buildUtil/config/$(SYSPAR)
+endif
+ifeq (${CTOOBJ},)
+  CTOOBJ :=-c 
+endif
+ifeq (${OBJOUT},)
+  OBJOUT :=-o 
+endif
+

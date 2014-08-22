@@ -1,0 +1,39 @@
+# Makefile addition for sgi_6 64 bit architecture/OS.
+
+DEFS := $(DEFS) -DSGI -DFORT_LC_US -D_SCOREC_NewCompiler -DUNIX
+PURIFYCMD := purify -cache-dir=$(HOME)/purify-cache
+INSURECMD := insure -o
+STATIC_LIB_EXT := a
+SHARED_LIB_EXT := so
+
+libtmpl = -L$(1) -rpath $(1)
+CC := cc
+CXX := CC
+FC := f90
+CFLAGS := -64 -mips4 -LANG:std $(CFLAGS)
+FFLAGS := -64 -mips4 -LANG:std $(FFLAGS)
+CXXFLAGS := -64 -mips4 -LANG:std -ptused $(CXXFLAGS)
+HAS_TEMP_REP := 0
+DEPFLAG := -M
+ifeq ($(VERS),opt)
+  CFLAGS := -O3 -OPT:Olimit=0 $(CFLAGS)
+  FFLAGS := -O3 -OPT:Olimit=0 $(FFLAGS)
+  CXXFLAGS := -O3 -OPT:Olimit=0 $(CXXFLAGS)
+else
+  CFLAGS := -g -fullwarn $(CFLAGS)
+  FFLAGS := -g -DEBUG:trap_uninitialized=ON $(FFLAGS)
+  CXXFLAGS := -g -fullwarn $(CXXFLAGS)
+endif
+ifeq ($(ISEXECUTABLE),)
+   ifeq ($(NOSHARED),1)
+      REALAR := $(CXX) -ar -64 -mips4 -o 
+   else
+      REALAR := $(CXX) -shared -64 -mips4 -o 
+      CFLAGS := -KPIC $(CFLAGS)
+      FFLAGS := -KPIC $(FFLAGS)
+      CXXFLAGS := -KPIC $(CXXFLAGS)
+   endif
+   else
+      REALAR := $(CXX) -64 -mips4 -LANG:std -o
+endif
+

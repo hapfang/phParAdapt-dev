@@ -1,0 +1,135 @@
+SCOREC build system README
+
+these variables are set for you automatically in the system start up files:
+  DEVROOT is set to $(HOME)/develop
+  DISTROOT is set to /users/SCOREC
+it is strongly suggested that you use these defaults
+
+All of your development will be done in the directory given by the value
+of DEVROOT, refered to here as $DEVROOT
+
+All the code in the system is organized as follows:
+$DEVROOT/$SUBSYSNAME/$MODULENAME
+
+where:
+  DEVROOT = common root directory of all development software
+  SUBSYSNAME = subsystem name that the module belongs to
+  MODULENAME = the name of the model
+
+
+========================================================================
+To set up your development directory.
+
+mkdir $DEVROOT
+cd $DEVROOT
+
+for each module you will be doing development on:
+  mkdir <subsysname>
+	<subsysname> is the name of the subsystem (e.g. model,util,etc)
+  cd <subsysname>
+  mkdir <modulename>
+	<modulename> is the name of the module (e.g. shapesmodel, etc)
+  cd <modulename>
+
+  (note: on some systems (e.g. Sun) you can just:
+    mkdir -p <subsystemname>/<modulename>/<version>
+    instead of doing them separately.
+  
+check out the source for that module:
+  svn checkout https://gforge.scorec.rpi.edu/svn/<modulename>
+
+this will create a directory with the same name as the module with 
+the source in it.
+
+  cd <modulename>
+  gmake setup NODEP=1 
+ 	you only need to do this the first time you build for each arch.
+	this will create the object directory, library directory, include
+	directory and set up all the symlinks for the include files.
+========================================================================
+Compilation:
+In the module directory (the one with the Makefile), give one of the
+following commands:
+  gmake - builds the debugging version, lib<module>.so (<module> is replaced 
+          with the actual name of the module)
+  gmake VERS=opt - builds the optimized version, lib<module>-O.so
+  gmake NOSHARED=1 - builds a static library, lib<module>.a
+  
+The first time you do a gmake for a module it will have to build up
+a list of dependencies, this can take a little while if there are
+a lot of files.
+---------------
+Note: the first time you build a module, or whenever build after adding  
+a file to a module you will get a message from gmake something like:
+
+/users/mbeall/develop/util/buildUtil/0.2/make.common:271: .SVector2.d: No such file or directory
+
+This is normal, ignore them.
+---------------
+
+=====================================================================
+Parallel:
+When building a parallel version of a library you need to tell the
+make command what parallel library you're using by defining the PARALLEL
+variable:
+The following are currently supported:
+gmake PARALLEL=mpich
+gmake PARALLEL=mpi (only on sp2)
+gmake PARALLEL=serial (use mpi dummy library, this is just to build
+a sort of serial version of a code that can't be conditionally compiled
+as serial, this is different than not defining PARALLEL).
+
+=====================================================================
+SP-2
+when building on the sp-2 the variable BUILDSYS should be set to sp2
+
+If you're doing development on both SCOREC machines and the sp2
+here is a description from Jim Teresco on how to set things up
+to make this work nicely:
+
+All development is done in /net/nic/jteresco/develop
+
+In the scorec world, I make links in ~/develop:
+- for packages I don't develop but need, to /usr/scorec
+- for packages I develop, to /net/nic/jteresco/develop
+- use the environment variables provided by the default
+
+On the SP:
+- ~/develop is a link to /nfs/scorec/scorec1/jteresco/develop
+- Links in /nfs/scorec/scorec1/jteresco/develop to packages I don't
+  develop are made to /dept/scorec/software
+- packages I develop are actually in this directory
+- environment variables:
+DISTROOT=/dept/scorec/software
+DEVROOT=/nfs/scorec/scorec1/jteresco/develop
+BUILDSYS=sp2
+
+Everything seems to work nicely with this setup.  I've built a few
+packages (and installed them, I believe) using it.
+
+=====================================================================
+Dependencies:
+a dependency file is generated for each source file. This can take a
+considerable amount of time if there are a lot of files. If your 
+code is purely C you can define the variable NODEP to be equal to
+1 to suppress this behavior (note: this is defined this way in 
+some makefiles for modules with only C code). If your code 
+is C++ you really do want these dependencies to be generated so
+you shouldn't override this.
+
+=====================================================================
+Architecture:
+The building system should automatically select a reasonable 
+architecure-Operating system configuration. That configuration will
+determine which compiler to use, which optimization flags to use, etc.
+It is possible to overide the default by using the ARCHOS variable.
+
+For example, the SGI default is 'sgi_6'. To use 'sgi_mips4' instead, do:
+	gmake setup ARCHOS=sgi_mips4
+	gmake ARCHOS=sgi_mips4
+
+
+To see what configuration are available, see the directory 
+$DEVROOT/util/buildUtil/<version>/buildUtil/config
+
+Please note that not all configuration are well tested. Use with care.

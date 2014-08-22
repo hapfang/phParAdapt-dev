@@ -1,0 +1,30 @@
+# Makefile addition for x86_linux architecture/OS.
+
+DEFS := $(DEFS) -DLINUX -DFORT_LC_US -D_SCOREC_NewCompiler -DUNIX
+libtmpl = -L$(1) -rpath $(1)
+CC := gcc
+CXX := g++
+HAS_TEMP_REP := 0
+DEPFLAG := -MM
+ifeq ($(VERS),opt)
+  CFLAGS := -O3  $(CFLAGS)
+  CXXFLAGS := -O3  $(CXXFLAGS)
+  FFLAGS := -O  $(FFLAGS)
+else
+  CFLAGS := -g -Wall $(CFLAGS)
+  CXXFLAGS := -g -Wall $(CXXFLAGS)
+  FFLAGS := -g -Wall $(FFLAGS)
+endif
+ifeq ($(ISEXECUTABLE),)
+   ifeq ($(NOSHARED),1)
+      REALAR := ar -cru
+   else
+      REALAR := gcc -shared -o 
+      CFLAGS := -fPIC $(CFLAGS)
+      CXXFLAGS := -fPIC  $(CXXFLAGS)
+      FFLAGS := -fPIC $(FFLAGS)
+   endif
+   else
+      REALAR := gcc -o
+endif
+

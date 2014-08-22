@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 39
+/svn/phasta/!svn/ver/1898/phShape/trunk
+END
+configure.ac
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/phasta/!svn/ver/1898/phShape/trunk/configure.ac
+END
+CHANGES
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/phasta/!svn/ver/722/phShape/trunk/CHANGES
+END
+Makefile.am
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/phasta/!svn/ver/1896/phShape/trunk/Makefile.am
+END
+Makefile.SCOREC
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/phasta/!svn/ver/1884/phShape/trunk/Makefile.SCOREC
+END

@@ -1,0 +1,257 @@
+K 25
+svn:wc:ra_dav:version-url
+V 40
+/svn/buildutil/!svn/ver/315/trunk/config
+END
+generic-openmpi
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/buildutil/!svn/ver/308/trunk/config/generic-openmpi
+END
+ia64_linux
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/buildutil/!svn/ver/284/trunk/config/ia64_linux
+END
+powerpc_darwin
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/buildutil/!svn/ver/284/trunk/config/powerpc_darwin
+END
+generic-mpigm
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/buildutil/!svn/ver/284/trunk/config/generic-mpigm
+END
+generic-sunmpi
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/buildutil/!svn/ver/284/trunk/config/generic-sunmpi
+END
+alpha_osf-gcc
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/buildutil/!svn/ver/284/trunk/config/alpha_osf-gcc
+END
+generic-ibmmpi
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/buildutil/!svn/ver/284/trunk/config/generic-ibmmpi
+END
+generic-serial
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/buildutil/!svn/ver/284/trunk/config/generic-serial
+END
+x86_64_linux-pgi
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/buildutil/!svn/ver/299/trunk/config/x86_64_linux-pgi
+END
+generic-mpich1
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/buildutil/!svn/ver/303/trunk/config/generic-mpich1
+END
+generic-mpich2
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/buildutil/!svn/ver/302/trunk/config/generic-mpich2
+END
+sun4_5-64-gcc
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/buildutil/!svn/ver/284/trunk/config/sun4_5-64-gcc
+END
+generic-mpi
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/buildutil/!svn/ver/305/trunk/config/generic-mpi
+END
+x86_cygwin-gcc
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/buildutil/!svn/ver/284/trunk/config/x86_cygwin-gcc
+END
+hp_11-gcc
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/buildutil/!svn/ver/284/trunk/config/hp_11-gcc
+END
+generic-sgimpi
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/buildutil/!svn/ver/284/trunk/config/generic-sgimpi
+END
+x86_linux
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/buildutil/!svn/ver/310/trunk/config/x86_linux
+END
+generic-mpi_alpha
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/buildutil/!svn/ver/284/trunk/config/generic-mpi_alpha
+END
+sgi_6
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/buildutil/!svn/ver/284/trunk/config/sgi_6
+END
+generic-decmpi
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/buildutil/!svn/ver/284/trunk/config/generic-decmpi
+END
+ppc64_linux
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/buildutil/!svn/ver/284/trunk/config/ppc64_linux
+END
+x86_64_linux
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/buildutil/!svn/ver/306/trunk/config/x86_64_linux
+END
+ibm-bgp
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/buildutil/!svn/ver/309/trunk/config/ibm-bgp
+END
+sun4_5
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/buildutil/!svn/ver/284/trunk/config/sun4_5
+END
+generic-openmpi.1.3.3
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/buildutil/!svn/ver/315/trunk/config/generic-openmpi.1.3.3
+END
+generic-mpich2-gnu
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/buildutil/!svn/ver/314/trunk/config/generic-mpich2-gnu
+END
+generic-mpich2-icc
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/buildutil/!svn/ver/314/trunk/config/generic-mpich2-icc
+END
+ibm_5
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/buildutil/!svn/ver/284/trunk/config/ibm_5
+END
+alpha_osf
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/buildutil/!svn/ver/284/trunk/config/alpha_osf
+END
+ibm-bg
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/buildutil/!svn/ver/307/trunk/config/ibm-bg
+END
+generic-mvapich-1.2-gcc41
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/buildutil/!svn/ver/313/trunk/config/generic-mvapich-1.2-gcc41
+END
+sgi_6-64
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/buildutil/!svn/ver/284/trunk/config/sgi_6-64
+END
+x86_linux-icc
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/buildutil/!svn/ver/301/trunk/config/x86_linux-icc
+END
+sun4_5-64
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/buildutil/!svn/ver/284/trunk/config/sun4_5-64
+END
+x86_cygwin
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/buildutil/!svn/ver/296/trunk/config/x86_cygwin
+END
+sun4_5-gcc
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/buildutil/!svn/ver/284/trunk/config/sun4_5-gcc
+END
+x86_64_linux-gcc
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/buildutil/!svn/ver/312/trunk/config/x86_64_linux-gcc
+END
+hp_11
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/buildutil/!svn/ver/284/trunk/config/hp_11
+END
+x86_64_linux-icc
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/buildutil/!svn/ver/300/trunk/config/x86_64_linux-icc
+END
+generic-mpich
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/buildutil/!svn/ver/284/trunk/config/generic-mpich
+END
+generic-mpivmi
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/buildutil/!svn/ver/284/trunk/config/generic-mpivmi
+END
+generic-mvapich-gfortran-1-1-1
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/buildutil/!svn/ver/311/trunk/config/generic-mvapich-gfortran-1-1-1
+END

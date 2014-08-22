@@ -1,0 +1,11 @@
+ifeq ($(MPIHOME),)
+  MPIHOME := 
+endif
+ifeq ($(MPICOMM),)
+  MPICOMM := 
+endif
+INCLUDES := $(INCLUDES)
+DEFS := $(DEFS) -DMPI 
+# TARCH := $(shell $(MPIHOME)/bin/tarch)
+CC := cc -lmpi -lelan
+CXX := g++ -lmpi -lelan

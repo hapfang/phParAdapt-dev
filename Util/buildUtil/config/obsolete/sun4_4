@@ -1,0 +1,10 @@
+export CC := cc
+export CXX := CC
+export CFLAGS := -g +w 
+export CXXFLAGS := -g +w 
+export CDEPFLAGS := -xM
+export CXXDEPFLAGS := -xM1
+export RANLIB := ranlib
+export DEFINES := -DSUN4 -DDEBUG -DFORT_LC_US
+export HAS_TEMP_REP := 1
+export TEMP_REP := -ptrobj/$(ARCHOSQ)

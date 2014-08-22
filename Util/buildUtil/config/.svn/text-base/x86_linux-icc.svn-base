@@ -1,0 +1,42 @@
+# Makefile addition for x86_linux architecture/OS.
+# It uses Intel C++ compiler 5.0 for C/C++ files
+# and Intel F95 compiler 5.0 for Fortran files.
+STATIC_LIB_EXT := a
+SHARED_LIB_EXT := so
+
+DEFS := $(DEFS) -DLINUX -DFORT_LC_US -D_SCOREC_NewCompiler -DUNIX
+libtmpl = -L$(1) -Wl,-rpath,$(1)
+ifdef INSURE
+  CC := insure icc
+  CXX := insure icpc
+else
+  CC := icc
+  CXX := icpc
+endif
+FC := ifort
+HAS_TEMP_REP := 0
+CXXFLAGS := -w -Krtti -unroll -Kc++eh $(CXXFLAGS)
+CFLAGS := -w -unroll $(CFLAGS)
+FFLAGS := -cm $(FFLAGS)
+DEPFLAG := -M $(DEPFLAGS)
+ifeq ($(VERS),opt)
+  CFLAGS := -march=pentiumiii -ip    $(CFLAGS)
+  CXXFLAGS := -march=pentiumiii -ip $(CXXFLAGS)
+  FFLAGS := -cm -march=pentiumiii -ip $(FFLAGS)
+else
+  CFLAGS := -g $(CFLAGS)
+  CXXFLAGS := -g  $(CXXFLAGS)
+  FFLAGS := -w95 -g  $(FFLAGS)
+endif
+ifeq ($(ISEXECUTABLE),)
+   ifeq ($(NOSHARED),1)
+      REALAR := ar -cru 
+   else
+      REALAR := $(CXX) -shared -o 
+      CFLAGS := -fPIC $(CFLAGS)
+      CXXFLAGS := -KPIC  $(CXXFLAGS)
+      FFLAGS := -KPIC $(FFLAGS)
+   endif
+   else
+      REALAR := $(CXX) -o
+endif

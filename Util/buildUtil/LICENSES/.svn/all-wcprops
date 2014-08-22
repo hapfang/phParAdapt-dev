@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/svn/buildutil/!svn/ver/284/trunk/LICENSES
+END
+LICENSE.LGPL.sample
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/buildutil/!svn/ver/284/trunk/LICENSES/LICENSE.LGPL.sample
+END
+LICENSE.BSD.sample
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/buildutil/!svn/ver/284/trunk/LICENSES/LICENSE.BSD.sample
+END

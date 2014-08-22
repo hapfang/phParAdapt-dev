@@ -1,0 +1,15 @@
+export CC := fcc
+export CXX := FCC
+export LD_LIBRARY_PATH := /opt/FSUNf90/lib:$(LD_LIBRARY_PATH)
+export CFLAGS := -g -KV8 $(MORECFLAGS)
+export CXXFLAGS := -g --instantiate used -KV8
+export CDEPFLAGS := -xM
+export CXXDEPFLAGS := -xM1
+export RANLIB := ls
+export DEFINES := -DSUN4 -DDEBUG -DFORT_LC_US
+export HAS_TEMP_REP := 1
+ifeq ($(VERS),opt)
+  CFLAGS := -O3 -KV8 $(MORECFLAGS)
+  CXXFLAGS := -O3 --instantiate used -KV8 
+  export DEFINES := -DSUN4 -DFORT_LC_US
+endif

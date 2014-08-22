@@ -1,0 +1,109 @@
+MNVERS := 0.2
+
+ARCHOS := $(shell $(DEVROOT)/util/buildUtil/$(MNVERS)/getarch)
+
+INSTROOT = $(DISTROOT)/$(MODULEPATH)/$(NVERS)
+INSTINC = $(INSTROOT)/include
+INSTLIB = $(INSTROOT)/lib/$(ARCHOS)
+
+MODULEPATH = $(SUBSYSNAME)/$(MODULENAME)
+
+# can define LIBNAME if it needs to be different from module name
+ifeq ($(LIBNAME),)
+  LIBNAME = $(MODULENAME)
+endif
+
+INCDIR = $(addsuffix /include,$(addprefix -I$(DEVROOT)/,$(DEPS))) $(MOREINCS)
+
+ifeq ($(VERS),)
+  ARCHOSQ = $(ARCHOS)
+endif
+ifeq ($(VERS),opt)
+  QUAL = -O
+  ARCHOSQ = $(ARCHOS)$(QUAL)
+endif
+
+# defining AR as echo stop make from archiving each member as it
+# compiles, then in the rule for the library we archive all the updated
+# files	
+export AR = echo
+
+ifeq ($(ARCHOS),sun4_4)
+  export CC = cc
+  export CXX = CC
+  export CFLAGS = -g +w $(MORECFLAGS)
+  export CXXFLAGS = -g +w $(MORECXXFLAGS)
+  export CDEPFLAGS = -xM
+  export CXXDEPFLAGS = -xM1
+  export RANLIB = ranlib
+  export DEFINES = -DSUN4 -DDEBUG -DFORT_LC_US
+  export HAS_TEMP_REP = 1
+  export TEMP_REP = -ptrobj/$(ARCHOSQ)
+endif
+ifeq ($(ARCHOS),sun4_5)
+  export CC = cc
+  export CXX = CC
+  export CFLAGS = -g $(MORECFLAGS)
+  export CXXFLAGS = -g $(MORECXXFLAGS)
+  export CDEPFLAGS = -xM
+  export CXXDEPFLAGS = -xM1
+  export RANLIB = ls
+  export DEFINES = -DSUN4 -DDEBUG -DFORT_LC_US
+  export HAS_TEMP_REP = 1
+  export TEMP_REP = -ptrobj/$(ARCHOSQ)
+  export TEMP_REP_DIR = obj/$(ARCHOSQ)/Templates.DB
+  ifeq ($(VERS),opt)
+    CFLAGS = -O3 $(MORECFLAGS)
+    CXXFLAGS = -O3 $(MORECXXFLAGS)
+    export DEFINES = -DSUN4 -DFORT_LC_US
+  endif
+endif
+ifeq ($(ARCHOS),sgi_6)
+  export CC = cc -32
+  export CXX = CC -32
+  export CFLAGS = -g $(MORECFLAGS)
+  export CXXFLAGS = -g -ptall $(MORECXXFLAGS)
+  export CDEPFLAGS = -M
+  export CXXDEPFLAGS = -M
+  export RANLIB = ls
+  export DEFINES = -DSGI -DDEBUG -DFORT_LC_US
+  ifeq ($(VERS),opt)
+    CFLAGS = -O
+    CXXFLAGS = -O
+     export DEFINES = -DSGI -DFORT_LC_US
+  endif
+
+endif
+ifeq ($(ARCHOS),ibm_4)
+  export CC = xlc
+  export CXX = xlC
+  export CFLAGS = -g $(MORECFLAGS)
+  export CXXFLAGS = -g $(MORECXXFLAGS)
+  export CDEPFLAGS = -M
+  export CXXDEPFLAGS = -M
+  export RANLIB = strip
+  export DEFINES = -DIBM -DDEBUG -DFORT_LC
+  ifeq ($(VERS),opt)
+    export CFLAGS = -O
+    export CXXFLAGS = -O
+    export DEFINES = -DIBM -DIBM -DFORT_LC
+  endif
+endif
+ifeq ($(ARCHOS),hp_10)
+  export CC = cc
+  export CXX = CC
+  export CFLAGS = -g -Aa $(MORECFLAGS)
+  export CXXFLAGS = -g -Aa +a1 $(MORECXXFLAGS)
+  export CDEPFLAGS = -M
+  export CXXDEPFLAGS = -M
+  export TEMP_REP = 
+  export TEMP_REP_DIR = ptrepository
+  export RANLIB = ranlib
+  export DEFINES = -DHP -DDEBUG -DFORT_LC_US
+  ifeq ($(VERS),opt)
+    export CFLAGS = -O -Aa
+    export CXXFLAGS = -O -Aa
+    export DEFINES = -DIBM -DHP -DFORT_LC_US
+  endif
+  export TEMP_INST = CC -pts -pth $(CXXFLAGS) $(DEFINES) $(INCDIR) *.o
+endif

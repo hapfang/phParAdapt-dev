@@ -1,0 +1,6 @@
+ifeq ($(MPIHOME),)
+  MPIHOME := /usr/local/mpich
+endif
+INCLUDES := $(INCLUDES) -I$(MPIHOME)/include
+DEFS := $(DEFS) -DMPI
+MPLIB = -L$(MPIHOME)/lib/ -lmpich -lpmpich

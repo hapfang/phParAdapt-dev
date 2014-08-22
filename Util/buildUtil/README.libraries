@@ -1,0 +1,27 @@
+SCOREC building system
+
+Starting with version 1.0, the default for all architectures is to build 
+shared libraries instead of static ones. As a reminder, a static library 
+usually ends with ".a" while a shared one ends with ".so".
+
+While creating shared libraries is still more difficult than creating a static
+one, the adoption of the ELF binary format by all 'supported' targets 
+(Sun Solaris, SGI Irix and Linux at this time) has made this goal possible.
+
+The benefits of using shared libraries instead of static ones are:
+
+1- Since the final linking is done at run time, the executable binary
+   is smaller. This will lead to dramatic disk space saving, as the
+   most often used code (util, model and mesh libraries) will no longer
+   need to be stored in each and every executable.
+2- For the same reason, it will no longer be necessary to recompile each and
+   every module everytime there's a single change (unless that change affects
+   an API, in which case recompiling the affected modules is necessary). For 
+   this reason, keeping dependencies to a minimum is a worthy goal.
+3- Smaller memory footprint. When two application use the same shared library,
+   the actual code of that library is loaded only once by the operating system.
+
+Generating static libraries is supported by the 'NOSHARED=1' gmake parameter.
+For applications, specifying 'NOSHARED=1' will make the binary link against
+the static libraries instead of the standard algorithm which tries dynamic linking
+first then fall back on static linking.

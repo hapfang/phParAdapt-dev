@@ -1,0 +1,5 @@
+ifeq ($(MPIHOME),)
+    MPIHOME :=/usr/local/vmi/mpich
+endif
+INCLUDES := $(INCLUDES) -I$(MPIHOME)/include
+MPLIB = $(call libtmpl,$(MPIHOME)/lib/intel) -lmpich -lvmi

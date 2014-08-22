@@ -1,0 +1,42 @@
+# Makefile addition for sgi_6 architecture/OS.
+
+DEFS := $(DEFS) -DSGI -DFORT_LC_US -D_SCOREC_NewCompiler -DUNIX
+PURIFYCMD := purify -cache-dir=$(HOME)/purify-cache
+INSURECMD := insure -o
+STATIC_LIB_EXT := a
+SHARED_LIB_EXT := so
+
+# Note: we want the '-R' option even for nonshared executable, because
+# the linker always prefers shared lib. The other option would be to specify
+# '-static' but then even the libc would be statically linked -> bad.
+libtmpl = -L$(1) -rpath $(1)
+CC := cc
+CXX := CC
+FC := f90
+CFLAGS := -n32 -mips4 -LANG:std $(CFLAGS)
+FFLAGS := -n32 -mips4 -LANG:std $(FFLAGS)
+CXXFLAGS := -n32 -mips4 -LANG:std -ptused $(CXXFLAGS)
+HAS_TEMP_REP := 0
+DEPFLAG := -M
+ifeq ($(VERS),opt)
+  CFLAGS := -O2 -OPT:Olimit=0 $(CFLAGS)
+  FFLAGS := -O2 -OPT:Olimit=0 $(FFLAGS)
+  CXXFLAGS := -O2 -OPT:Olimit=0 $(CXXFLAGS)
+else
+  CFLAGS := -g -fullwarn $(CFLAGS)
+  FFLAGS := -g -fullwarn $(FFLAGS)
+  CXXFLAGS := -g -fullwarn $(CXXFLAGS)
+   endif
+ifeq ($(ISEXECUTABLE),)
+   ifeq ($(NOSHARED),1)
+      REALAR := $(CXX) -ar -n32 -mips4 -o 
+   else
+      REALAR := $(CXX) -shared -n32 -mips4 -o
+      CFLAGS := -KPIC $(CFLAGS)
+      FFLAGS := -KPIC $(FFLAGS)
+      CXXFLAGS := -KPIC $(CXXFLAGS)
+   endif
+   else
+      REALAR := $(CXX) -n32 -mips4 -LANG:std -o
+endif
+

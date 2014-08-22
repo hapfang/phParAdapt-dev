@@ -1,0 +1,6 @@
+K 13
+svn:externals
+V 76
+m4 http://redmine.scorec.rpi.edu/svn/buildutil/trunk/GNUautoTools/m4Macros 
+
+END

@@ -1,0 +1,38 @@
+# Makefile addition for sgi_6 64 bit architecture/OS.
+
+DEFS := $(DEFS) -Ddecalp -DFORT_LC_US -D_SCOREC_NewCompiler -DUNIX
+PURIFYCMD := purify -cache-dir=$(HOME)/purify-cache
+INSURECMD := insure -o
+STATIC_LIB_EXT := a
+SHARED_LIB_EXT := so
+
+libtmpl = -L$(1) -rpath $(1)
+CC := cc
+CXX := cxx
+FC := f90
+CFLAGS :=  -std strict_ansi $(CFLAGS)
+FFLAGS :=  -std strict_ansi $(FFLAGS)
+CXXFLAGS := -std strict_ansi -LANG:std $(CXXFLAGS)
+HAS_TEMP_REP := 0
+DEPFLAG := -M
+ifeq ($(VERS),opt)
+  CFLAGS := -O4  $(CFLAGS)
+  FFLAGS := -O4  $(FFLAGS)
+  CXXFLAGS := -O4  $(CXXFLAGS)
+else
+  CFLAGS := -g $(CFLAGS)
+  FFLAGS := -g $(FFLAGS)
+  CXXFLAGS := -g $(CXXFLAGS)
+endif
+ifeq ($(ISEXECUTABLE),)
+   ifeq ($(NOSHARED),1)
+      REALAR := ar -cru 
+   else
+      REALAR := $(CXX) -shared  -o  
+      CFLAGS := $(CFLAGS)
+      FFLAGS := $(FFLAGS)
+      CXXFLAGS := $(CXXFLAGS)
+   endif
+   else
+      REALAR := $(CXX) -std strict_ansi -call_shared -LANG:std -o 
+endif

@@ -1,0 +1,13 @@
+ifeq ($(MPIHOME),)
+    MPIHOME := /opt/SUNWhpc
+endif
+    DEFS := $(DEFS) -DMPI -D_MPIPP_H
+ifeq ($(ARCHOS),sun4_5)
+    INCLUDES := $(INCLUDES) -I$(MPIHOME)/include
+    MPLIB = $(call libtmpl,$(MPIHOME)/lib) -lmpi -lrte -ldl -lposix4
+    FFLAGS := -M$(MPIHOME)/include $(FFLAGS)
+else
+    INCLUDES := $(INCLUDES) -I$(MPIHOME)/include/v9
+    MPLIB = $(call libtmpl,$(MPIHOME)/lib/sparcv9) -lmpi -lrte -ldl -lposix4
+    FFLAGS := -M$(MPIHOME)/include/v9 $(FFLAGS)
+endif

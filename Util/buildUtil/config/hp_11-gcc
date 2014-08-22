@@ -1,0 +1,39 @@
+# Makefile addition for hp_11 architecture/OS using GCC compiler.
+
+DEFS := $(DEFS) -DHP -DFORT_LC_US -D_SCOREC_NewCompiler -DUNIX
+PURIFYCMD := echo
+STATIC_LIB_EXT := a
+SHARED_LIB_EXT := sl
+
+# Note: we want the '-R' option even for nonshared executable, because
+# the linker always prefers shared lib. The other option would be to specify
+# '-static' but then even the libc would be statically linked -> bad.
+libtmpl = -L$(1) -Wl,-R$(1)
+LDFLAGS := $(LDFLAGS) -xildoff
+# List of system libraries required for mpich2 parallel env.
+MPICH2_SYS_LIBS := -lthread -lsocket -lnsl -laio 
+CC := gcc
+CXX := g++
+FC := g77
+DEPFLAG := -MM
+ifeq ($(VERS),opt)
+  CFLAGS := -O4 $(CFLAGS)
+  FFLAGS := -O4 $(FFLAGS)
+  CXXFLAGS := -O4 $(CXXFLAGS)
+else
+  CFLAGS := -g -Wall $(CFLAGS)
+  FFLAGS := -g -Wall $(FFLAGS)
+  CXXFLAGS := -g -Wall $(CXXFLAGS)
+endif
+ifeq ($(ISEXECUTABLE),)
+   ifeq ($(NOSHARED),1)
+      REALAR := ar -cru
+   else
+      REALAR := $(CXX) -shared -o 
+      CFLAGS := -fPIC $(CFLAGS)
+      CXXFLAGS := -fPIC  $(CXXFLAGS)
+      FFLAGS := -fPIC $(FFLAGS)
+   endif
+   else
+      REALAR := $(CXX) -o
+endif

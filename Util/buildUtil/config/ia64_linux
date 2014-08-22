@@ -1,0 +1,41 @@
+# Makefile addition for x86_linux architecture/OS.
+# It uses Intel C++ compiler 5.0 for C/C++ files
+# and Intel F95 compiler 5.0 for Fortran files.
+STATIC_LIB_EXT := a
+SHARED_LIB_EXT := so
+
+DEFS := $(DEFS) -DLINUX -DFORT_LC_US -D_SCOREC_NewCompiler -DUNIX
+libtmpl = -L$(1) -Qoption,link,-rpath,$(1)
+CC := ecc
+CXX := ecpc
+FC := efc
+CFLAGS := $(CFLAGS) -unroll
+CXXFLAGS := $(CXXFLAGS) -Krtti -unroll -Kc++eh
+FFLAGS := $(FFLAGS) -w95 -W0 -cm -80
+LDFLAGS := $(LDFLAGS) -L/usr/local/intel/mkl/lib/64 \
+           -lmkl_lapack -lintrins -lCEPCF90 -lPEPCF90 -ldl -lF90 \
+           -lpthread -lc -lm
+
+HAS_TEMP_REP := 0
+DEPFLAG := -M
+ifeq ($(VERS),opt)
+  CFLAGS := -tpp6 -ip $(CFLAGS)
+  CXXFLAGS := -tpp6 -ip $(CXXFLAGS)
+  FFLAGS := -tpp6 -ip $(FFLAGS)
+else
+  CFLAGS := -g -Wall $(CFLAGS)
+  CXXFLAGS := -g -w2 $(CXXFLAGS)
+  FFLAGS := -g -w2 $(FFLAGS)
+endif
+ifeq ($(ISEXECUTABLE),)
+   ifeq ($(NOSHARED),1)
+      REALAR := ar -cru 
+   else
+      REALAR := ecpc -shared -o 
+      CFLAGS := -fPIC $(CFLAGS)
+      CXXFLAGS := -KPIC  $(CXXFLAGS)
+      FFLAGS := -KPIC $(FFLAGS)
+   endif
+   else
+      REALAR := ecpc $(LDFLAGS) -o 
+endif
