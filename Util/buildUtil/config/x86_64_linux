@@ -16,9 +16,9 @@ GLINKER := $(CXX)
 HAS_TEMP_REP := 0
 DEPFLAG := -MM
 ifeq ($(VERS),opt)
-  CFLAGS := -O3 -g $(CFLAGS)
-  CXXFLAGS := -O3 -g $(CXXFLAGS)
-  FFLAGS := -O3 -g $(FFLAGS)
+  CFLAGS := -O3 $(CFLAGS)
+  CXXFLAGS := -O3 $(CXXFLAGS)
+  FFLAGS := -O3 $(FFLAGS)
 else
   CFLAGS := -g -Wall $(CFLAGS)
   CXXFLAGS := -g -Wall $(CXXFLAGS)
