@@ -525,14 +525,14 @@ void setSizeFieldUsingCombined(pParMesh pmesh,
 //  M_writeVTKFile(mesh,"nodalSize",nodalSizeID,3);
 //  M_writeVTKFile(mesh, "nodalDirection", nodalDirectionID, 9);
 #endif  
-  if(PMU_size()==1) {
-     pMesh meshMerge;
-     meshMerge = M_createFromParMesh(pmesh, 3, prog);
+//  if(PMU_size()==1) {
+//     pMesh meshMerge;
+//     meshMerge = M_createFromParMesh(pmesh, 3, prog);
 //     M_write(mesh, "mesh_size.sms", 0, prog);
-     M_release(meshMerge);
-  } else {
-//     PM_write(pmesh, "mesh_size.sms", sthreadNone, prog);
-  }
+//     M_release(meshMerge);
+//  } else {
+     PM_write(pmesh, "mesh_size.sms", sthreadNone, prog);
+//  }
 
   printf(" [%d] Nodes with hmin into effect : %d (%4.2f%%)\n",PMU_rank(),hminCount,((double)hminCount/nshg)*100);
   printf(" [%d] Nodes with hmax into effect : %d (%4.2f%%)\n",PMU_rank(),hmaxCount,((double)hmaxCount/nshg)*100);

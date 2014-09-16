@@ -385,12 +385,12 @@ adapt(  // parallel mesh
 */    
 #endif
 
-    if(PMU_size()==1) {
-      simAdapter = MSA_new(mesh,1);
-    }
-    else {
+//    if(PMU_size()==1) {
+//      simAdapter = MSA_new(mesh,1);
+//    }
+//    else {
       simAdapter = MSA_new(pmesh,1);
-   }
+//   }
 
 #ifdef FMDB
     if(nvar){
