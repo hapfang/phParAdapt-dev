@@ -53,7 +53,7 @@ transformToScalarErrorVal(pMesh mesh, int nvar, int option)
         EN_attachDataPtr( (pEntity)v, errorIndicatorID, (void *)
 		       scalarValue);
 
-#ifdef DEBUG
+#ifdef DEBUG_NOT_DONE_NOW
         double *testScalarValue;
         if(!EN_getDataPtr((pEntity)v, errorIndicatorID,(void**)&testScalarValue)){
             

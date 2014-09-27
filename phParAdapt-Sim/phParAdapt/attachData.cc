@@ -137,13 +137,14 @@ void cleanAttachedData(pMesh mesh,
       pVertex vtx;
       VIter vt_iter=M_vertexIter(mesh);
       while(vtx = VIter_next(vt_iter)) {
-	double *data;
-	if(EN_getDataPtr((pEntity)vtx,dataID,(void**)&data)) {
+//	double *data;
+//	if(EN_getDataPtr((pEntity)vtx,dataID,(void**)&data)) {
+	if(EN_getDataPtr((pEntity)vtx,dataID,NULL)) {
 
-	  if(array)
-	    delete [] data;
-	  else
-	    delete data;
+//	  if(array)
+//	    delete [] data;
+//	  else
+//	    free(data);
 
 	  EN_deleteData((pEntity)vtx,dataID);
 	}

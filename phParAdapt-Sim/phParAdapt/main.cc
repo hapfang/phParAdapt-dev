@@ -61,7 +61,7 @@ int main(int argc, char *argv[])
     Sim_logOn(log_file);
 
     MS_init();
-
+    Sim_setMessageHandler(NULL);
     SimAdvMeshing_start();
 
     SimMeshing_start();
