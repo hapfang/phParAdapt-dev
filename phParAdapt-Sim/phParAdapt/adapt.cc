@@ -419,6 +419,7 @@ adapt(  // parallel mesh
      MSA_setExposedBLBehavior(simAdapter, BL_DisallowExposed);
   }
 
+  MSA_setCoarsenMode(simAdapter, 0);
   MSA_setMaxIterations(simAdapter, numSplit);
   MSA_setBoundaryMeshModification(simAdapter, isBLAdapt);
 
@@ -570,7 +571,7 @@ adapt(  // parallel mesh
         simAdapter->setnVar(nvar);
     }
 #endif   
-   MSA_setCallback(simAdapter, phastaTransferFn, 9, NULL);// 8 for regions, 1 for vertices
+//   MSA_setCallback(simAdapter, phastaTransferFn, 9, NULL);// 8 for regions, 1 for vertices
 #ifdef SIM
     MSA_setAdaptBL(simAdapter, isBLAdapt);
     MSA_setExposedBLBehavior(simAdapter, BL_DisallowExposed);
@@ -659,7 +660,7 @@ adapt(  // parallel mesh
         simAdapter->setnVar(nvar);
     }
 #endif   
-    MSA_setCallback(simAdapter, phastaTransferFn, 9, NULL);// 8 for regions, 1 for vertices
+//    MSA_setCallback(simAdapter, phastaTransferFn, 9, NULL);// 8 for regions, 1 for vertices
     MSA_setAdaptBL(simAdapter, isBLAdapt);
 
 #ifdef SIM
@@ -725,9 +726,12 @@ adapt(  // parallel mesh
     else if (option==11) {
       double *dwal_indicator;
       readArrayFromFile(error_indicator_file,"dwal",dwal_indicator);
+      double *ybar_indicator;
+      readArrayFromFile(error_indicator_file,"ybar",ybar_indicator);
       int nshg = M_numVertices(mesh);
       for(int inode=0;inode<nshg;inode++) {
          //WARNING: HARD CODED dwal overwriting the first diffusive flux:w
+         error_indicator[inode*10+4] = ybar_indicator[inode*13+12]; 
          error_indicator[inode*10+3] = dwal_indicator[inode]; 
        }
        delete [] dwal_indicator;
@@ -756,6 +760,11 @@ adapt(  // parallel mesh
     // transforms the 10 attached EI into ONE single value
     // according to individual needs
     // error will be attached via errorIndicatorID
+//KEJ    for (int i=0; i<20; i++) {
+//KEJ       SmoothErrorIndicators(mesh,option);
+//KEJ    }
+//KEJ tried the above but it seems to be broken as it needs an option set which is not set in the location elsewhere in this routine I copied from....suspect routines have changed since last used
+    
     transformToScalarErrorVal(mesh,nvar,option);
 
     wtimePoints[11] = time(0);
@@ -891,7 +900,7 @@ adapt(  // parallel mesh
         simAdapter->setnVar(nvar);
     }
 #endif   
-    MSA_setCallback(simAdapter, NULL,9,NULL);// 8 for regions, 1 for vertices
+//    MSA_setCallback(simAdapter, NULL,9,NULL);// 8 for regions, 1 for vertices
 
     // attaching the solution to the original coarse mesh
     double *sol;
@@ -949,7 +958,7 @@ adapt(  // parallel mesh
       // set mesh size-field manually (anisotropic adaptation) at each vertex
       // strategy provides different choices
       setManualSizeField(pmesh, mesh,simAdapter,strategy, option);
-      MSA_setCallback(simAdapter, NULL,9,NULL);
+//      MSA_setCallback(simAdapter, NULL,9,NULL);
 //      NormalizedEdgeLength(mesh);
 
 #ifdef SIM

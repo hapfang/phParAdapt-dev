@@ -136,17 +136,21 @@ void setIsotropicSizeField(pParMesh pmesh,
       else newSize = *oldSize;
     }
     else if (option == 11 ){
-      double coord[3];
-      double plane;
-      V_coord(vertex,coord); 
-      plane = -0.516616558513076*coord[0]+0.787121033907457*coord[1]+0.336968558548957*coord[2]+0.761858682657;
-      if (*nodalValue > factor && plane >= 0.0) newSize = *oldSize/2;
+      //double coord[3];
+      //double plane;
+      //V_coord(vertex,coord); 
+      //plane = -0.516616558513076*coord[0]+0.787121033907457*coord[1]+0.336968558548957*coord[2]+0.761858682657;
+      //if (*nodalValue > factor && plane >= 0.0) newSize = *oldSize/2;
+      //else  newSize = *oldSize;
+      //
+      if (*nodalValue > factor) newSize = *oldSize/2;
       else  newSize = *oldSize;
     }
     else {   
       newSize = adaptFactor*(*oldSize);
     }
- 
+
+
     if (newSize > MaxCoarsenFactor) {
       // If the newSize is smaller than max theshold, set the newSize back to the theshold
       newSize = MaxCoarsenFactor;
@@ -200,21 +204,17 @@ void setIsotropicSizeField(pParMesh pmesh,
     double* sizeField = new double;
     if(option != 3) {
      if(!preLBforAdaptivity) {
-      MSA_setVertexSize(simAdapter, 
-			vertex,
-			newSize);
+//KEDAR: MSA_setVertexSize delete from here to call SmoothSize
       *sizeField = newSize;
 //      printf("size: %lf\n", newSize);
      }
      else {
       double *size = new double;
       *size = newSize;
-
       EN_attachDataPtr((pEntity)vertex,meshSizeID,size);
      }
     }
     EN_attachDataPtr((pEntity)vertex,nodalSizeID,(void *)sizeField);
-
 
 #ifdef DEBUG
 //    sizes<<newSize<<"\n";
@@ -222,7 +222,36 @@ void setIsotropicSizeField(pParMesh pmesh,
 #endif
 
   }
+  VIter_reset(vIter);
+
+  M_writeVTKFile(mesh,"nodalSizeB",nodalSizeID,3);
+
+//KEDAR: SmoothSize moved outside the vertex iterator.
+//SetVertexSize needs to be called after again 
+  int numSmooth=1;
+  for (int k=0; k<10; k++){
+     SmoothSize(mesh,numSmooth); //Size field smoothing similar to hessians    
+     commuSmoothSize(pmesh, mesh,numSmooth);
+      if(PMU_rank()==0) {
+         cout<<"Size Field Smoothing iteration      : "<<k<<endl;
+      }
+  }
+  M_writeVTKFile(mesh,"nodalSizeA",nodalSizeID,3);
+
+//now set sizes with simmetrix
+  while ( vertex=VIter_next(vIter)) {
+     double* h = new double;
+
+    EN_getDataPtr((pEntity)vertex,nodalSizeID ,
+                      (void**)&h);
+
+      MSA_setVertexSize(simAdapter, 
+			vertex,
+			h[0]);
+      delete [] h;
+  }
   VIter_delete(vIter);
+
 #ifdef DEBUG  
 //  M_writeVTKFile(mesh, "IsotropicSize", nodalSizeID, 1);
 #endif

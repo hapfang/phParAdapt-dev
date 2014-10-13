@@ -328,10 +328,10 @@ void setSizeFieldUsingHessians(pParMesh pmesh,
   VIter_reset(vit);
   i=0;
 
-
+  int numSmooth=3;
   for (int k=0; k<20; k++){
-    SmoothSize(mesh); //Size field smoothing similar to hessians    
-    commuSmoothSize(pmesh, mesh);
+    SmoothSize(mesh,numSmooth); //Size field smoothing similar to hessians    
+    commuSmoothSize(pmesh, mesh,numSmooth);
   }
 /*  
   for (int k=0; k<0; k++) {

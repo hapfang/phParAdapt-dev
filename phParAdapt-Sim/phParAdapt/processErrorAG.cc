@@ -40,7 +40,8 @@ processErrorAG(double* nodalErrorSet, double* nodalSolutionSet, int nvar, int op
     }
     else if (option == 11) {
        double rms_mag = sqrt(nodalErrorSet[6]*nodalErrorSet[6]+nodalErrorSet[7]*nodalErrorSet[7]+nodalErrorSet[8]*nodalErrorSet[8]);
-       scalarVal = rms_mag * log( sqrt(nodalErrorSet[0]*nodalErrorSet[0]+nodalErrorSet[1]*nodalErrorSet[1]+nodalErrorSet[2]*nodalErrorSet[2]) + 1E-10 ) / (1e-2 + 100*nodalErrorSet[3]);
+//       scalarVal = rms_mag * log( sqrt(nodalErrorSet[0]*nodalErrorSet[0]+nodalErrorSet[1]*nodalErrorSet[1]+nodalErrorSet[2]*nodalErrorSet[2]) + 1E-10 ) / (1e-2 + 100*nodalErrorSet[3]);
+       scalarVal = log( rms_mag*sqrt(nodalErrorSet[0]*nodalErrorSet[0]+nodalErrorSet[1]*nodalErrorSet[1]+nodalErrorSet[2]*nodalErrorSet[2]) + 1E-10 ) / (1e-0 + 10*nodalErrorSet[3])+500*nodalErrorSet[4];
     }
     
     else {

@@ -25,8 +25,9 @@ extern pMeshDataId numSurroundNodesID;
 // The commu attaches the combined data  via nodalSizeID
 // ( delete old ones on part bdry)
 void
-commuSmoothSize(pParMesh pmesh, pMesh mesh)
+commuSmoothSize(pParMesh pmesh, pMesh mesh, int num)
 {
+    int numpl = num+1;
     int mult = sizeof(P_int)/sizeof(int);
     int *ns = new int [ PMU_size() ];
     int *nr = new int [ PMU_size() ];
@@ -89,7 +90,7 @@ commuSmoothSize(pParMesh pmesh, pMesh mesh)
         // 2) numSurroundNodes
         // 3) nodalhessian (3x)
         se[i] = new void* [ ns[i] ];
-        dsend[i] = new double[4*ns[i]];
+        dsend[i] = new double[numpl*ns[i]];
         ns[i] = nr[i] = 0;
     }
 
@@ -136,12 +137,12 @@ commuSmoothSize(pParMesh pmesh, pMesh mesh)
                     exit(0);
                 }
                 // numSurroundNodes
-                dsend[vCopyGid][ 4*ns[vCopyGid]  ] =   numSurroundNodes[0];
+                dsend[vCopyGid][ numpl*ns[vCopyGid]  ] =   numSurroundNodes[0];
                 
                 // nodal Size
-                for(int k=0;k<3;k++){
+                for(int k=0;k<num;k++){
                     
-                    dsend[vCopyGid][ 4*ns[vCopyGid] +1+k ] = nodalSize[k];
+                    dsend[vCopyGid][ numpl*ns[vCopyGid] +1+k ] = nodalSize[k];
                 }
                
                 // increment number of copies shared between this proc and proc
@@ -164,12 +165,12 @@ commuSmoothSize(pParMesh pmesh, pMesh mesh)
     for (int i=0; i < PMU_size(); i++){
         
         re[i] = new void* [ nr[i] ];
-        drecv[i] = new double[4*nr[i]];
+        drecv[i] = new double[numpl*nr[i]];
     }
     
     // communicate the actual copies and data
     PMU_commuArr((void**)se, ns, (void**)re, nr, MPI_INT, mult);    
-    PMU_commuArr((void**)dsend, ns, (void**)drecv, nr, MPI_DOUBLE, 4); 
+    PMU_commuArr((void**)dsend, ns, (void**)drecv, nr, MPI_DOUBLE, numpl); 
 
 
     // retrieve communicated data and globalize
@@ -191,7 +192,7 @@ commuSmoothSize(pParMesh pmesh, pMesh mesh)
                 exit(0);
             }
             double* newNumSurrNodes = new double[1];  
-            newNumSurrNodes[0] =   drecv[i][4*j]; 
+            newNumSurrNodes[0] =   drecv[i][numpl*j]; 
             newNumSurrNodes[0] +=  currentNumSurrNodes[0];
 //            delete [] currentNumSurrNodes;
 //            EN_deleteData(ent, numSurroundNodesID);
@@ -206,9 +207,9 @@ commuSmoothSize(pParMesh pmesh, pMesh mesh)
                 cout<<"\nerror in commuSmoothSize globalize: no currentSize data attached to vertex\n";
                 exit(0);
             }
-            double* newSize = new double[3];  
-            for(int k=0;k<3;k++){
-                newSize[k]= drecv[i][4*j+1+k];
+            double* newSize = new double[num];  
+            for(int k=0;k<num;k++){
+                newSize[k]= drecv[i][numpl*j+1+k];
 
                 newSize[k] += currentSize[k];
             }
@@ -235,7 +236,7 @@ commuSmoothSize(pParMesh pmesh, pMesh mesh)
     // over to data attched via nodalSizeID again
     for (int i=0; i < PMU_size(); i++)  {
         se[i] = new void* [ ns[i] ];
-        dsend[i] = new double[4*ns[i]];
+        dsend[i] = new double[numpl*ns[i]];
         ns[i] = nr[i] = 0;
     }
 
@@ -258,8 +259,8 @@ commuSmoothSize(pParMesh pmesh, pMesh mesh)
             exit(0);
         }
 
-        double* newNodalSize = new double[3];
-        for(int k=0;k<3;k++){
+        double* newNodalSize = new double[num];
+        for(int k=0;k<num;k++){
 	  if(currentNumSurrNodes[0])
             newNodalSize[k] = nodalSize[k]/currentNumSurrNodes[0];
 	  else
@@ -315,8 +316,8 @@ commuSmoothSize(pParMesh pmesh, pMesh mesh)
             }
             
             double*  numSurrVerts;
-            double* smoothSize = new double[3];
-            for(int i=0; i<3; i++){
+            double* smoothSize = new double[num];
+            for(int i=0; i<num; i++){
                 smoothSize[i]= 0.0  ;
             }
             if(!EN_getDataPtr((pEntity)vertex,numSurroundNodesID ,
@@ -324,7 +325,7 @@ commuSmoothSize(pParMesh pmesh, pMesh mesh)
                     cout<<"\nerror in INTR commuSmoothSize: no numSurrVerts data attached to vertex\n";
                     exit(0);
             }
-            for(int i=0 ; i<3;i++) {
+            for(int i=0 ; i<num;i++) {
 
 	      if(numSurrVerts)
                 // build average

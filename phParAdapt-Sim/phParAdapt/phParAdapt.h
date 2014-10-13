@@ -163,7 +163,7 @@ extern "C" {
   void ModifyHessiansAtBdry(pMesh mesh);
   void writeRestartHessians(pMesh mesh );
   void SmoothHessians(pMesh mesh);
-  void SmoothSize(pMesh mesh);
+  void SmoothSize(pMesh mesh, int num);
   void SmoothDir(pMesh mesh);
   void commuSmoothDir(pParMesh pmesh, pMesh mesh);
   void SmoothWallField(pMesh mesh, pMeshDataId field, int ndof);
@@ -401,7 +401,7 @@ GEN_attachDataI(pGEntity g, char* str, int data);
 void
 commuSmoothHessians(pParMesh pmesh, pMesh mesh);
 void
-commuSmoothSize(pParMesh pmesh, pMesh mesh);
+commuSmoothSize(pParMesh pmesh, pMesh mesh, int num);
 
 void
 commuGradientsFromPatch(pParMesh pmesh, pMesh mesh);

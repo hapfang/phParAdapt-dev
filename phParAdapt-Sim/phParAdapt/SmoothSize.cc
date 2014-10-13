@@ -20,7 +20,7 @@ extern pMeshDataId nodalDirectionID;
   
 // simple average over a patch surrounding the vertex    
 void 
-SmoothSize(pMesh mesh) {
+SmoothSize(pMesh mesh, int num) {
 
   pVertex v;
   VIter vIter=M_vertexIter(mesh);
@@ -35,9 +35,9 @@ SmoothSize(pMesh mesh) {
 #endif 
 
   while(v = VIter_next(vIter)) {
-    averageSize[vCount] = new double[3];
+    averageSize[vCount] = new double[num];
     
-    for(int i=0;i<3;i++) {
+    for(int i=0;i<num;i++) {
       averageSize[vCount][i]=0.0;
     }
     // can be different from V_numEdges
@@ -57,7 +57,7 @@ SmoothSize(pMesh mesh) {
 	V_info(v);
 	exit(0);
       }
-      for(int i=0; i<3; i++) {
+      for(int i=0; i<num; i++) {
 	averageSize[vCount][i]= nodalSize[i];
       }
       numSurroundingVerts[vCount]++;
@@ -106,7 +106,7 @@ SmoothSize(pMesh mesh) {
                     exit(0);
                 }
                 // add values up
-                for(int i=0;i<3;i++) {
+                for(int i=0;i<num;i++) {
                     averageSize[vCount][i] = averageSize[vCount][i] + nodalSizeOther[i];
                 }
                 numSurroundingVerts[vCount]++;
@@ -142,7 +142,7 @@ SmoothSize(pMesh mesh) {
       
       // just add its own values up
       // mostly the case when a region has no intr. node/vert.
-      for(int i=0;i<3;i++) {
+      for(int i=0;i<num;i++) {
        averageSize[vCount][i] = nodalSize[i];
       }
       numSurroundingVerts[vCount]++;
@@ -182,9 +182,9 @@ SmoothSize(pMesh mesh) {
 //      EN_deleteData((pEntity)v, nodalHessianID);
    
     
-    double* smoothSize = new double[3];
+    double* smoothSize = new double[num];
 
-    for(int k=0;k<3;k++){
+    for(int k=0;k<num;k++){
         smoothSize[k] = averageSize[vCount][k];
     }
 

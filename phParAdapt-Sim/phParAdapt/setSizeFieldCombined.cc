@@ -378,9 +378,10 @@ void setSizeFieldUsingCombined(pParMesh pmesh,
 #endif    
 //  SizePropogate(mesh);
 
+   int numSmooth=3;
    for (int k=0; k<50; k++){
-     SmoothSize(mesh); //Size field smoothing similar to hessians    
-     commuSmoothSize(pmesh, mesh);
+     SmoothSize(mesh,numSmooth); //Size field smoothing similar to hessians    
+     commuSmoothSize(pmesh, mesh,numSmooth);
    }
    
    if(isSizeLimit)
