@@ -1,6 +1,6 @@
 export DEVROOT=`pwd`
-export VERS=dbg
-#export VERS=opt
+#export VERS=dbg
+export VERS=opt
 
 #BGQ
 #export PARALLEL=bgmpi
@@ -14,7 +14,7 @@ export VERS=dbg
 # UCB
 export PARALLEL=openmpi
 export ARCHOS=x86_64_linux
-export MESHSIM=/users/mrasquin/develop/Meshing/simmodsuite-9.0-140724/9.0-140724
+export MESHSIM=/users/mrasquin/develop/Meshing/simmodsuite-9.0-140927/9.0-140927
 
 export CC=mpicc
 export CXX=mpicxx
