@@ -136,14 +136,15 @@ void setIsotropicSizeField(pParMesh pmesh,
       else newSize = *oldSize;
     }
     else if (option == 11 ){
-      //double coord[3];
+      double coord[3];
       //double plane;
-      //V_coord(vertex,coord); 
+      V_coord(vertex,coord); 
       //plane = -0.516616558513076*coord[0]+0.787121033907457*coord[1]+0.336968558548957*coord[2]+0.761858682657;
       //if (*nodalValue > factor && plane >= 0.0) newSize = *oldSize/2;
       //else  newSize = *oldSize;
       //
-      if (*nodalValue > factor) newSize = *oldSize/2;
+//      if (*nodalValue > factor) newSize = *oldSize/2;
+      if (*nodalValue < factor && coord[0] > -0.08 && coord[0] < 0.7) newSize = *oldSize/2;
       else  newSize = *oldSize;
     }
     else {   
@@ -229,7 +230,7 @@ void setIsotropicSizeField(pParMesh pmesh,
 //KEDAR: SmoothSize moved outside the vertex iterator.
 //SetVertexSize needs to be called after again 
   int numSmooth=1;
-  for (int k=0; k<10; k++){
+  for (int k=0; k<0; k++){
      SmoothSize(mesh,numSmooth); //Size field smoothing similar to hessians    
      commuSmoothSize(pmesh, mesh,numSmooth);
       if(PMU_rank()==0) {

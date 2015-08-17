@@ -724,17 +724,20 @@ adapt(  // parallel mesh
        delete [] ybar_indicator;
     }
     else if (option==11) {
+      double *SolTot = new double[ndofTot*nshg];
       double *dwal_indicator;
       readArrayFromFile(error_indicator_file,"dwal",dwal_indicator);
       double *ybar_indicator;
       readArrayFromFile(error_indicator_file,"ybar",ybar_indicator);
       int nshg = M_numVertices(mesh);
       for(int inode=0;inode<nshg;inode++) {
-         //WARNING: HARD CODED dwal overwriting the first diffusive flux:w
-         error_indicator[inode*10+4] = ybar_indicator[inode*13+12]; 
-         error_indicator[inode*10+3] = dwal_indicator[inode]; 
+        for(int idof=0;idof<ndof;idof++)
+         SolTot[inode*ndofTot+idof] = ybar_indicator[inode*nYbarVars+idof]; 
        }
+       attachArray(SolTot,mesh,phasta_solution,ndofTot,poly);
        delete [] dwal_indicator;
+       delete [] SolTot;
+    printf("\n Attached ybar to phasta_solution with nYbarVars= %i:\n",nYbarVars);
     }
        
 
