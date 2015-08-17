@@ -158,7 +158,7 @@ ifeq ($(SIM),1)
   ifeq ($(MODELER),parasolid)
     PARASOLID = $(MESHSIM)/lib/$(SIMARCH)/psKrnl 
     PSKRNL = -lpskernel
-    MESHSIMMODELVERS = -lSimParasolid260 
+    MESHSIMMODELVERS = -lSimParasolid270 
   else
     MODELLIB = -lSim$(MODELER)
   endif 
