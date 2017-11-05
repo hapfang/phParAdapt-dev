@@ -239,18 +239,40 @@ void setIsotropicSizeField(pParMesh pmesh,
   M_writeVTKFile(mesh,"nodalSizeA",nodalSizeID,3);
 
 //now set sizes with simmetrix
-  while ( vertex=VIter_next(vIter)) {
-     double* h = new double;
 
+  double* OrgSize = new double;
+  double OrgAnisoSize[3][3];
+  int iSize;
+  double *oldSize;
+  double* h = new double;
+  double ratThresh=0.9; // not certain of the best number here as smoothing was applied to the original size
+
+  while ( vertex=VIter_next(vIter)) {
+    EN_getDataPtr((pEntity)vertex,oldMeshSizeID,(void**)&oldSize);
     EN_getDataPtr((pEntity)vertex,nodalSizeID ,
                       (void**)&h);
+    double sizeRat;
+    sizeRat= h[0]/(*oldSize);
+    if(sizeRat <= ratThresh){
+      iSize = V_size(vertex, OrgSize, OrgAnisoSize);
+      if (iSize == 1){   // this vertex is isotropic
+         MSA_setVertexSize(simAdapter, 
+                        vertex,
+                        h[0]);
+         }
+      if (iSize == 2){
+            for (int j=0 ;j<3; j++) {
+               OrgAnisoSize[2][j]*=h[0];
+            }
+         MSA_setAnisoVertexSize(simAdapter, 
+                        vertex,
+                        OrgAnisoSize);
 
-      MSA_setVertexSize(simAdapter, 
-			vertex,
-			h[0]);
-      delete [] h;
+      }
+    }
   }
   VIter_delete(vIter);
+  delete [] h;
 
 #ifdef DEBUG  
 //  M_writeVTKFile(mesh, "IsotropicSize", nodalSizeID, 1);
