@@ -255,20 +255,28 @@ void setIsotropicSizeField(pParMesh pmesh,
     sizeRat= h[0]/(*oldSize);
     if(sizeRat <= ratThresh){
       iSize = V_size(vertex, OrgSize, OrgAnisoSize);
-      if (iSize == 1){   // this vertex is isotropic
-         MSA_setVertexSize(simAdapter, 
-                        vertex,
-                        h[0]);
-         }
-      if (iSize == 2){
+//      if (iSize == 1){   // this vertex is isotropic
+//         MSA_setVertexSize(simAdapter, 
+//                        vertex,
+//                        h[0]);
+//         }
+//      if (iSize == 2){
+          for (int k=0 ;k<3; k++) {
             for (int j=0 ;j<3; j++) {
-               OrgAnisoSize[2][j]*=h[0];
+               OrgAnisoSize[k][j]=0.0;
             }
-         MSA_setAnisoVertexSize(simAdapter, 
+          }
+//          OrgAnisoSize[0][2]= 0.025;
+//          OrgAnisoSize[1][1]= 0.1; // <-now try....worked -> 0.025;
+//          OrgAnisoSize[2][0]= 0.1;
+          OrgAnisoSize[0][1]= 0.025;
+          OrgAnisoSize[1][2]= 0.025; 
+          OrgAnisoSize[2][0]= 0.1;
+          MSA_setAnisoVertexSize(simAdapter, 
                         vertex,
                         OrgAnisoSize);
 
-      }
+//      }
     }
   }
   VIter_delete(vIter);
