@@ -15,7 +15,7 @@ export VERS=opt
 export PARALLEL=openmpi
 export ARCHOS=x86_64_linux
 export MESHSIM=/users/mrasquin/develop/Meshing/simmodsuite-9.0-140927/9.0-140927
-
++simmodsuite-9.0-150808
 export CC=mpicc
 export CXX=mpicxx
 export FC=gfortran
