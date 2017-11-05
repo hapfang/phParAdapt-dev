@@ -69,7 +69,7 @@ void readBC(pGModel model, pMesh mesh)
    * those while reading back an already partitioned mesh. */
 
 #ifdef PARALLEL
-  pAttachDataCommu adc = PM_newAttachDataCommu(1,0,1);
+  pAttachDataCommu adc = AttachDataCommu_new(1,0,1);
   if(adc){
       MD_setMeshCallback(inod, CBmigrateOut, pm_sendAnInt, adc);
       MD_setMeshCallback(inod, CBmigrateIn, pm_recvAnInt, adc);

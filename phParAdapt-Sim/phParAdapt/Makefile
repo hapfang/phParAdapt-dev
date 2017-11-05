@@ -71,13 +71,13 @@ ifeq ($(ARCHOS),x86_64_linux-icc)
 endif
 
 ifeq ($(ARCHOS),x86_64_linux)
-   SIMARCH := x64_rhel7_gcc48
+   SIMARCH := x64_rhel5_gcc41
    ETCFLAGS := $(ETCFLAGS) -lnsl -lpthread
    DEFS := $(DEFS) -DB64
 endif
 
 ifeq ($(ARCHOS),x86_64_linux-gcc)
-   SIMARCH := x64_rhel7_gcc48
+   SIMARCH := x64_rhel5_gcc41
    ETCFLAGS := $(ETCFLAGS) -lnsl -lpthread
    DEFS := $(DEFS) -DB64
 endif
@@ -158,7 +158,7 @@ ifeq ($(SIM),1)
   ifeq ($(MODELER),parasolid)
     PARASOLID = $(MESHSIM)/lib/$(SIMARCH)/psKrnl 
     PSKRNL = -lpskernel
-    MESHSIMMODELVERS = -lSimParasolid270 
+    MESHSIMMODELVERS = -lSimParasolid280 
   else
     MODELLIB = -lSim$(MODELER)
   endif 

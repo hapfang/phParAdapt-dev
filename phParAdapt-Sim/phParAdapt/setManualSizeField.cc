@@ -237,7 +237,7 @@ setManualSizeField( pParMesh pmesh,
 #ifdef DEBUG    
 //    M_writeVTKFile(mesh, "nodalSize", nodalSizeID, 3);
 //    M_writeVTKFile(mesh, "OrgSize", OrgSizeID, 3);
-//    M_write(mesh, "mesh_size.sms", sthreadNone, prog);
+//    M_write(mesh, "mesh_size.sms", prog);
 #endif    
     }
     break;   

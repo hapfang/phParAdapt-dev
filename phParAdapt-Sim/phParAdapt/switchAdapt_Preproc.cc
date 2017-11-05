@@ -231,10 +231,11 @@ switchAdapt_Preproc(int argc, char *argv[]){
 
     if(PMU_rank()==0) {
       printf("\n");
-      printf("Meshing    Library build ID : %s\n",SimMeshing_buildID());
-      printf("PMesh      Library build ID : %s\n",SimPartitionedMesh_buildID());
-      printf("MeshTools  Library build ID : %s\n",SimMeshTools_buildID());
-      printf("AdvMeshing Library build ID: %s\n",SimAdvMeshing_buildID());
+      printf("Simmetrix  Library build ID : %s\n",Sim_buildID());
+//      printf("Meshing    Library build ID : %s\n",SimMeshing_buildID());
+//      printf("PMesh      Library build ID : %s\n",SimPartitionedMesh_buildID());
+//      printf("MeshTools  Library build ID : %s\n",SimMeshTools_buildID());
+//      printf("AdvMeshing Library build ID: %s\n",SimAdvMeshing_buildID());
     }
     
     double tmptime;
@@ -245,14 +246,14 @@ switchAdapt_Preproc(int argc, char *argv[]){
     int id; 
 
     if(PMU_size()==1) {
-      pmesh = PM_load(mname,sthreadDefault,model,prog);
+      pmesh = PM_load(mname,model,prog);
       if(adaptFlag && isThickAdapt)
          mesh = M_load(mname, model, prog);
 //         mesh = PM_mesh(pmesh, 0);
       else 
          mesh = PM_mesh(pmesh, 0);
     } else {
-      pmesh = PM_load("parts.sms",sthreadDefault,model,prog);
+      pmesh = PM_load("parts.sms",model,prog);
       mesh = PM_mesh(pmesh, 0);
     }
 #endif
@@ -279,7 +280,7 @@ switchAdapt_Preproc(int argc, char *argv[]){
 #endif
 #endif
 
-    if(PM_verify(pmesh, 1, sthreadDefault, prog) == 0)
+    if(PM_verify(pmesh, 1, prog) == 0)
        cout << "Mesh is not valid!!!! " << endl;
 
     if(SolutionMigration && !adaptFlag) //migrate solution from restart files
@@ -352,7 +353,7 @@ switchAdapt_Preproc(int argc, char *argv[]){
       
        int mult = sizeof(double)/sizeof(int);
        //adc = PM_newAttachDataCommu(mult, 0, ndof);
-       adc = PM_newAttachDataCommu(mult, 0, ndof+ndisp+ndwal+nmapping);
+       adc = AttachDataCommu_new(mult, 0, ndof+ndisp+ndwal+nmapping);
 
        MD_setMeshCallback(phasta_solution, CBmigrateOut, pm_sendDblArray, adc);
        MD_setMeshCallback(phasta_solution, CBmigrateIn, pm_recvDblArray, adc);
@@ -361,11 +362,11 @@ switchAdapt_Preproc(int argc, char *argv[]){
        PM_setMigrId(pmesh, phasta_solution);
 
     }
-    pOpts = PM_newPartitionOpts();
+    pOpts = PartitionOpts_new();
     PartitionOpts_setTotalNumParts(pOpts, numTotParts);
 
     if(numTotParts!=PMU_size() && !adaptFlag) { //multiparts per proc
-      PM_partition(pmesh, pOpts, sthreadNone, prog);
+      PM_partition(pmesh, pOpts, prog);
       PartitionOpts_delete(pOpts);
     }
     numParts = PM_numParts(pmesh);
@@ -374,7 +375,7 @@ switchAdapt_Preproc(int argc, char *argv[]){
     if(PMU_rank()==0) {
       printf("checking the mesh after partitioning");
     }
-    if(PM_verify(pmesh, 1, sthreadDefault, prog) == 0)
+    if(PM_verify(pmesh, 1, prog) == 0)
         cout << "Mesh is not valid!!!! " << endl;
 #endif
 
@@ -418,11 +419,11 @@ switchAdapt_Preproc(int argc, char *argv[]){
     wtimePoints[1] = time(0);
     PM_write2(meshes, "geom_.sms");
 
-    if(PM_verify(pmesh, 1, sthreadDefault, prog) == 0)
+    if(PM_verify(pmesh, 1, prog) == 0)
           cout << "Mesh is not valid!!!! " << endl;
           
  /* 
-    if(PM_verify  (  pmesh ,0,sthreadDefault,prog ) == 0){
+    if(PM_verify  (  pmesh ,0,prog ) == 0){
       if (PMU_rank() == 0){
 	printf("\nerror in adapt.cc: invalid parallel mesh read in\n");
       }
@@ -482,7 +483,7 @@ switchAdapt_Preproc(int argc, char *argv[]){
                          adaptOption);
 
 
-    if(PM_verify(pmesh, 1, sthreadDefault, prog) == 0)
+    if(PM_verify(pmesh, 1, prog) == 0)
         cout << "Mesh is not valid!!!! " << endl;
 #ifndef ibm
   //      printf("\n[%2d] memory usage after mesh adaptation: %d (KB)\n",PMU_rank(),phParAdaptProcSize());
@@ -514,7 +515,7 @@ switchAdapt_Preproc(int argc, char *argv[]){
 
 #ifdef SIM
 
-    PM_write(pmesh, "mesh_parts.sms", sthreadNone, prog);
+    PM_write(pmesh, "mesh_parts.sms", prog);
 #endif
 
     if(nErrorVars)

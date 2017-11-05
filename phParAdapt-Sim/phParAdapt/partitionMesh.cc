@@ -92,7 +92,7 @@ int partitionMesh(pParMesh pmesh)
                   
                   // create a weight set for each region
 
-                  id = PM_newRegionWtId ("defaultWtSet");
+                  id = EntityWeightId_new ("defaultWtSet");
                   
                   // loop vertices
                   for (i=0; i < n; i++)  {
@@ -115,7 +115,7 @@ int partitionMesh(pParMesh pmesh)
                           savereg = region;
                       else
                           
-                          R_setWeight(region, id,-1); // negative wt => zero wt  
+                          EN_setWeight(region, id,-1); // negative wt => zero wt  
                       Sregion++;
                       
                   }// if (i < n) 
@@ -123,7 +123,7 @@ int partitionMesh(pParMesh pmesh)
               }// loop regions
               
               assert(savereg != 0);
-              R_setWeight(savereg, id, Sregion);
+              EN_setWeight(savereg, id, Sregion);
               
           }//if (gface[1]) 
       }
@@ -179,7 +179,7 @@ int partitionMesh(pParMesh pmesh)
               
                   // create a weight set for each region
                   
-                  id = PM_newRegionWtId ("defaultWtSet");
+                  id = EntityWeightId_new ("defaultWtSet");
                   
                   // loop vertices
                   for (i=0; i < n; i++)  {
@@ -201,7 +201,7 @@ int partitionMesh(pParMesh pmesh)
                       if (!savereg)
                           savereg = region;
                       else
-                          R_setWeight(region, id,-1); // negative wt => zero wt  
+                          EN_setWeight(region, id,-1); // negative wt => zero wt  
 
                       Sregion++;
                       
@@ -210,7 +210,7 @@ int partitionMesh(pParMesh pmesh)
               }// loop regions
               
               assert(savereg != 0);
-              R_setWeight(savereg, id, Sregion);
+              EN_setWeight(savereg, id, Sregion);
               
           }//if (gface[1]) 
           

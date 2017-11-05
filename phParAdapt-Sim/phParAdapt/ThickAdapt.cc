@@ -201,7 +201,12 @@ void DistOffWall(pMesh mesh, pMSAdapt simAdapter){
       H[2] = Dist[2];
 //      nL = 20;      
 //      printf("number of layers:%d\n",nL);
-      MSA_setBLNormalSize(simAdapter, vertex, 1, nL, H);
+// This is broken because  API changed to require face and side...documentation 
+// claims optional won't compile
+//
+       printf("MSA_setBLNormalSize commented: \n");
+   
+// MSA_setBLNormalSize(simAdapter, vertex, 1, nL, H);
       
       EN_deleteData((pEntity)vertex, wallDistID); 
       EN_attachDataPtr((pEntity)vertex, wallDistID, (void*)H);

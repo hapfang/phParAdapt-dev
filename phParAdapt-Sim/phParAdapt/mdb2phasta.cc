@@ -198,7 +198,7 @@ void mdb2phasta(char* fname, char* mname,pGModel model,std::vector<pParMesh> pme
       
 #ifdef PARALLEL
 // from /net/vistmp1/kjansen/P-NSpre-dist/phNSpre/src/
-      adc = PM_newAttachDataCommu(1,0,1);
+      adc = AttachDataCommu_new(1,0,1);
       if(adc){ //Note this function is currently only called for Simmetrix lib
                // supports only one part per processor
           MD_setMeshCallback(incorp, CBmigrateOut, pm_sendAnInt, adc);

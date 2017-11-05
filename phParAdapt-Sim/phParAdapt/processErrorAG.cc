@@ -44,7 +44,11 @@ processErrorAG(double* nodalErrorSet, double* nodalSolutionSet, int nvar, int op
 // lastused       scalarVal = log( rms_mag*sqrt(nodalErrorSet[0]*nodalErrorSet[0]+nodalErrorSet[1]*nodalErrorSet[1]+nodalErrorSet[2]*nodalErrorSet[2]) + 1E-10 ) / (1e-0 + 10*nodalErrorSet[3])+500*nodalErrorSet[4];
 //       double pde_mag=sqrt(nodalErrorSet[0]*nodalErrorSet[0]+nodalErrorSet[1]*nodalErrorSet[1]+nodalErrorSet[2]*nodalErrorSet[2]);
        double pde_mag=sqrt(nodalErrorSet[0]*nodalErrorSet[0]+nodalErrorSet[1]*nodalErrorSet[1]+nodalErrorSet[2]*nodalErrorSet[2]);
-       scalarVal =  rms_mag *log(pde_mag + 1E-10 );
+// Previous       scalarVal =  rms_mag *log(pde_mag + 1E-10 );
+       scalarVal =  (rms_mag *log(pde_mag + 1E-10 )*0.4 +0.2)*nodalSolutionSet[5];
+// pasted from ParaView with value 0.01 for HLCRM-16degrees Simmmetrix Coarse-Mixed
+// mag(rms-vel)*log10(mag(pde-res)+1.0e-10)*EVbar*0.4 + 0.2*EVbari
+       scalarVal =  nodalSolutionSet[5];
     }
     
     else {

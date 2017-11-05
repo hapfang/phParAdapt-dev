@@ -171,7 +171,7 @@ adapt(  // parallel mesh
 
 //  pMesh mesh;
 /*
-  if(PM_verify  (  pmesh ,0, sthreadDefault,  prog) == 0){
+  if(PM_verify  (  pmesh ,0, prog) == 0){
       if (PMU_rank() == 0){
           printf("\nerror in adapt.cc: invalid parallel mesh read in\n");
       }
@@ -253,7 +253,7 @@ adapt(  // parallel mesh
     if(dwalMigration) {
       ndwal = 1;
     }
-    adc = PM_newAttachDataCommu(sizeof(double)/sizeof(int),0,numVars+ndwal);
+    adc = AttachDataCommu_new(sizeof(double)/sizeof(int),0,numVars+ndwal);
 /*    
     if(adc){
         MD_setMeshCallback(phasta_solution , CBmigrateOut, pm_sendDblArray, adc );
@@ -266,7 +266,7 @@ adapt(  // parallel mesh
 //*/
     incorp = MD_newMeshDataId("smsNum");
     // only when required to be migrated over procs
-    adcSN = PM_newAttachDataCommu(1,0,1);
+    adcSN = AttachDataCommu_new(1,0,1);
 //     MD_setMeshCallback(incorp, CBmigrateOut, pm_sendAnInt, adcSN);
 //     MD_setMeshCallback(incorp, CBmigrateIn, pm_recvAnInt, adcSN);
 //     PM_setMigrId(pmesh, incorp);
@@ -860,7 +860,7 @@ adapt(  // parallel mesh
       MSA_setRefineLevel(simAdapter,(pEntity)edge,1);
     }
     EIter_delete(eIter);
-//    PM_write(pmesh, "mesh_size.sms", sthreadNone, prog);
+//    PM_write(pmesh, "mesh_size.sms", prog);
   }
   break;
   case 8: {
@@ -1107,11 +1107,11 @@ adapt(  // parallel mesh
 
       printf("\nPartitioning mesh equally after adaptation \n\n");
 
-      pPartitionOpts popts = PM_newPartitionOpts();
+      pPartitionOpts popts = PartitionOpts_new();
       PartitionOpts_setTotalNumParts(popts,tnp);
       PartitionOpts_setPartWtEqual(popts);
       
-      PM_partition(pmesh,popts,sthreadDefault, prog);
+      PM_partition(pmesh,popts,prog);
       
       PartitionOpts_delete(popts);
 
@@ -1141,7 +1141,7 @@ adapt(  // parallel mesh
      M_write(mesh, "mesh_out.sms", 0, prog);
      M_writeVTKFile(mesh, "mesh_out", phasta_solution, ndof);
 //  } else {
-//     PM_write(pmesh, "mesh_out.sms", sthreadNone, prog);
+//     PM_write(pmesh, "mesh_out.sms", prog);
   }
 #endif
 #ifdef DEBUG
@@ -1159,7 +1159,7 @@ adapt(  // parallel mesh
   if(PMU_rank()==0)
     printf("\n Writing out the parallel mesh ...\n\n");
 #ifdef SIM
-//  PM_write(pmesh, moutfile,sthreadNone,0);
+//  PM_write(pmesh, moutfile,0);
 #endif
 #ifdef FMDB
 //  PM_write(pmesh, moutfile);

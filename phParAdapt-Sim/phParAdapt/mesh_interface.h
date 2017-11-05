@@ -23,7 +23,7 @@ typedef class MRegion * pRegion;
 #include "MeshSimAdapt.h"
 #include "MeshSimInternal.h" 
 #include <math.h>
-enum sthreadType {sthreadNone = 0, sthreadDefault = 1};
+// enum sthreadType {sthreadNone = 0, sthreadDefault = 1};
 #ifdef __cplusplus
 // for remote copies
 //#include "AOMD_cc.h"
@@ -323,9 +323,9 @@ typedef enum MeshModType {
 /*      return (pPList)0; */
 /*  } */
 
-    inline pPartitionOpts PM_newPartitionOpts(){
+    inline pPartitionOpts PartitionOpts_new(){
       if(P_pid()==0)
-        printf("\nPM_newPartitionOpts(): Not yet implemented\n");
+        printf("\nPartitionOpts_new(): Not yet implemented\n");
         return (pPartitionOpts)0;
     }
     inline void PartitionOpts_delete(pPartitionOpts popts){      
@@ -344,31 +344,31 @@ typedef enum MeshModType {
       if(P_pid()==0)
         printf("\nPartionOpts_setPartWtEqual(): Not yet implemented\n");
     }
-    inline void PartitionOpts_setRegionWtId(pPartitionOpts popts, int i, pRegionWtId id){
+    inline void PartitionOpts_setEntityWeightId(pPartitionOpts popts, int i, pRegionWtId id){
       if(P_pid()==0)
-        printf("\nPartionOpts_setRegionWeId(): Not yet implemented\n");
+        printf("\nPartionOpts_setsetEntityWeightId(): Not yet implemented\n");
     }
-    inline void PartitionOpts_setNumRegionWtIds(pPartitionOpts popts, int nrwtid){
+    inline void PartitionOpts_setNumEntityWeightIds(pPartitionOpts popts, int nrwtid){
       if(P_pid()==0)
-        printf("\nPartionOpts_setNumRegionWdIds(): Not yet implemented\n");
+        printf("\nPartionOpts_setNumEntityWeightIds(): Not yet implemented\n");
     }
     inline void PM_partition(pParMesh pm, pPartitionOpts popts, int thropt, pProgress prog){
       if(P_pid()==0)
         printf("\nPM_partition(): Not yet implemented\n");
     }
     
-    inline pRegionWtId PM_newRegionWtId(const char *tag){
+    inline pRegionWtId EntityWeightId_new(const char *tag){
       if(P_pid()==0)
-        printf("\nPM_newRegionWtId(): Not yet implemented\n");
+        printf("\nEntityWeightId_new(): Not yet implemented\n");
         return (pRegionWtId)0;
     }
-    inline void R_setWeight(pRegion r, pRegionWtId id, int wgt){
+    inline void EN_setWeight(pRegion r, pRegionWtId id, int wgt){
       if(P_pid()==0)
-        printf("\nR_setWeight(): Not yet implemented\n");
+        printf("\nEN_setWeight(): Not yet implemented\n");
     }
-    inline void RegionWtId_delete(pRegionWtId id){
+    inline void EntityWeightId_delete(pRegionWtId id){
       if(P_pid()==0)
-        printf("\nRegionWtId_delete(): Not yet implemented\n");
+        printf("\nEntityWeightId_delete(): Not yet implemented\n");
     }
     inline void PM_setMigrId(pParMesh pm, pMeshDataId id){
       if(P_pid()==0)
@@ -379,10 +379,10 @@ typedef enum MeshModType {
         printf("\nPM_removeMigrId(): Not yet implemented\n");
     }
     
-    inline pAttachDataCommu PM_newAttachDataCommu(int mult, int var,
+    inline pAttachDataCommu AttachDataCommu_new(int mult, int var,
                                                   int maxper){
       if(P_pid()==0)
-        printf("\nPM_newAttachDataCommu(): Not yet implemented\n");
+        printf("\nAttachDataCommu_new(): Not yet implemented\n");
       return (pAttachDataCommu)0;
     }
     inline void AttachDataCommu_delete(pAttachDataCommu adc){

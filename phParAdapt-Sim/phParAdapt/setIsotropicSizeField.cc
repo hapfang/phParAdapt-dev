@@ -259,6 +259,16 @@ void setIsotropicSizeField(pParMesh pmesh,
   sizes.close();
   adaptFactorFile.close();
 #endif
+   pProgress prog;
+   /*if(PMU_size()==1) {
+      pMesh meshMerge;
+      cout << "\n converting pParMesh to pMesh here " << endl;
+      meshMerge = M_createFromParMesh(pmesh, 3, prog);
+      M_write(meshMerge, "mesh_size.sms", 0, prog);
+      M_release(meshMerge);
+   } else {*/
+     PM_write(pmesh, "mesh_size.sms", prog);
+   //}
 
   // data (single double ptr.) is attached to vertices
   cleanAttachedData(mesh,numSurroundNodesID,0,0);

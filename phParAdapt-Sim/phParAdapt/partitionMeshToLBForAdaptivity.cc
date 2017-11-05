@@ -91,7 +91,7 @@ void partitionMeshToLoadBalanceForAdaptivity(pParMesh pmesh,
     scaleWgtNumNewRgns = nNewLowerLimit;
   double wgtUpperLimit = nNewUpperLimit/scaleWgtNumNewRgns;
 
-  pMeshDataId rWtID = PM_newRegionWtId("rgn weight id");
+  pMeshDataId rWtID = EntityWeightId_new("rgn weight id");
   RIter_reset(rit);
   while(rgn = RIter_next(rit)) {
     double numNewRgns;
@@ -109,7 +109,7 @@ void partitionMeshToLoadBalanceForAdaptivity(pParMesh pmesh,
     else if(weightDbl>wgtUpperLimit)
       weight = (int)wgtUpperLimit;
 
-    R_setWeight(rgn,rWtID,weight);
+    EN_setWeight(rgn,rWtID,weight);
 
     EN_deleteDataDbl((pEntity)rgn,newRgnsID);
   }
@@ -122,7 +122,7 @@ void partitionMeshToLoadBalanceForAdaptivity(pParMesh pmesh,
   if(option==9)
     nVarsForSize = 1;
 
-  pAttachDataCommu adcSize = PM_newAttachDataCommu(sizeof(double)/sizeof(int),0,nVarsForSize);
+  pAttachDataCommu adcSize = AttachDataCommu_new(sizeof(double)/sizeof(int),0,nVarsForSize);
   MD_setMeshCallback(meshSizeID, CBmigrateOut, pm_sendDblArray, adcSize);
   MD_setMeshCallback(meshSizeID, CBmigrateIn,  pm_recvDblArray, adcSize);
   if(nVarsForSize>1)
@@ -131,7 +131,7 @@ void partitionMeshToLoadBalanceForAdaptivity(pParMesh pmesh,
     MD_setMeshCallback(meshSizeID, CBdelete,  delDbl, NULL);
   PM_setMigrId(pmesh, meshSizeID);
 
-  pAttachDataCommu adcEI = PM_newAttachDataCommu(sizeof(double)/sizeof(int),0,nCurrentErrorVars);
+  pAttachDataCommu adcEI = AttachDataCommu_new(sizeof(double)/sizeof(int),0,nCurrentErrorVars);
   MD_setMeshCallback(errorIndicatorID, CBmigrateOut, pm_sendDblArray, adcEI);
   MD_setMeshCallback(errorIndicatorID, CBmigrateIn,  pm_recvDblArray, adcEI);
   if(nCurrentErrorVars>1)
@@ -142,7 +142,7 @@ void partitionMeshToLoadBalanceForAdaptivity(pParMesh pmesh,
 
   MPI_Barrier(MPI_COMM_WORLD);
 
-  pPartitionOpts popts = PM_newPartitionOpts();
+  pPartitionOpts popts = PartitionOpts_new();
   PartitionOpts_setTotalNumParts(popts,PM_totalNumParts(pmesh));
   if(masterProcWgt>0.) {
     int tnp = PM_totalNumParts(pmesh);
@@ -161,10 +161,10 @@ void partitionMeshToLoadBalanceForAdaptivity(pParMesh pmesh,
   }
   else
     PartitionOpts_setPartWtEqual(popts);
-  PartitionOpts_setNumRegionWtIds(popts,1); 
-  PartitionOpts_setRegionWtId(popts,0,rWtID);
+  PartitionOpts_setNumEntityWeightIds(popts,1); 
+  PartitionOpts_setEntityWeightId(popts,0,rWtID);
 
-  PM_partition(pmesh,popts,sthreadDefault, prog);
+  PM_partition(pmesh,popts,prog);
 
   PM_removeMigrId(pmesh,errorIndicatorID);
   PM_removeMigrId(pmesh,meshSizeID);
@@ -180,7 +180,7 @@ void partitionMeshToLoadBalanceForAdaptivity(pParMesh pmesh,
   PartitionOpts_delete(popts);
   AttachDataCommu_delete(adcSize);
   AttachDataCommu_delete(adcEI);
-  RegionWtId_delete(rWtID);
+  EntityWeightId_delete(rWtID);
 
   pMesh LBmesh = PM_mesh(pmesh,0);
   mesh = LBmesh;

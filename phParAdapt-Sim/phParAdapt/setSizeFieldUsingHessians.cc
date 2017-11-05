@@ -213,9 +213,10 @@ void setSizeFieldUsingHessians(pParMesh pmesh,
 //   adaptSimLog<<"PMesh     Library build ID : "<<SimPMesh_buildID()<<endl;
 //   adaptSimLog<<"MeshTools Library build ID : "<<SimMeshTools_buildID()<<endl;
 //   adaptSimLog<<endl;
-  fprintf(adaptSimLog,"MeshSim   Library build ID : %s\n",SimMeshing_buildID());
-  fprintf(adaptSimLog,"PMesh     Library build ID : %s\n",SimPartitionedMesh_buildID());
-  fprintf(adaptSimLog,"MeshTools Library build ID : %s\n",SimMeshTools_buildID());
+//  fprintf(adaptSimLog,"MeshSim   Library build ID : %s\n",SimMeshing_buildID());
+//  fprintf(adaptSimLog,"PMesh     Library build ID : %s\n",SimPartitionedMesh_buildID());
+//  fprintf(adaptSimLog,"MeshTools Library build ID : %s\n",SimMeshTools_buildID());
+  fprintf(adaptSimLog,"Simmetrix Library build ID : %s\n",Sim_buildID());
   fprintf(adaptSimLog,"\n");
 
   if(option==1 || option==2) {
@@ -440,10 +441,10 @@ void setSizeFieldUsingHessians(pParMesh pmesh,
   if(PMU_size()==1) {
      pMesh meshMerge;
      meshMerge = M_createFromParMesh(pmesh, 3, prog);
-//     M_write(meshMerge, "mesh_size.sms", 0, prog);
+     M_write(meshMerge, "mesh_size.sms", 0, prog);
      M_release(meshMerge);
   } else {
-//    PM_write(pmesh, "mesh_size.sms", sthreadNone, prog);
+    PM_write(pmesh, "mesh_size.sms", prog);
   }
 
   printf(" [%d] Nodes with hmin into effect : %d (%4.2f%%)\n",PMU_rank(),hminCount,((double)hminCount/nshg)*100);

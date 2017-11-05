@@ -28,6 +28,7 @@ typedef double dArray[3];
 /* void crossProd(const double*,const double*,double*); */
 void F_coord(pFace,double(*)[3],int);
 void M_setTolerance(pMesh);
+void MSA_writePartData(pMSAdapt adapter, int rank, int iter, const char *optsfile, const char *meshfile );
 
 //int GEN_dataI(pGEntity , const char *tag);
 //void * GEN_dataP(pGEntity , const char *tag);
