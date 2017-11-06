@@ -251,6 +251,98 @@ void setIsotropicSizeField(pParMesh pmesh,
     EN_getDataPtr((pEntity)vertex,oldMeshSizeID,(void**)&oldSize);
     EN_getDataPtr((pEntity)vertex,nodalSizeID ,
                       (void**)&h);
+
+// begin of computation of current anisotropic size
+
+     int numEdges = V_numEdges(vertex);
+     if (numEdges <= 4) { // corner case
+      put some code here to set anisotropic size from existing 3 perp edges
+      when it equals 4 it means their is a single diagonal incident on corner     
+     } 
+     else if( 
+//step 1: compute edge lengths to determine if anisotropic size needed
+     double edgeL,edgemax,edgemin;
+     edgemax=0.0;
+     edgemin=1.0e6;
+     for (int i=0; i < numEdges; i++) {
+	edge = V_edge(vertex,i);
+	edgeL= E_length(edge);
+ 	edgemax=max(edgemax,edgeL);
+	edgemin=min(edgemin,edgeL);
+     }
+     if ( edgemax < 4.0*edgemin) { \\ not really worth complicate aniso
+        either plug in iso or simple aniso here
+     } else {
+//step 2: get and store all the edge vectors for the current vertex 
+     double coordvcur[3];
+     double coordvother[3];
+     double edgesIonV[numEdges][3];
+      V_coord(vertex, coordvcur );	
+      pVertex vother;
+      for (int i=0; i < numEdges; i++) {
+        edge = V_edge(vertex,i);
+        vother=E_otherVertex(edge, vertex);	
+        V_coord(vother, coordvother );	
+        for (int j=0 ;j<3; j++) {
+               edgesIonV[i][j]=coordvother[j]-coordvcur[j];
+        }
+    
+//step 3, find the two normal growth curve edge.  They will be aligned and perpendicular to the others
+      double dotProdTable[numEdges][numEdges];
+      for (int i=0; i < numEdges; i++) {
+        for (int j=0; j < numEdges; j++) {
+          dotProdTable[i][j]=dotProd(edgesIonV[i],edgesIonV[j]);
+        }
+      }
+      double InvEdgeL[numEdges];
+      for (int i=0; i < numEdges; i++) {
+         InvEdgeL[i]=1.0/sqrt(dotProdTable[i][i]);
+      }
+      double NormdotProdTable[numEdges][numEdges];
+      for (int i=0; i < numEdges; i++) {
+        for (int j=0; j < numEdges; j++) {
+          NormdotProdTable[i][j]=dotProdTable[i][j]*
+          InvEdgeL[i]*invEdgeL[j];
+        }
+      }
+      int edgeAlignCounts[numEdges][3];
+      double high,med, low;
+      high=0.99;
+      med=0.9;
+      low=0.01;
+      int icountHigh, icountMed, icountLow;
+      for (int i=0; i < numEdges; i++) {
+        icountHigh=0;
+        icountMed=0;
+        icountLow=0
+        for (int j=0; j < numEdges; j++) {
+          if(abs(NormdotProdTable[i][j])> high) icountHigh++;
+          if(abs(NormdotProdTable[i][j])> med) icountMed++;
+          if(abs(NormdotProdTable[i][j])> low) icountLow++;
+        }
+        edgeAlignCounts[i][1]=icountHigh
+        edgeAlignCounts[i][2]=icountMed
+        edgeAlignCounts[i][3]=icountLow
+      }
+//success check we expect one pair of edges that ha
+      for (int i=0; i < numEdges; i++) {
+        if(edgeAlignCounts[i][3]==2) { \\ candidate growth edge
+          gc_count++
+          if(gc_count==1) gc1=i
+          if(gc_count==2) gc2=i
+        }
+      }
+      if(gc_count > 2) cout << "growth Dir search failed" << endl
+      for (int i=0; i < 3; i++) {
+        d0[0]=
+      ABORT...HOpe we never return to this
+           
+          
+      
+
+// end of computation anisotropic size
+
+
     double sizeRat;
     sizeRat= h[0]/(*oldSize);
     if(sizeRat <= ratThresh){
