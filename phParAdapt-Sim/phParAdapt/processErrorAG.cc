@@ -48,7 +48,7 @@ processErrorAG(double* nodalErrorSet, double* nodalSolutionSet, int nvar, int op
        scalarVal =  (rms_mag *log(pde_mag + 1E-10 )*0.4 +0.2)*nodalSolutionSet[5];
 // pasted from ParaView with value 0.01 for HLCRM-16degrees Simmmetrix Coarse-Mixed
 // mag(rms-vel)*log10(mag(pde-res)+1.0e-10)*EVbar*0.4 + 0.2*EVbari
-       scalarVal =  nodalSolutionSet[5];
+//       scalarVal =  nodalSolutionSet[5];
     }
     
     else {
