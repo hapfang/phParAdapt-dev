@@ -429,6 +429,7 @@ void setIsotropicSizeField(pParMesh pmesh,
           OrgAnisoSize[1][1]= edgesIonV[midE][1];
           OrgAnisoSize[1][2]= edgesIonV[midE][2];
  
+          sizeRat=0.65;
           OrgAnisoSize[2][0]= sizeRat*edgesIonV[maxE][0];
           OrgAnisoSize[2][1]= sizeRat*edgesIonV[maxE][1];
           OrgAnisoSize[2][2]= sizeRat*edgesIonV[maxE][2];
