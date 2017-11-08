@@ -245,7 +245,7 @@ void setIsotropicSizeField(pParMesh pmesh,
   int iSize,icountVerts;
   double *oldSize;
   double* h = new double;
-  double ratThresh=0.9; // not certain of the best number here as smoothing was applied to the original size
+  double ratThresh=0.75; // not certain of the best number here as smoothing was applied to the original size
 
   icountVerts=0;
   while ( vertex=VIter_next(vIter)) {
@@ -256,6 +256,8 @@ void setIsotropicSizeField(pParMesh pmesh,
     int Isotrop;
     double sizeRat;
     sizeRat= h[0]/(*oldSize);
+    double coordvcur[3];
+    V_coord(vertex, coordvcur ); 
     if(sizeRat <= ratThresh){
 
 // begin of computation of current anisotropic size
@@ -265,7 +267,7 @@ void setIsotropicSizeField(pParMesh pmesh,
      double edgesIonV[numEdges][3];
 //step 1: compute edge lengths to determine if anisotropic size needed
      double edgeL,edgemax,edgemin;
-     double coordvcur[3];
+     double eLength [3];
      int ifirst, isecond, ithird;
      edgemax=0.0;
      edgemin=1.0e6;
@@ -282,7 +284,6 @@ void setIsotropicSizeField(pParMesh pmesh,
 //step 2: get and store all the edge vectors for the current vertex 
 //     double coordvcur[3];
      double coordvother[3];
-      V_coord(vertex, coordvcur );	
       pVertex vother;
       for (int i=0; i < numEdges; i++) {
         edge = V_edge(vertex,i);
@@ -341,45 +342,28 @@ void setIsotropicSizeField(pParMesh pmesh,
           edgeAlignCounts[i][2]=edgeAlignCounts[i][1];
         }
       }
-//      int ifirst, isecond, ithird;
-      ifirst=0;
-      isecond=1;
-      ithird=2;  // safety values
 // find the edge with the greatest orthonality to others
-      int minLow=numEdges;
-      for (int i=0; i < numEdges; i++) {
-        if(edgeAlignCounts[i][2]<minLow) { // candidate first edge
-            minLow=edgeAlignCounts[i][2];
-            ifirst=i;
-        }
-      }
-// mark edges with strong projections off candidate list
-      for (int i=0; i < numEdges; i++) {
-        if(fabs(NormdotProdTable[i][ifirst]) >=0.5) {
-           edgeAlignCounts[i][2]=numEdges;
-        }
-      }
-      if(1) {
-// choose second vector as the one with the lowest projection onto ifirst
-      double projmin=1;
+     if(1) {
       double tmp1;
-      isecond=-1;
+      double projmin=1;
       for (int i=0; i < numEdges; i++) {
-         tmp1=fabs(NormdotProdTable[ifirst][i]);
-         if(tmp1 < projmin) {
-            projmin=tmp1;
-            isecond=i;
+        for (int j=i+1; j < numEdges; j++) {
+         tmp1=fabs(NormdotProdTable[i][j]);
+            if(tmp1<projmin) {
+               projmin=tmp1;
+               ifirst=i;
+               isecond=j;
+            }
          }
       }
-      if(isecond==-1) {
-         cout << "second edge failed" << endl;
-      }
+// find the third vector as the one with the weakest sum projection onto first and second
       projmin=2;
       ithird=-1;
       for (int i=0; i < numEdges; i++) {
          if((i!=ifirst)&&(i!=isecond)){ 
            tmp1=fabs(NormdotProdTable[ifirst][i]);
-           tmp1+=fabs(NormdotProdTable[isecond][i]);
+// average allows bad choice           tmp1+=fabs(NormdotProdTable[isecond][i]);
+           tmp1=max(tmp1,fabs(NormdotProdTable[isecond][i]));
            if(tmp1 < projmin) {
               projmin=tmp1;
               ithird=i;
@@ -389,37 +373,7 @@ void setIsotropicSizeField(pParMesh pmesh,
       if(ithird==-1) {
          cout << "third edge failed" << endl;
       }
-      } else {       
-// find the second edge in a similar way
-      minLow=numEdges;
-      for (int i=0; i < numEdges; i++) {
-        if(edgeAlignCounts[i][2]<minLow) { //candidate second edge
-             minLow=edgeAlignCounts[i][2];
-            isecond=i;
-        }
-       }
-// mark edges with strong projections off candidate list
-      for (int i=0; i < numEdges; i++) {
-        if(fabs(NormdotProdTable[i][isecond]) > 0.5) {
-         edgeAlignCounts[i][2]=numEdges;
-        }
-       }
-      if(minLow==numEdges) {
-        cout << "second edge search failed" << endl;
-      }
-// find the third edge in a similar way
-      minLow=numEdges;
-      for (int i=0; i < numEdges; i++) {
-        if(edgeAlignCounts[i][2]<minLow) { // candidate third edge
-            minLow=edgeAlignCounts[i][2];
-            ithird=i;
-        }
-      }
-      if(minLow==numEdges) {
-        cout << "third edge search failed on vertex " << icountVerts << endl;
-      }
-      } // closes the old way of computing ifirst, isecond, and ithird    
-      double eLength [3];
+     }
       eLength[0]=sqrt(dotProdTable[ifirst][ifirst]);    
       eLength[1]=sqrt(dotProdTable[isecond][isecond]);    
       eLength[2]=sqrt(dotProdTable[ithird][ithird]);    
@@ -450,6 +404,16 @@ void setIsotropicSizeField(pParMesh pmesh,
       minE=d0;
       midE=d1;
       maxE=d2;
+      double dots[3];
+      dots[0]=fabs(NormdotProdTable[minE][midE]);
+      dots[1]=fabs(NormdotProdTable[minE][maxE]);
+      dots[2]=fabs(NormdotProdTable[midE][maxE]);
+      for (int k=0; k<3; k++) {
+         if (dots[k]>0.6) {
+           cout << "WARNING: two of the selected vectors are not orthogonal" << endl;
+           Isotrop=1;
+         }
+      }
       if(minE==midE || minE==maxE || midE==maxE) {
          Isotrop=1;
          cout << "Setting Isotropic size on vertex " << icountVerts << endl;
@@ -476,20 +440,15 @@ void setIsotropicSizeField(pParMesh pmesh,
           OrgAnisoSize[1][1]= edgesIonV[midE][1];
           OrgAnisoSize[1][2]= edgesIonV[midE][2];
  
-          sizeRat=0.65;
+          sizeRat=0.5;
           OrgAnisoSize[2][0]= sizeRat*edgesIonV[maxE][0];
           OrgAnisoSize[2][1]= sizeRat*edgesIonV[maxE][1];
           OrgAnisoSize[2][2]= sizeRat*edgesIonV[maxE][2];
-          double dots[3];
-          dots[0]=fabs(NormdotProdTable[minE][midE]);
-          dots[1]=fabs(NormdotProdTable[minE][maxE]);
-          dots[2]=fabs(NormdotProdTable[midE][maxE]);
-          for (int k=0; k<3; k++) {
-             if (dots[k]>0.6) {
-               cout << "WARNING: two of the selected vectors are not orthogonal" << endl;
-             }
-          }
      }
+    int istop;
+    if(coordvcur[1]<5e-6) {
+       istop=1;
+    }
      MSA_setAnisoVertexSize(simAdapter, 
                         vertex,
                         OrgAnisoSize);

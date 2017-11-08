@@ -405,6 +405,8 @@ adapt(  // parallel mesh
 
 #ifdef SIM
   MSA_setAdaptBL(simAdapter, isBLAdapt);
+  int localAdapt=1; // 0 if you want the whole mesh to adapt, 1 if you want only where you have set the size field
+  MSA_setLocal(simAdapter, localAdapt);	
   if(isBLAdapt==1) {
      MSA_setExposedBLBehavior(simAdapter, BL_DisallowExposed);
 //     MSA_setExposedBLBehavior(simAdapter, bl_DisallowExposed);
