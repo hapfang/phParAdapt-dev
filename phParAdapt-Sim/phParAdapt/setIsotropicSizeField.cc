@@ -301,8 +301,14 @@ void setIsotropicSizeField(pParMesh pmesh,
         }
       }
       double InvEdgeL[numEdges];
+      int longestEdge;
+      double InvEdgeMin=1e6;
       for (int i=0; i < numEdges; i++) {
          InvEdgeL[i]=1.0/sqrt(dotProdTable[i][i]);
+         if (InvEdgeL[i]<InvEdgeMin) {
+           InvEdgeMin=InvEdgeL[i];
+           longestEdge=i;
+         }
       }
 //      double NormdotProdTable[numEdges][numEdges];
       for (int i=0; i < numEdges; i++) {
@@ -316,36 +322,52 @@ void setIsotropicSizeField(pParMesh pmesh,
       high=0.99;
       med=0.5;
       low=0.01;
-      int icountHigh, icountMed, icountLow;
-      int icountLowNotViable=0;
-      for (int i=0; i < numEdges; i++) {
-        icountHigh=0;
-        icountMed=0;
-        icountLow=0;
-        for (int j=0; j < numEdges; j++) {
-          temp=fabs(NormdotProdTable[i][j]);
-          if(temp > high) icountHigh++;
-          if(temp> med) icountMed++;
-          if(temp> low) icountLow++;
-//          if(abs(NormdotProdTable[i][j])> high) icountHigh++;
-//          if(abs(NormdotProdTable[i][j])> med) icountMed++;
-//          if(abs(NormdotProdTable[i][j])> low) icountLow++;
-
-        }
-        edgeAlignCounts[i][0]=icountHigh;
-        edgeAlignCounts[i][1]=icountMed;
-        edgeAlignCounts[i][2]=icountLow;
-        if(icountLow==numEdges) icountLowNotViable++;
-      }
-      if(numEdges - icountLowNotViable < 3) { // won't get a basis from low
-        for (int i=0; i < numEdges; i++) {
-          edgeAlignCounts[i][2]=edgeAlignCounts[i][1];
-        }
-      }
-// find the edge with the greatest orthonality to others
-     if(1) {
       double tmp1;
       double projmin=1;
+      if(1){
+//  Simmetrix suggestion that longest edge should be one of vectors
+      ifirst=longestEdge;
+      for (int i=0; i < numEdges; i++) {
+           tmp1=fabs(NormdotProdTable[ifirst][i]);
+           if(tmp1 < projmin) {
+              projmin=tmp1;
+              isecond=i;
+           }
+      }
+// third vector is not an edge, rather it is orthogonal to the first 2 and then scaled by the longest "other" edge projection onto this third vector
+      double size3[3];
+      size3[0]= edgesIonV[ifirst][1]*edgesIonV[isecond][2]
+              - edgesIonV[ifirst][2]*edgesIonV[isecond][1];
+      size3[1]= edgesIonV[ifirst][2]*edgesIonV[isecond][0]
+              - edgesIonV[ifirst][0]*edgesIonV[isecond][2];
+      size3[2]= edgesIonV[ifirst][0]*edgesIonV[isecond][1]
+              - edgesIonV[ifirst][1]*edgesIonV[isecond][0];
+      tmp1 =1.0/sqrt(size3[0]*size3[0]+size3[1]*size3[1]+size3[2]*size3[2]);
+      size3[0]*=tmp1;
+      size3[1]*=tmp1;
+      size3[2]*=tmp1;
+      double projmax=0.0;
+      double proj3;
+      for (int i=0; i < numEdges; i++) {
+         if((i!=ifirst)&&(i!=isecond)){ 
+           tmp1=dotProd(edgesIonV[i],size3)*InvEdgeL[i];
+           if(fabs(tmp1) > projmax) {
+              projmax=abs(tmp1); // alignment (non-dim)
+              proj3=tmp1/InvEdgeL[i]; // actual length projection onto size3
+              ithird=i;
+           }
+         }
+       }
+// now scale the third vector
+       size3[0]*=proj3;
+       size3[1]*=proj3;
+       size3[2]*=proj3;
+       edgesIonV[ithird][0]=size3[0];
+       edgesIonV[ithird][1]=size3[1];
+       edgesIonV[ithird][2]=size3[2];
+      dotProdTable[ithird][ithird]=proj3*proj3; // store size3's length here to be consistent with later use to get length of the third vector 
+    } else {
+// find the edge with the greatest orthonality to others
       for (int i=0; i < numEdges; i++) {
         for (int j=i+1; j < numEdges; j++) {
          tmp1=fabs(NormdotProdTable[i][j]);
@@ -373,7 +395,7 @@ void setIsotropicSizeField(pParMesh pmesh,
       if(ithird==-1) {
          cout << "third edge failed" << endl;
       }
-     }
+     } // should close not simmetrix suggested way
       eLength[0]=sqrt(dotProdTable[ifirst][ifirst]);    
       eLength[1]=sqrt(dotProdTable[isecond][isecond]);    
       eLength[2]=sqrt(dotProdTable[ithird][ithird]);    
