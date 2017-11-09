@@ -407,6 +407,8 @@ adapt(  // parallel mesh
   MSA_setAdaptBL(simAdapter, isBLAdapt);
   int localAdapt=1; // 0 if you want the whole mesh to adapt, 1 if you want only where you have set the size field
   MSA_setLocal(simAdapter, localAdapt);	
+  int coarsenMode=0; // 0 if you want to disable, 1 just initial, 2 all
+  MSA_setCoarsenMode(simAdapter, coarsenMode);	
   if(isBLAdapt==1) {
      MSA_setExposedBLBehavior(simAdapter, BL_DisallowExposed);
 //     MSA_setExposedBLBehavior(simAdapter, bl_DisallowExposed);

@@ -242,12 +242,14 @@ void setIsotropicSizeField(pParMesh pmesh,
   int maxE,minE,midE;
   double* OrgSize = new double;
   double OrgAnisoSize[3][3];
-  int iSize,icountVerts;
+  int iSize,icountVerts,icountIsotrop,icountAnisotrop;
   double *oldSize;
   double* h = new double;
   double ratThresh=0.75; // not certain of the best number here as smoothing was applied to the original size
 
   icountVerts=0;
+  icountIsotrop=0;
+  icountAnisotrop=0;
   while ( vertex=VIter_next(vIter)) {
     icountVerts++;
     EN_getDataPtr((pEntity)vertex,oldMeshSizeID,(void**)&oldSize);
@@ -281,6 +283,7 @@ void setIsotropicSizeField(pParMesh pmesh,
      if ( edgemax < 4.0*edgemin) { // not really worth complicate aniso
        Isotrop=1; 
      } else {
+      Isotrop=0;  // set this to 0 but note we switch to isotropic if needed    
 //step 2: get and store all the edge vectors for the current vertex 
 //     double coordvcur[3];
      double coordvother[3];
@@ -412,7 +415,6 @@ void setIsotropicSizeField(pParMesh pmesh,
         }
       }
       for (int k=0 ;k<3; k++) if((k!=maxE) && (k!=minE)) midE=k;
-      Isotrop=0;     
       int d0,d1,d2;
       if(minE==0) d0=ifirst;
       if(minE==1) d0=isecond;
@@ -430,9 +432,17 @@ void setIsotropicSizeField(pParMesh pmesh,
       dots[0]=fabs(NormdotProdTable[minE][midE]);
       dots[1]=fabs(NormdotProdTable[minE][maxE]);
       dots[2]=fabs(NormdotProdTable[midE][maxE]);
+      double A20,A10,A21;
+      eLength[0]=sqrt(dotProdTable[minE][minE]);    
+      eLength[1]=sqrt(dotProdTable[midE][midE]);    
+      eLength[2]=sqrt(dotProdTable[maxE][maxE]);    
+      A20=eLength[2]/eLength[0];
+      A10=eLength[1]/eLength[0];
+      A21=eLength[2]/eLength[1];
+      if(A21<4 && A10 > 100) Isotrop=1; // 
       for (int k=0; k<3; k++) {
          if (dots[k]>0.6) {
-           cout << "WARNING: two of the selected vectors are not orthogonal" << endl;
+//           cout << "WARNING: two of the selected vectors are not orthogonal" << endl;
            Isotrop=1;
          }
       }
@@ -440,19 +450,12 @@ void setIsotropicSizeField(pParMesh pmesh,
          Isotrop=1;
          cout << "Setting Isotropic size on vertex " << icountVerts << endl;
       }
-//      cout << " Norm Dot Prod v1.v2 " << NormDotProdTable[minE][midE] << endl;
-//      cout << " Norm Dot Prod v1.v3 " << NormDotProdTable[minE][maxE] << endl;
-//      cout << " Norm Dot Prod v2.v3 " << NormDotProdTable[midE][maxE] << endl;
      } // anisotrop      
      if(Isotrop==1) {
-          for (int k=0 ;k<3; k++) {
-            for (int j=0 ;j<3; j++) {
-               OrgAnisoSize[k][j]=0.0;
-            }
-          }
-          OrgAnisoSize[0][0]= h[0];
-          OrgAnisoSize[1][1]= h[0];
-          OrgAnisoSize[2][2]= h[0];
+         MSA_setVertexSize(simAdapter, 
+                        vertex,
+                        h[0]);
+         icountIsotrop++;
      } else {
           OrgAnisoSize[0][0]= edgesIonV[minE][0];
           OrgAnisoSize[0][1]= edgesIonV[minE][1];
@@ -466,18 +469,24 @@ void setIsotropicSizeField(pParMesh pmesh,
           OrgAnisoSize[2][0]= sizeRat*edgesIonV[maxE][0];
           OrgAnisoSize[2][1]= sizeRat*edgesIonV[maxE][1];
           OrgAnisoSize[2][2]= sizeRat*edgesIonV[maxE][2];
-     }
-    int istop;
-    if(coordvcur[1]<5e-6) {
-       istop=1;
-    }
-     MSA_setAnisoVertexSize(simAdapter, 
+          int istop;
+          if(coordvcur[1]<5e-6) {
+             istop=1;
+          }
+          MSA_setAnisoVertexSize(simAdapter, 
                         vertex,
-                        OrgAnisoSize);
+                       OrgAnisoSize);
+
+          icountAnisotrop++;
+     }
+
    } // the skip if not marked
   }  // iteraor
   VIter_delete(vIter);
   delete [] h;
+  cout << "icountVerts " << icountVerts << endl;
+  cout << "icountIsotrop " << icountIsotrop << endl;
+  cout << "icountAnisotrop " << icountAnisotrop << endl;
 
 #ifdef DEBUG  
 //  M_writeVTKFile(mesh, "IsotropicSize", nodalSizeID, 1);
