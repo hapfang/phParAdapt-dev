@@ -65,19 +65,19 @@ ifeq ($(ARCHOS),x86_64_linux-pgi)
 endif
 
 ifeq ($(ARCHOS),x86_64_linux-icc)
-   SIMARCH := x64_rhel5_gcc41
+   SIMARCH := x64_rhel7_gcc48
    ETCFLAGS := $(ETCFLAGS) -lnsl -lpthread
    DEFS := $(DEFS) -DB64
 endif
 
 ifeq ($(ARCHOS),x86_64_linux)
-   SIMARCH := x64_rhel5_gcc41
+   SIMARCH := x64_rhel7_gcc48
    ETCFLAGS := $(ETCFLAGS) -lnsl -lpthread
    DEFS := $(DEFS) -DB64
 endif
 
 ifeq ($(ARCHOS),x86_64_linux-gcc)
-   SIMARCH := x64_rhel5_gcc41
+   SIMARCH := x64_rhel7_gcc48
    ETCFLAGS := $(ETCFLAGS) -lnsl -lpthread
    DEFS := $(DEFS) -DB64
 endif

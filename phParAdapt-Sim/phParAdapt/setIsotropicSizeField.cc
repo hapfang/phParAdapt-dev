@@ -245,7 +245,7 @@ void setIsotropicSizeField(pParMesh pmesh,
   int iSize,icountVerts,icountIsotrop,icountAnisotrop;
   double *oldSize;
   double* h = new double;
-  double ratThresh=0.75; // not certain of the best number here as smoothing was applied to the original size
+  double ratThresh=0.8; // not certain of the best number here as smoothing was applied to the original size
 
   icountVerts=0;
   icountIsotrop=0;
@@ -439,9 +439,24 @@ void setIsotropicSizeField(pParMesh pmesh,
       A20=eLength[2]/eLength[0];
       A10=eLength[1]/eLength[0];
       A21=eLength[2]/eLength[1];
-      if(A21<4 && A10 > 100) Isotrop=1; // 
+//      Isotrop=1; // the unltimate no-pass filter
+// shield spheres
+/*      double bpt[3];
+      double tc=1.0e-1;
+      bpt[0]=44.707299804817559;
+      bpt[1]=29.083719907441136;
+      bpt[2]=6.2321790986239671;
+      if(sqrt(dist(bpt, coordvcur))<tc) Isotrop=1;
+
+      bpt[0]=25.645204911719141;
+      bpt[1]=3.6247629134018351;
+      bpt[2]=4.4261465737576327;
+      if(sqrt(dist(bpt, coordvcur))<tc) Isotrop=1;
+*/
+//      if(coordvcur[0]<26) Isotrop=1;
+      if(A21<4 || A10 < 10) Isotrop=1; // 
       for (int k=0; k<3; k++) {
-         if (dots[k]>0.6) {
+         if (dots[k]>0.2) {
 //           cout << "WARNING: two of the selected vectors are not orthogonal" << endl;
            Isotrop=1;
          }
