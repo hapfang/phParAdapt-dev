@@ -530,7 +530,7 @@ adapt(  // parallel mesh
     }  
     if(option == 3) {  
       transformToScalarErrorVal(mesh,nvar,option);
-      setIsotropicSizeField(pmesh,mesh,simAdapter,factor,hmax,hmin,option);
+      setIsotropicSizeField(model,pmesh,mesh,simAdapter,factor,hmax,hmin,option);
     }
     wtimePoints[13] = time(0);
   }// case 2:  anisotropic adaptation
@@ -778,7 +778,7 @@ adapt(  // parallel mesh
     // compute mesh size-field using residues (isotropic adaptation)
     // and set it at each vertex 
     // uses a single scalar nodal value attached via errorIndicatorID
-    setIsotropicSizeField(pmesh,mesh,simAdapter,factor,hmax,hmin,option); 
+    setIsotropicSizeField(model,pmesh,mesh,simAdapter,factor,hmax,hmin,option); 
 
     wtimePoints[13] = time(0);
 
@@ -919,7 +919,7 @@ adapt(  // parallel mesh
     attachArray(interfaceMetric,mesh,interfaceMetricID,9,poly); 
     delete [] interfaceMetric;
 
-    //setIsotropicSizeField(pmesh,mesh,simAdapter,factor,hmax,hmin,option); 
+    //setIsotropicSizeField(model,pmesh,mesh,simAdapter,factor,hmax,hmin,option); 
 
     setSizeFieldFromAttachedData(mesh,simAdapter,interfaceMetricID); 
 

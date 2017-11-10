@@ -45,7 +45,8 @@ extern int isSizeLimit;
 extern int MaxLimitFact;
 extern int MinLimitFact;
 
-void setIsotropicSizeField(pParMesh pmesh,
+void setIsotropicSizeField(pGModel model,
+                           pParMesh pmesh,
 			   pMesh mesh,
 			   pMSAdapt simAdapter,
 			   double factor,
@@ -250,7 +251,14 @@ void setIsotropicSizeField(pParMesh pmesh,
   icountVerts=0;
   icountIsotrop=0;
   icountAnisotrop=0;
-  while ( vertex=VIter_next(vIter)) {
+  
+  pGFace gface;
+  GFIter gfIter=GM_faceIter(model);
+  while ( gface=GFIter_next(gfIter)) {
+    VIter vofIter  = M_classifiedVertexIter(mesh, (pGEntity)gface, 0);
+    while ( vertex=VIter_next(vofIter)) {
+//  above 5 lines swap to a vertices on face iteration while below is all    
+// reuse of reset iterator while ( vertex=VIter_next(vIter)) {
     icountVerts++;
     EN_getDataPtr((pEntity)vertex,oldMeshSizeID,(void**)&oldSize);
     EN_getDataPtr((pEntity)vertex,nodalSizeID ,
@@ -466,12 +474,13 @@ void setIsotropicSizeField(pParMesh pmesh,
          cout << "Setting Isotropic size on vertex " << icountVerts << endl;
       }
      } // anisotrop      
+     if(Isotrop==1) Isotrop=-1;
      if(Isotrop==1) {
          MSA_setVertexSize(simAdapter, 
                         vertex,
                         h[0]);
          icountIsotrop++;
-     } else {
+     } else if (Isotrop==2){
           OrgAnisoSize[0][0]= edgesIonV[minE][0];
           OrgAnisoSize[0][1]= edgesIonV[minE][1];
           OrgAnisoSize[0][2]= edgesIonV[minE][2];
@@ -496,8 +505,12 @@ void setIsotropicSizeField(pParMesh pmesh,
      }
 
    } // the skip if not marked
-  }  // iteraor
-  VIter_delete(vIter);
+  }  // iterator
+  VIter_delete(vofIter);
+  }  // iterator
+  GFIter_delete(gfIter);
+//  3 lines above make a vertex iterator over model faces below is all
+//  VIter_delete(vIter);
   delete [] h;
   cout << "icountVerts " << icountVerts << endl;
   cout << "icountIsotrop " << icountIsotrop << endl;

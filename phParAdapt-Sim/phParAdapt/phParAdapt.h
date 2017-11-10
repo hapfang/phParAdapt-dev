@@ -82,7 +82,7 @@ extern "C" {
   void computeOldMeshSize(pMesh, int option);
   void commuOldMeshSize(pParMesh, pMesh);
 
-  void setIsotropicSizeField(pParMesh,pMesh,pMSAdapt,double,double,double,int option );
+  void setIsotropicSizeField(pGModel,pParMesh,pMesh,pMSAdapt,double,double,double,int option );
 
   void setManualSizeField(pParMesh pmesh, pMesh mesh, pMSAdapt simAdapter, int comp, int option);
     
