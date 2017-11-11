@@ -255,7 +255,7 @@ void setIsotropicSizeField(pGModel model,
   pGFace gface;
   GFIter gfIter=GM_faceIter(model);
   while ( gface=GFIter_next(gfIter)) {
-    VIter vofIter  = M_classifiedVertexIter(mesh, (pGEntity)gface, 0);
+    VIter vofIter  = M_classifiedVertexIter(mesh, (pGEntity)gface, 1); // 1 gives closure 0 not....I think we want closure to pick up verts on model edges and verts
     while ( vertex=VIter_next(vofIter)) {
 //  above 5 lines swap to a vertices on face iteration while below is all    
 // reuse of reset iterator while ( vertex=VIter_next(vIter)) {
@@ -480,7 +480,7 @@ void setIsotropicSizeField(pGModel model,
                         vertex,
                         h[0]);
          icountIsotrop++;
-     } else if (Isotrop==2){
+     } else if (Isotrop==0){
           OrgAnisoSize[0][0]= edgesIonV[minE][0];
           OrgAnisoSize[0][1]= edgesIonV[minE][1];
           OrgAnisoSize[0][2]= edgesIonV[minE][2];

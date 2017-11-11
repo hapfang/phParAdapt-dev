@@ -1142,7 +1142,7 @@ adapt(  // parallel mesh
 #ifdef SIM
 //  GM_write(model, "thisModel.smd",0, prog);
   if(PMU_size()==1) {
-     M_write(mesh, "mesh_out.sms", 0, prog);
+//     M_write(mesh, "mesh_out.sms", 0, prog);
      M_writeVTKFile(mesh, "mesh_out", phasta_solution, ndof);
 //  } else {
 //     PM_write(pmesh, "mesh_out.sms", prog);
