@@ -10,6 +10,7 @@
 #include "mpi.h"
 #ifdef SIM
 #include "SimMeshTools.h"
+#include "SimAdvMeshing.h"
 #endif
 
 using namespace std;
@@ -260,14 +261,53 @@ void setIsotropicSizeField(pGModel model,
 //  above 5 lines swap to a vertices on face iteration while below is all    
 // reuse of reset iterator while ( vertex=VIter_next(vIter)) {
     icountVerts++;
-    EN_getDataPtr((pEntity)vertex,oldMeshSizeID,(void**)&oldSize);
-    EN_getDataPtr((pEntity)vertex,nodalSizeID ,
-                      (void**)&h);
+
     int Isotrop;
     double sizeRat;
-    sizeRat= h[0]/(*oldSize);
     double coordvcur[3];
     V_coord(vertex, coordvcur ); 
+
+// adding the ability to scan the growth curve to find the highest error.
+   int itest,fromSide=1; // guessing fromSide should be 1??
+   pGEntity into;
+/// copied from above for format  pVertex vertex;
+   pEntity seed;
+   if(EN_isBLEntity((pEntity)vertex)) { // true if this is a BL entity
+     if(BL_isBaseEntity((pEntity)vertex,(pGEntity)gface)) { // current vertex is base
+       itest=BL_stackSeedEntity((pEntity)vertex,(pGEntity)gface,fromSide,into,&seed);
+       if(itest<1) {
+         cout << "WARNING: BL_stackSeedEntity failed" <<     endl;
+       } else {
+         pPList verStack=PList_new();
+         pPList edgeStack=PList_new();
+         itest=BL_growthVerticesAndEdges((pEdge)seed,verStack,edgeStack);
+         void *iter = 0; // must initialize to 0
+         double sizeRatMin=1.0;
+         pVertex ent;
+         while(ent = (pVertex)PList_next(verStack, &iter)){
+             // process each item in list
+           EN_getDataPtr((pEntity)ent,oldMeshSizeID,(void**)&oldSize);
+           EN_getDataPtr((pEntity)ent,nodalSizeID ,
+                      (void**)&h);
+           sizeRat= h[0]/(*oldSize);
+           sizeRatMin=min(sizeRat,sizeRatMin);
+          }
+          sizeRat=sizeRatMin;
+          PList_delete(verStack);
+          PList_delete(edgeStack);
+       }
+      }
+    }
+
+
+ // end stack scan for worst
+
+// 4 lines below are what we did when we checked every vertex
+//    EN_getDataPtr((pEntity)vertex,oldMeshSizeID,(void**)&oldSize);
+//    EN_getDataPtr((pEntity)vertex,nodalSizeID ,
+//                      (void**)&h);
+// sizeRat= h[0]/(*oldSize);
+
     if(sizeRat <= ratThresh){
 
 // begin of computation of current anisotropic size
