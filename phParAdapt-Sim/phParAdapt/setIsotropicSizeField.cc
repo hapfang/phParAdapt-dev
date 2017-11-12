@@ -255,6 +255,9 @@ void setIsotropicSizeField(pGModel model,
   
   pGFace gface;
   GFIter gfIter=GM_faceIter(model);
+  pGRegion gregion;
+  GRIter grIter=GM_regionIter(model);
+  while ( gregion=GRIter_next(grIter)) {   // only way I know to find region
   while ( gface=GFIter_next(gfIter)) {
     VIter vofIter  = M_classifiedVertexIter(mesh, (pGEntity)gface, 1); // 1 gives closure 0 not....I think we want closure to pick up verts on model edges and verts
     while ( vertex=VIter_next(vofIter)) {
@@ -263,21 +266,31 @@ void setIsotropicSizeField(pGModel model,
     icountVerts++;
 
     int Isotrop;
-    double sizeRat;
+    double sizeRat=1.0;
     double coordvcur[3];
     V_coord(vertex, coordvcur ); 
 
 // adding the ability to scan the growth curve to find the highest error.
-   int itest,fromSide=1; // guessing fromSide should be 1??
+   int itest,itesto,fromSide=0; // 1-> face normal points outside region, 0-> opposite
    pGEntity into;
 /// copied from above for format  pVertex vertex;
    pEntity seed;
-   if(EN_isBLEntity((pEntity)vertex)) { // true if this is a BL entity
+   sizeRat=1;
+   if(EN_isBLEntity((pEntity)vertex)) { // true if this is a BL entitGy
      if(BL_isBaseEntity((pEntity)vertex,(pGEntity)gface)) { // current vertex is base
-       itest=BL_stackSeedEntity((pEntity)vertex,(pGEntity)gface,fromSide,into,&seed);
-       if(itest<1) {
-         cout << "WARNING: BL_stackSeedEntity failed" <<     endl;
-       } else {
+       // for a 3D BL, the into region is not needed, pass NULL?
+       itest=BL_stackSeedEntity((pEntity)vertex,(pGEntity)gface,fromSide,(pGEntity)gregion,&seed);
+       if(itest<1) { // try other side?
+         fromSide=1;
+         itesto=BL_stackSeedEntity((pEntity)vertex,(pGEntity)gface,fromSide,(pGEntity)gregion,&seed);
+         if(itesto<1) { 
+         sizeRat=101; // code for both sides fail
+//  This will fail for all faces that BL's grow "up", e.g., symmetry planes 
+// disable warning until we figure out how to block these faces.
+//         cout << "WARNING: BL_stackSeedEntity failed" <<     endl;
+         }
+       }
+       if(sizeRat<100) { // one side succeeded so traverse the stack
          pPList verStack=PList_new();
          pPList edgeStack=PList_new();
          itest=BL_growthVerticesAndEdges((pEdge)seed,verStack,edgeStack);
@@ -295,9 +308,9 @@ void setIsotropicSizeField(pGModel model,
           sizeRat=sizeRatMin;
           PList_delete(verStack);
           PList_delete(edgeStack);
-       }
-      }
-    }
+       } // end of stack found
+      } // not a base sizeRat left at 1.0 so no ref
+    } // end of isBL
 
 
  // end stack scan for worst
@@ -549,7 +562,9 @@ void setIsotropicSizeField(pGModel model,
   VIter_delete(vofIter);
   }  // iterator
   GFIter_delete(gfIter);
-//  3 lines above make a vertex iterator over model faces below is all
+  } // region iterator...just a way to get region
+  GRIter_delete(grIter);
+//  5 lines above make a vertex iterator over model faces below is all
 //  VIter_delete(vIter);
   delete [] h;
   cout << "icountVerts " << icountVerts << endl;
