@@ -40,6 +40,7 @@ extern "C" int readLicenseFile(char*);
 extern "C" int procSize();
 // avoid elements at (bdry.) with no interior nodes/dofs
 extern void fix4NodesOnSurface(pMesh mesh);
+extern void MSA_setMaxIterations(pMSAdapt,int maxiter);
 
 #ifdef __cplusplus
 extern "C" {
@@ -406,7 +407,7 @@ adapt(  // parallel mesh
 #ifdef SIM
   MSA_setAdaptBL(simAdapter, isBLAdapt);
   int localAdapt=1; // 0 if you want the whole mesh to adapt, 1 if you want only where you have set the size field
-  MSA_setLocal(simAdapter, localAdapt);	
+  MSA_setLocal(simAdapter, localAdapt);		
   int coarsenMode=0; // 0 if you want to disable, 1 just initial, 2 all
   MSA_setCoarsenMode(simAdapter, coarsenMode);	
   if(isBLAdapt==1) {
@@ -675,6 +676,33 @@ adapt(  // parallel mesh
         MSA_setBLMinLayerAspectRatio(simAdapter, 0.0);
      }
      MSA_setBoundaryMeshModification(simAdapter, isBLAdapt);
+// stuff we have added from BL thickness adapt
+  int localAdapt=1; // 0 if you want the whole mesh to adapt, 1 if you want only where you have set the size field
+  MSA_setLocal(simAdapter, localAdapt);	
+  int coarsenMode=0; // 0 if you want to disable, 1 just initial, 2 all
+  MSA_setCoarsenMode(simAdapter, coarsenMode);	
+
+/* below is everything set for BL thickness adapt that we might need now
+  MSA_setAdaptBL(simAdapter, isBLAdapt);
+  int localAdapt=1; // 0 if you want the whole mesh to adapt, 1 if you want only where you have set the size field
+  MSA_setLocal(simAdapter, localAdapt);	
+  MSA_setMaxIterations(simAdapter, 5);	
+  int coarsenMode=0; // 0 if you want to disable, 1 just initial, 2 all
+  MSA_setCoarsenMode(simAdapter, coarsenMode);	
+  if(isBLAdapt==1) {
+     MSA_setExposedBLBehavior(simAdapter, BL_DisallowExposed);
+//     MSA_setExposedBLBehavior(simAdapter, bl_DisallowExposed);
+     MSA_setBLMinLayerAspectRatio(simAdapter, 1.0);
+  }
+// MSA_setBLSnapping(simAdapter, 0);
+  if(PMU_size()>1 && isBLAdapt==1) {
+//     MSA_setCoarsenMode(simAdapter, 0);
+//     MSA_setBLSnapping(simAdapter, 0);
+     MSA_setBLMinLayerAspectRatio(simAdapter, 0.0);
+     MSA_setExposedBLBehavior(simAdapter, BL_DisallowExposed);
+  }
+*/
+  MSA_setBoundaryMeshModification(simAdapter, isBLAdapt);
 
 #endif
     wtimePoints[7] = time(0);

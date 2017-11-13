@@ -247,7 +247,7 @@ void setIsotropicSizeField(pGModel model,
   int iSize,icountVerts,icountIsotrop,icountAnisotrop;
   double *oldSize;
   double* h = new double;
-  double ratThresh=0.8; // not certain of the best number here as smoothing was applied to the original size
+  double ratThresh=0.95; // not certain of the best number here as smoothing was applied to the original size
 
   icountVerts=0;
   icountIsotrop=0;
@@ -308,6 +308,35 @@ void setIsotropicSizeField(pGModel model,
           sizeRat=sizeRatMin;
           PList_delete(verStack);
           PList_delete(edgeStack);
+          if(0) {  // turn this on or off with 0 or 1
+// inserted codeblock to use Simmetrix size
+          if(sizeRat<ratThresh) {
+            int itype=2; // we want anisotropic
+            double size;  // failed so I passed null
+            double anisosize[3][3];
+            itest=V_estimateSize(vertex, itype, NULL, anisosize);
+            if(itest==1) {
+              sizeRat=0.5/1.2;
+              double sizeRat2=1.0/1.32;
+              anisosize[2][0]*= sizeRat;
+              anisosize[2][1]*= sizeRat;
+              anisosize[2][2]*= sizeRat;
+              anisosize[1][0]*= sizeRat2;
+              anisosize[1][1]*= sizeRat2;
+              anisosize[1][2]*= sizeRat2;
+              MSA_setAnisoVertexSize(simAdapter, 
+                            vertex,
+                           anisosize);
+              icountAnisotrop++;
+            } else {
+              cout << "WARNING: V_estimateSize returned 0 " <<     endl;
+            }
+          }
+          sizeRat=1.0; // this is a cheat to allow us to keep other option but skip since sizeRat > ratThresh on line below
+// end of inserted codeblock
+        } 
+
+
        } // end of stack found
       } // not a base sizeRat left at 1.0 so no ref
     } // end of isBL
@@ -391,6 +420,7 @@ void setIsotropicSizeField(pGModel model,
       if(1){
 //  Simmetrix suggestion that longest edge should be one of vectors
       ifirst=longestEdge;
+// for now, choose the second edge to be the one that is most orthogonal to first
       for (int i=0; i < numEdges; i++) {
            tmp1=fabs(NormdotProdTable[ifirst][i]);
            if(tmp1 < projmin) {
@@ -430,6 +460,27 @@ void setIsotropicSizeField(pGModel model,
        edgesIonV[ithird][1]=size3[1];
        edgesIonV[ithird][2]=size3[2];
       dotProdTable[ithird][ithird]=proj3*proj3; // store size3's length here to be consistent with later use to get length of the third vector 
+// now make second edge perpendicular to first and third
+      size3[0]= edgesIonV[ithird][1]*edgesIonV[ifirst][2]
+              - edgesIonV[ithird][2]*edgesIonV[ifirst][1];
+      size3[1]= edgesIonV[ithird][2]*edgesIonV[ifirst][0]
+              - edgesIonV[ithird][0]*edgesIonV[ifirst][2];
+      size3[2]= edgesIonV[ithird][0]*edgesIonV[ifirst][1]
+              - edgesIonV[ithird][1]*edgesIonV[ifirst][0];
+// want square not this      tmp1 =1.0/sqrt(size3[0]*size3[0]+size3[1]*size3[1]+size3[2]*size3[2]);
+      tmp1 =1.0/(size3[0]*size3[0]+size3[1]*size3[1]+size3[2]*size3[2]);
+//project original v2 onto unit vector perp to V1 and v3.   
+// to do this scale away its cross-product length to make it a unit vector then dot this vector with v2 and multiply by unit vector
+// math v2<-(v2.size3/|size3|*size3/|size3| = (v2.size3)*size3/|size3|^2
+// which is why above tmp1 has 1/|size3|^2 and next we *=tmp1 with the v2.size3
+// to get the scaleing for size3
+      tmp1*=dotProd(edgesIonV[isecond],size3);
+       edgesIonV[isecond][0]=tmp1*size3[0];
+       edgesIonV[isecond][1]=tmp1*size3[1];
+       edgesIonV[isecond][2]=tmp1*size3[2];
+       dotProdTable[isecond][isecond]=dotProd(edgesIonV[isecond],edgesIonV[isecond]);
+// make second edge perpendicular to first and third
+
     } else {
 // find the edge with the greatest orthonality to others
       for (int i=0; i < numEdges; i++) {
@@ -459,6 +510,7 @@ void setIsotropicSizeField(pGModel model,
       if(ithird==-1) {
          cout << "third edge failed" << endl;
       }
+
      } // should close not simmetrix suggested way
       eLength[0]=sqrt(dotProdTable[ifirst][ifirst]);    
       eLength[1]=sqrt(dotProdTable[isecond][isecond]);    
@@ -490,9 +542,9 @@ void setIsotropicSizeField(pGModel model,
       midE=d1;
       maxE=d2;
       double dots[3];
-      dots[0]=fabs(NormdotProdTable[minE][midE]);
-      dots[1]=fabs(NormdotProdTable[minE][maxE]);
-      dots[2]=fabs(NormdotProdTable[midE][maxE]);
+      dots[0]=fabs(dotProd(edgesIonV[minE],edgesIonV[midE]));
+      dots[1]=fabs(dotProd(edgesIonV[maxE],edgesIonV[midE]));
+      dots[2]=fabs(dotProd(edgesIonV[minE],edgesIonV[maxE]));
       double A20,A10,A21;
       eLength[0]=sqrt(dotProdTable[minE][minE]);    
       eLength[1]=sqrt(dotProdTable[midE][midE]);    
@@ -515,10 +567,10 @@ void setIsotropicSizeField(pGModel model,
       if(sqrt(dist(bpt, coordvcur))<tc) Isotrop=1;
 */
 //      if(coordvcur[0]<26) Isotrop=1;
-      if(A21<4 || A10 < 10) Isotrop=1; // 
+//      if(A21<4 || A10 < 10) Isotrop=1; // 
       for (int k=0; k<3; k++) {
          if (dots[k]>0.2) {
-//           cout << "WARNING: two of the selected vectors are not orthogonal" << endl;
+           cout << "WARNING: two of the selected vectors are not orthogonal" << endl;
            Isotrop=1;
          }
       }
@@ -534,9 +586,11 @@ void setIsotropicSizeField(pGModel model,
                         h[0]);
          icountIsotrop++;
      } else if (Isotrop==0){
-          OrgAnisoSize[0][0]= edgesIonV[minE][0];
-          OrgAnisoSize[0][1]= edgesIonV[minE][1];
-          OrgAnisoSize[0][2]= edgesIonV[minE][2];
+//   test if short edges cause trouble
+          double scl=eLength[1]/eLength[0];
+          OrgAnisoSize[0][0]= scl*edgesIonV[minE][0];
+          OrgAnisoSize[0][1]= scl*edgesIonV[minE][1];
+          OrgAnisoSize[0][2]= scl*edgesIonV[minE][2];
  
           OrgAnisoSize[1][0]= edgesIonV[midE][0];
           OrgAnisoSize[1][1]= edgesIonV[midE][1];
