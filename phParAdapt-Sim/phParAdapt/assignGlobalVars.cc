@@ -10,6 +10,17 @@
 #include "phParAdapt.h"
 using namespace std;
 /* global variables */
+extern double sizeRatio=0.5;
+extern double ratioThresh=0.75;
+extern int localAdapt=0;
+// 0: all mesh is adapted
+// 1: only where sizes set are modified
+extern int coarsenMode=2;
+// 0: No coarsening will be done on the mesh.
+// 1: By default an initial coarsening pass is done. Mode 1 disables this pass.
+// 2: All coarsening is done as needed (default).
+extern int numSmooth=10;
+extern int AnisoSimmetrix=1;
 extern int globalP;
 extern int fType;
 extern int rStart;
@@ -120,6 +131,12 @@ assignGlobalVars()
       wght[iEvar] = wght1[iEvar];
     //sets the global polynomial order
     globalP = inputObject.inp_globalP();
+    numSmooth = inputObject.inp_numSmooth();
+    AnisoSimmetrix = inputObject.inp_AnisoSimmetrix();
+    localAdapt = inputObject.inp_localAdapt();
+    coarsenMode = inputObject.inp_coarsenMode();
+    ratioThresh = inputObject.inp_ratioThresh();
+    sizeRatio = inputObject.inp_sizeRatio();
 
     // time step number
     timeStepNumber = inputObject.inp_timeStepNumber();

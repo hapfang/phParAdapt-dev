@@ -18,6 +18,12 @@ public:
   double *weights () { return d_wght; }
   double threshold() { return d_threshold; }
 //this input is requiring for new release of phParAdapt (with size+tag field adaptivity)
+int inp_localAdapt () {return dlocalAdapt;}
+int inp_coarsenMode () {return dcoarsenMode;}
+double inp_sizeRatio () {return dsizeRatio;}
+double inp_ratioThresh () {return dratioThresh;}
+int inp_numSmooth () {return dnumSmooth;}
+int inp_AnisoSimmetrix () {return dAnisoSimmetrix;}
 int inp_globalP () {return dglobalP;}
 int inp_timeStepNumber () {return dtimeStepNumber;}
 int inp_numelX (){return dnumelX;}
@@ -84,6 +90,12 @@ double depsilon;
 double dmax_size;
 double dmin_size;
 int dsize_flag;
+ int dcoarsenMode;
+ int dlocalAdapt;
+ double dsizeRatio;
+ double dratioThresh;
+ int dnumSmooth;
+ int dAnisoSimmetrix;
  int dglobalP;
  int dtimeStepNumber;
  int dnumelX;

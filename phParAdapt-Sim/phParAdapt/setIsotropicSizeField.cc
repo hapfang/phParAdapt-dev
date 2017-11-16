@@ -24,6 +24,10 @@ extern "C" {
 
 extern double* wght;
 extern int nErrorVars;
+extern int AnisoSimmetrix;
+extern double sizeRatio;
+extern double ratioThresh;
+extern int numSmooth;
 
 extern pMeshDataId phasta_solution;
 extern pMeshDataId errorIndicatorID;
@@ -230,13 +234,16 @@ void setIsotropicSizeField(pGModel model,
 
 //KEDAR: SmoothSize moved outside the vertex iterator.
 //SetVertexSize needs to be called after again 
-  int numSmooth=1;
-  for (int k=0; k<10; k++){
-     SmoothSize(mesh,numSmooth); //Size field smoothing similar to hessians    
-     commuSmoothSize(pmesh, mesh,numSmooth);
-      if(PMU_rank()==0) {
-         cout<<"Size Field Smoothing iteration      : "<<k<<endl;
-      }
+//  int numSmooth=1;
+//  int iSmooth=1;
+  if (numSmooth>0) {
+     for (int k=0; k<numSmooth; k++){
+        SmoothSize(mesh,numSmooth); //Size field smoothing similar to hessians    
+        commuSmoothSize(pmesh, mesh,numSmooth);
+        if(PMU_rank()==0) {
+           cout<<"Size Field Smoothing iteration      : "<<k<<endl;
+        }
+     }
   }
   M_writeVTKFile(mesh,"nodalSizeA",nodalSizeID,3);
 
@@ -247,11 +254,18 @@ void setIsotropicSizeField(pGModel model,
   int iSize,icountVerts,icountIsotrop,icountAnisotrop;
   double *oldSize;
   double* h = new double;
-  double ratThresh=0.95; // not certain of the best number here as smoothing was applied to the original size
+  double ratThresh=ratioThresh; // 0.75; // not certain of the best number here as smoothing was applied to the original size
 
   icountVerts=0;
   icountIsotrop=0;
   icountAnisotrop=0;
+
+  if(PMU_rank()==0) {
+    cout << "Starting aniso Adapt  with AnisoSimmetrix="<<AnisoSimmetrix << endl;
+    cout << "ratioThresh="<<ratioThresh << endl;
+    cout << "sizeRatio="<<sizeRatio << endl;
+    cout << "numSmooth="<<numSmooth << endl;
+  }
   
   pGFace gface;
   GFIter gfIter=GM_faceIter(model);
@@ -308,7 +322,7 @@ void setIsotropicSizeField(pGModel model,
           sizeRat=sizeRatMin;
           PList_delete(verStack);
           PList_delete(edgeStack);
-          if(0) {  // turn this on or off with 0 or 1
+          if(AnisoSimmetrix > 0) {  // turn this on or off with 0 or 1
 // inserted codeblock to use Simmetrix size
           if(sizeRat<ratThresh) {
             int itype=2; // we want anisotropic
@@ -316,14 +330,32 @@ void setIsotropicSizeField(pGModel model,
             double anisosize[3][3];
             itest=V_estimateSize(vertex, itype, NULL, anisosize);
             if(itest==1) {
-              sizeRat=0.5/1.2;
-              double sizeRat2=1.0/1.32;
+              sizeRat=sizeRatio; // flat plate suggests that Simm overestimates sizes this and the 1.32 below correct to expected size but not sure if universal
+// saurabh says we should be careful to limit the smaller sizes from becoming larger than the size we are shrinking.  To do that we calculate the length of all three size vectors, and then, if their size will be larger than the future size of l2 then create a scale factor that makes them the same size viz:
+              double l0,l1,l2;
+              l1=sqrt(anisosize[1][0]*anisosize[1][0]
+                     +anisosize[1][1]*anisosize[1][1]
+                     +anisosize[1][2]*anisosize[1][2]);
+              l2=sqrt(anisosize[2][0]*anisosize[2][0]
+                     +anisosize[2][1]*anisosize[2][1]
+                     +anisosize[2][2]*anisosize[2][2]);
+              l0=sqrt(anisosize[0][0]*anisosize[0][0]
+                     +anisosize[0][1]*anisosize[0][1]
+                     +anisosize[0][2]*anisosize[0][2]);
+              double sizeRat1=1.0; // /1.32;
+              if(AnisoSimmetrix==2) sizeRat1=sizeRatio;
+              double sizeRat0=sizeRat1; // /1.32;
+              if(sizeRat1*l1>sizeRat*l2) sizeRat1*=l2*sizeRat/l1;
+              if(sizeRat0*l0>sizeRat*l2) sizeRat0*=l2*sizeRat/l0;
               anisosize[2][0]*= sizeRat;
               anisosize[2][1]*= sizeRat;
               anisosize[2][2]*= sizeRat;
-              anisosize[1][0]*= sizeRat2;
-              anisosize[1][1]*= sizeRat2;
-              anisosize[1][2]*= sizeRat2;
+              anisosize[1][0]*= sizeRat1;
+              anisosize[1][1]*= sizeRat1;
+              anisosize[1][2]*= sizeRat1;
+              anisosize[0][0]*= sizeRat0;
+              anisosize[0][1]*= sizeRat0;
+              anisosize[0][2]*= sizeRat0;
               MSA_setAnisoVertexSize(simAdapter, 
                             vertex,
                            anisosize);
@@ -333,8 +365,7 @@ void setIsotropicSizeField(pGModel model,
             }
           }
           sizeRat=1.0; // this is a cheat to allow us to keep other option but skip since sizeRat > ratThresh on line below
-// end of inserted codeblock
-        } 
+       }   // end of inserted codeblock
 
 
        } // end of stack found
@@ -370,7 +401,7 @@ void setIsotropicSizeField(pGModel model,
  	edgemax=max(edgemax,edgeL);
 	edgemin=min(edgemin,edgeL);
      }
-     if ( edgemax < 4.0*edgemin) { // not really worth complicate aniso
+     if (0) { // always do else now edgemax < 4.0*edgemin) { // not really worth complicate aniso
        Isotrop=1; 
      } else {
       Isotrop=0;  // set this to 0 but note we switch to isotropic if needed    
@@ -552,20 +583,6 @@ void setIsotropicSizeField(pGModel model,
       A20=eLength[2]/eLength[0];
       A10=eLength[1]/eLength[0];
       A21=eLength[2]/eLength[1];
-//      Isotrop=1; // the unltimate no-pass filter
-// shield spheres
-/*      double bpt[3];
-      double tc=1.0e-1;
-      bpt[0]=44.707299804817559;
-      bpt[1]=29.083719907441136;
-      bpt[2]=6.2321790986239671;
-      if(sqrt(dist(bpt, coordvcur))<tc) Isotrop=1;
-
-      bpt[0]=25.645204911719141;
-      bpt[1]=3.6247629134018351;
-      bpt[2]=4.4261465737576327;
-      if(sqrt(dist(bpt, coordvcur))<tc) Isotrop=1;
-*/
 //      if(coordvcur[0]<26) Isotrop=1;
 //      if(A21<4 || A10 < 10) Isotrop=1; // 
       for (int k=0; k<3; k++) {
@@ -586,17 +603,23 @@ void setIsotropicSizeField(pGModel model,
                         h[0]);
          icountIsotrop++;
      } else if (Isotrop==0){
-//   test if short edges cause trouble
-          double scl=eLength[1]/eLength[0];
+          sizeRat=sizeRatio;
+          double sizeRat1=1.0; 
+          if(AnisoSimmetrix==-2) sizeRat1=sizeRatio;
+//refine middle size if it will be larger than the largest after its split
+          if(sizeRat1*eLength[1]>sizeRat*eLength[2]) 
+             sizeRat1*=eLength[2]*sizeRat/eLength[1];
+//   short edges cause trouble so rescale to length of middle edge
+//   including  adustment down for sizeRat1
+          double scl=sizeRat1*eLength[1]/eLength[0];
           OrgAnisoSize[0][0]= scl*edgesIonV[minE][0];
           OrgAnisoSize[0][1]= scl*edgesIonV[minE][1];
           OrgAnisoSize[0][2]= scl*edgesIonV[minE][2];
  
-          OrgAnisoSize[1][0]= edgesIonV[midE][0];
-          OrgAnisoSize[1][1]= edgesIonV[midE][1];
-          OrgAnisoSize[1][2]= edgesIonV[midE][2];
+          OrgAnisoSize[1][0]= sizeRat1*edgesIonV[midE][0];
+          OrgAnisoSize[1][1]= sizeRat1*edgesIonV[midE][1];
+          OrgAnisoSize[1][2]= sizeRat1*edgesIonV[midE][2];
  
-          sizeRat=0.5;
           OrgAnisoSize[2][0]= sizeRat*edgesIonV[maxE][0];
           OrgAnisoSize[2][1]= sizeRat*edgesIonV[maxE][1];
           OrgAnisoSize[2][2]= sizeRat*edgesIonV[maxE][2];
@@ -621,9 +644,11 @@ void setIsotropicSizeField(pGModel model,
 //  5 lines above make a vertex iterator over model faces below is all
 //  VIter_delete(vIter);
   delete [] h;
-  cout << "icountVerts " << icountVerts << endl;
-  cout << "icountIsotrop " << icountIsotrop << endl;
-  cout << "icountAnisotrop " << icountAnisotrop << endl;
+  if(PMU_rank()==0) {
+    cout << "icountVerts " << icountVerts << endl;
+    cout << "icountIsotrop " << icountIsotrop << endl;
+    cout << "icountAnisotrop " << icountAnisotrop << endl;
+  }
 
 #ifdef DEBUG  
 //  M_writeVTKFile(mesh, "IsotropicSize", nodalSizeID, 1);

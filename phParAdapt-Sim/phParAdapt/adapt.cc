@@ -40,7 +40,9 @@ extern "C" int readLicenseFile(char*);
 extern "C" int procSize();
 // avoid elements at (bdry.) with no interior nodes/dofs
 extern void fix4NodesOnSurface(pMesh mesh);
-extern void MSA_setMaxIterations(pMSAdapt,int maxiter);
+// extern void MSA_setMaxIterations(pMSAdapt,int maxiter);
+extern int localAdapt;
+extern int coarsenMode;
 
 #ifdef __cplusplus
 extern "C" {
@@ -406,9 +408,7 @@ adapt(  // parallel mesh
 
 #ifdef SIM
   MSA_setAdaptBL(simAdapter, isBLAdapt);
-  int localAdapt=1; // 0 if you want the whole mesh to adapt, 1 if you want only where you have set the size field
   MSA_setLocal(simAdapter, localAdapt);		
-  int coarsenMode=0; // 0 if you want to disable, 1 just initial, 2 all
   MSA_setCoarsenMode(simAdapter, coarsenMode);	
   if(isBLAdapt==1) {
      MSA_setExposedBLBehavior(simAdapter, BL_DisallowExposed);
@@ -424,7 +424,6 @@ adapt(  // parallel mesh
      MSA_setExposedBLBehavior(simAdapter, BL_DisallowExposed);
   }
 
-  MSA_setCoarsenMode(simAdapter, 0);
   MSA_setMaxIterations(simAdapter, numSplit);
   MSA_setBoundaryMeshModification(simAdapter, isBLAdapt);
 
@@ -677,18 +676,15 @@ adapt(  // parallel mesh
      }
      MSA_setBoundaryMeshModification(simAdapter, isBLAdapt);
 // stuff we have added from BL thickness adapt
-  int localAdapt=1; // 0 if you want the whole mesh to adapt, 1 if you want only where you have set the size field
   MSA_setLocal(simAdapter, localAdapt);	
-  int coarsenMode=0; // 0 if you want to disable, 1 just initial, 2 all
   MSA_setCoarsenMode(simAdapter, coarsenMode);	
+  if(PMU_rank()==0) {
+    cout << "coarsenMode="<<coarsenMode << endl;
+    cout << "localAdapt="<<localAdapt << endl;
+  }
 
 /* below is everything set for BL thickness adapt that we might need now
   MSA_setAdaptBL(simAdapter, isBLAdapt);
-  int localAdapt=1; // 0 if you want the whole mesh to adapt, 1 if you want only where you have set the size field
-  MSA_setLocal(simAdapter, localAdapt);	
-  MSA_setMaxIterations(simAdapter, 5);	
-  int coarsenMode=0; // 0 if you want to disable, 1 just initial, 2 all
-  MSA_setCoarsenMode(simAdapter, coarsenMode);	
   if(isBLAdapt==1) {
      MSA_setExposedBLBehavior(simAdapter, BL_DisallowExposed);
 //     MSA_setExposedBLBehavior(simAdapter, bl_DisallowExposed);
@@ -1071,6 +1067,7 @@ adapt(  // parallel mesh
   wtimePoints[15] = time(0);
   MPI_Barrier(MPI_COMM_WORLD);
   diff = clock()-start_t;
+  if(!PMU_rank())
   cout << "Time for adaptation: " <<diff/CLOCKS_PER_SEC <<"\n";
 
   MPI_Barrier(MPI_COMM_WORLD);
@@ -1202,7 +1199,9 @@ adapt(  // parallel mesh
   // create a new directory
   // put the adapted mesh and solution in this new directory
   char sss[100];
+  if(!PMU_rank())
   sprintf(sss,"mkdir %d",lstep);
+  MPI_Barrier(MPI_COMM_WORLD);
   system(sss);
   sprintf(sss,"%d",lstep);
   chdir(sss);

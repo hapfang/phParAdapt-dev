@@ -53,6 +53,24 @@ Input::Input(ifstream &inf)
     else if ( !strcmp(inBuf,"numberYbarVars") ){
         inf >> dnYbarVars;
     } 
+    else if ( !strcmp(inBuf,"localAdapt")) {
+        inf >> dlocalAdapt;
+    } 
+    else if ( !strcmp(inBuf,"coarsenMode")) {
+        inf >> dcoarsenMode;
+    } 
+    else if ( !strcmp(inBuf,"sizeRatio")) {
+        inf >> dsizeRatio;
+    } 
+    else if ( !strcmp(inBuf,"ratioThresh")) {
+        inf >> dratioThresh;
+    } 
+    else if ( !strcmp(inBuf,"AnisoSimmetrix")) {
+        inf >> dAnisoSimmetrix;
+    } 
+    else if ( !strcmp(inBuf,"numSmooth")) {
+        inf >> dnumSmooth;
+    } 
     else if ( !strcmp(inBuf,"globalP")) {
         inf >> dglobalP;
     } 
