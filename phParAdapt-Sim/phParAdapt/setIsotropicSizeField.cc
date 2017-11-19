@@ -247,18 +247,41 @@ void setIsotropicSizeField(pGModel model,
   }
   M_writeVTKFile(mesh,"nodalSizeA",nodalSizeID,3);
 
-//now set sizes with simmetrix
+  double ratThresh=ratioThresh; // 0.75; // not certain of the best number here as smoothing was applied to the original size
+  int Isotrop;
+  double sizeRat=1.0;
+  double coordvcur[3];
+  int iSize,icountVertsNotBL,icountVertsOnFaces,icountIsotrop,icountAnisotrop;
+  icountVertsNotBL=0;
+  icountVertsOnFaces=0;
+  icountIsotrop=0;
+  icountAnisotrop=0;
+  double* h = new double;
+  double *oldSize;
+//now set sizes with simmetrix outside of the BL
+  while ( vertex=VIter_next(vIter)) {
+   if(!EN_isBLEntity((pEntity)vertex)) { // true if this is a NOT BL entity
+     EN_getDataPtr((pEntity)vertex,oldMeshSizeID,(void**)&oldSize);
+     EN_getDataPtr((pEntity)vertex,nodalSizeID ,
+                      (void**)&h);
+     sizeRat= h[0]/(*oldSize);
+     icountVertsNotBL++;
+
+     if(sizeRat<ratThresh){   // only set if size ratio under threshold
+      MSA_setVertexSize(simAdapter, 
+			vertex,
+			h[0]);
+      icountIsotrop++;
+      }
+    }
+  }
+  VIter_delete(vIter);
+
+//now set sizes with simmetrix inside of the BL
   int maxE,minE,midE;
   double* OrgSize = new double;
   double OrgAnisoSize[3][3];
-  int iSize,icountVerts,icountIsotrop,icountAnisotrop;
-  double *oldSize;
-  double* h = new double;
-  double ratThresh=ratioThresh; // 0.75; // not certain of the best number here as smoothing was applied to the original size
 
-  icountVerts=0;
-  icountIsotrop=0;
-  icountAnisotrop=0;
 
   if(PMU_rank()==0) {
     cout << "Starting aniso Adapt  with AnisoSimmetrix="<<AnisoSimmetrix << endl;
@@ -277,11 +300,7 @@ void setIsotropicSizeField(pGModel model,
     while ( vertex=VIter_next(vofIter)) {
 //  above 5 lines swap to a vertices on face iteration while below is all    
 // reuse of reset iterator while ( vertex=VIter_next(vIter)) {
-    icountVerts++;
 
-    int Isotrop;
-    double sizeRat=1.0;
-    double coordvcur[3];
     V_coord(vertex, coordvcur ); 
 
 // adding the ability to scan the growth curve to find the highest error.
@@ -290,6 +309,7 @@ void setIsotropicSizeField(pGModel model,
 /// copied from above for format  pVertex vertex;
    pEntity seed;
    sizeRat=1;
+   icountVertsOnFaces++;
    if(EN_isBLEntity((pEntity)vertex)) { // true if this is a BL entitGy
      if(BL_isBaseEntity((pEntity)vertex,(pGEntity)gface)) { // current vertex is base
        // for a 3D BL, the into region is not needed, pass NULL?
@@ -593,7 +613,7 @@ void setIsotropicSizeField(pGModel model,
       }
       if(minE==midE || minE==maxE || midE==maxE) {
          Isotrop=1;
-         cout << "Setting Isotropic size on vertex " << icountVerts << endl;
+         cout << "Setting Isotropic size on vertex " << icountVertsOnFaces << endl;
       }
      } // anisotrop      
      if(Isotrop==1) Isotrop=-1;
@@ -645,7 +665,8 @@ void setIsotropicSizeField(pGModel model,
 //  VIter_delete(vIter);
   delete [] h;
   if(PMU_rank()==0) {
-    cout << "icountVerts " << icountVerts << endl;
+    cout << "icountVertsNotBL " << icountVertsNotBL << endl;
+    cout << "icountVertsOnFaces " << icountVertsOnFaces << endl;
     cout << "icountIsotrop " << icountIsotrop << endl;
     cout << "icountAnisotrop " << icountAnisotrop << endl;
   }
