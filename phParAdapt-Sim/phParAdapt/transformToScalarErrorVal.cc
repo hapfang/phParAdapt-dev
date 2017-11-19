@@ -51,7 +51,7 @@ transformToScalarErrorVal(pMesh mesh, int nvar, int option)
         }
 // add  option to compute max pressure gradient from incident edges
         double coordvcur[3]; // note not set if not taking this option 
-//	double *Anything;
+	double *Anything;
 //whyfail        double *nodalSolutionSet_other;
         if(0) {
 /* 
@@ -80,7 +80,7 @@ transformToScalarErrorVal(pMesh mesh, int nvar, int option)
   */  
      }
 //whyfail       delete [] nodalSolutionSet_other;
-//        delete [] Anything;
+        delete [] Anything;
             
 
         *scalarValue = processErrorAG(nodalErrorSet,nodalSolutionSet,nvar,option,coordvcur);
