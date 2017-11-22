@@ -664,12 +664,12 @@ void setIsotropicSizeField(pGModel model,
 //  5 lines above make a vertex iterator over model faces below is all
 //  VIter_delete(vIter);
   delete [] h;
-  if(PMU_rank()==0) {
-    cout << "icountVertsNotBL " << icountVertsNotBL << endl;
-    cout << "icountVertsOnFaces " << icountVertsOnFaces << endl;
-    cout << "icountIsotrop " << icountIsotrop << endl;
-    cout << "icountAnisotrop " << icountAnisotrop << endl;
-  }
+//  if(PMU_rank()==0) {
+    cout << "icountVertsNotBL " << PMU_rank() << icountVertsNotBL << endl;
+    cout << "icountVertsOnFaces " << PMU_rank() << icountVertsOnFaces << endl;
+    cout << "icountIsotrop " << PMU_rank() << icountIsotrop << endl;
+    cout << "icountAnisotrop " << PMU_rank() << icountAnisotrop << endl;
+ // }
 
 #ifdef DEBUG  
 //  M_writeVTKFile(mesh, "IsotropicSize", nodalSizeID, 1);

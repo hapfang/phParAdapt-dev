@@ -45,16 +45,27 @@ processErrorAG(double* nodalErrorSet, double* nodalSolutionSet, int nvar, int op
 //       double pde_mag=sqrt(nodalErrorSet[0]*nodalErrorSet[0]+nodalErrorSet[1]*nodalErrorSet[1]+nodalErrorSet[2]*nodalErrorSet[2]);
        double pde_mag=sqrt(nodalErrorSet[0]*nodalErrorSet[0]+nodalErrorSet[1]*nodalErrorSet[1]+nodalErrorSet[2]*nodalErrorSet[2]);
 // Previous       scalarVal =  rms_mag *log(pde_mag + 1E-10 );
-
-       scalarVal =  25.0*nodalSolutionSet[5];
-       if(0.8*(coord[0]-0.4)-0.45*(coord[1]-17.0) > 0){
-//       if(0.8*(coord[0]-40.4)-0.45*(coord[1]-17.0) > 0)
-         scalarVal=max(scalarVal,1.0);  // beyond this plane pick up pgrad without evisc weight but only when it is bigger than the product
+     if(1) {
+       double pgrad_p[3];
+       double volInv=1.0/nodalErrorSet[0];
+       pgrad_p[0]=nodalErrorSet[3]*volInv;
+       pgrad_p[1]=nodalErrorSet[4]*volInv;
+       pgrad_p[2]=nodalErrorSet[5]*volInv;
+       double maggradp=sqrt(pgrad_p[0]*pgrad_p[0]
+                           +pgrad_p[1]*pgrad_p[1]
+                           +pgrad_p[2]*pgrad_p[2]);
+//       scalarVal =  30.0*nodalSolutionSet[5];
+       scalarVal =  90.0*nodalSolutionSet[5];
+// flat plate hack       if(0.8*(coord[0]-0.4)-0.45*(coord[1]-17.0) > 0){
+       if(0.8*(coord[0]-40.4)-0.45*(coord[1]-17.0) > 0) {
+       scalarVal = max(scalarVal,log10(maggradp + 1E-10 ));
+//       scalarVal *= log10(maggradp + 1E-10 );
+//Check         scalarVal=max(scalarVal,1.0);  // beyond this plane pick up pgrad without evisc weight but only when it is bigger than the product
        }
-       scalarVal *= log(nodalErrorSet[3] + 1E-10 );
+    } else {
 
-
-// last used       scalarVal =  (rms_mag *log(pde_mag + 1E-10 )*0.4 +0.2)*nodalSolutionSet[5];
+      scalarVal =  (rms_mag *log(pde_mag + 1E-10 )*0.4 +0.2)*nodalSolutionSet[5];
+   }
 // pasted from ParaView with value 0.01 for HLCRM-16degrees Simmmetrix Coarse-Mixed
 // mag(rms-vel)*log10(mag(pde-res)+1.0e-10)*EVbar*0.4 + 0.2*EVbari
 //       scalarVal =  nodalSolutionSet[5];
