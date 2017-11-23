@@ -183,7 +183,7 @@ extern "C" {
     void transformToScalarErrorVal(pMesh mesh, int nvar, int option);
 
 //    double  processErrorAG(double* nodalErrorSet,int nvar); 
-double  processErrorAG(double* nodalErrorSet,double* nodalSolutionSet,int nvar, int option);
+double  processErrorAG(double* nodalErrorSet,double* nodalSolutionSet,int nvar, int option, double* coord);
 
 
   // for solving linear system (small) 
