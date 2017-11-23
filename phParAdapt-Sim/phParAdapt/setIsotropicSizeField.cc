@@ -157,12 +157,17 @@ void setIsotropicSizeField(pGModel model,
     }
 
 
+// Note, the logic below will block refinement of cells that are larger than input hmax
+// which is far from the users intent when they choose a max element size
+//  for now I am blocking it for 
+   if(0) {
     if (newSize > MaxCoarsenFactor) {
       // If the newSize is smaller than max theshold, set the newSize back to the theshold
       newSize = MaxCoarsenFactor;
       // But preserve the old size that was already larger than the threshold so that it does not get refined
       if (*oldSize > MaxCoarsenFactor)  newSize = *oldSize;
     }
+  }
 
     if (newSize < MaxRefineFactor) {
       // If the newSize is smaller than min theshold, set the newSize back to the theshold
@@ -665,10 +670,10 @@ void setIsotropicSizeField(pGModel model,
 //  VIter_delete(vIter);
   delete [] h;
 //  if(PMU_rank()==0) {
-    cout << "icountVertsNotBL " << PMU_rank() << icountVertsNotBL << endl;
-    cout << "icountVertsOnFaces " << PMU_rank() << icountVertsOnFaces << endl;
-    cout << "icountIsotrop " << PMU_rank() << icountIsotrop << endl;
-    cout << "icountAnisotrop " << PMU_rank() << icountAnisotrop << endl;
+    cout << "icountVertsNotBL " << PMU_rank() << " "  << icountVertsNotBL << endl;
+    cout << "icountVertsOnFaces " << PMU_rank()  << " " << icountVertsOnFaces << endl;
+    cout << "icountIsotrop " << PMU_rank()  << " " << icountIsotrop << endl;
+    cout << "icountAnisotrop " << PMU_rank()  << " " << icountAnisotrop << endl;
  // }
 
 #ifdef DEBUG  
