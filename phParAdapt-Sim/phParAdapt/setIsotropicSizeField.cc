@@ -142,9 +142,19 @@ void setIsotropicSizeField(pGModel model,
       else newSize = *oldSize;
     }
     else if (option == 11 ){
-      //double coord[3];
+/*      double coord[3];
       //double plane;
-      //V_coord(vertex,coord); 
+      V_coord(vertex,coord); 
+      double ptCheck[3]; // This is a point that should not be ref 38 11.5 4.93675
+      ptCheck[0]=38.025; //38.025 11.625 4.975
+      ptCheck[1]=11.625;
+      ptCheck[2]=4.975;
+      int stop;
+      double distTop = sqrt(dist(coord, ptCheck));
+      if(distTop < 1e-2) {
+         stop=1;
+      }  
+*/
       //plane = -0.516616558513076*coord[0]+0.787121033907457*coord[1]+0.336968558548957*coord[2]+0.761858682657;
       //if (*nodalValue > factor && plane >= 0.0) newSize = *oldSize/2;
       //else  newSize = *oldSize;
@@ -265,6 +275,20 @@ void setIsotropicSizeField(pGModel model,
   double *oldSize;
 //now set sizes with simmetrix outside of the BL
   while ( vertex=VIter_next(vIter)) {
+/*
+      double coord[3];
+      //double plane;
+      V_coord(vertex,coord); 
+      double ptCheck[3]; // This is a point that should not be ref 38 11.5 4.93675
+      ptCheck[0]=38.025; //38.025 11.625 4.975
+      ptCheck[1]=11.625;
+      ptCheck[2]=4.975;
+      int stop;
+      double distTop = sqrt(dist(coord, ptCheck));
+      if(distTop < 1e-2) {
+         stop=1;
+      }  
+*/
    if(!EN_isBLEntity((pEntity)vertex)) { // true if this is a NOT BL entity
      EN_getDataPtr((pEntity)vertex,oldMeshSizeID,(void**)&oldSize);
      EN_getDataPtr((pEntity)vertex,nodalSizeID ,
@@ -315,6 +339,18 @@ void setIsotropicSizeField(pGModel model,
    pEntity seed;
    sizeRat=1;
    icountVertsOnFaces++;
+//
+/*      double ptCheck[3]; // This is a point that should not be ref 38 11.5 4.93675
+      ptCheck[0]=38.025; //38.025 11.625 4.975
+      ptCheck[1]=11.625;
+      ptCheck[2]=4.975;
+      int stop;
+      double distTop = sqrt(dist(coordvcur, ptCheck));
+      if(distTop < 1e-2) {
+         stop=1;
+      }  
+*/
+//
    if(EN_isBLEntity((pEntity)vertex)) { // true if this is a BL entitGy
      if(BL_isBaseEntity((pEntity)vertex,(pGEntity)gface)) { // current vertex is base
        // for a 3D BL, the into region is not needed, pass NULL?

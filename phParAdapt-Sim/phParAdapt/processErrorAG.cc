@@ -1,8 +1,10 @@
 #include <iostream>
+#include "func.h"
 #include <fstream>
 #include <mpi.h>
 #include "phParAdapt.h"
 #include <math.h>
+
 //  using std::cout;
 //  using std::endl;
 
@@ -45,6 +47,20 @@ processErrorAG(double* nodalErrorSet, double* nodalSolutionSet, int nvar, int op
 //       double pde_mag=sqrt(nodalErrorSet[0]*nodalErrorSet[0]+nodalErrorSet[1]*nodalErrorSet[1]+nodalErrorSet[2]*nodalErrorSet[2]);
        double pde_mag=sqrt(nodalErrorSet[0]*nodalErrorSet[0]+nodalErrorSet[1]*nodalErrorSet[1]+nodalErrorSet[2]*nodalErrorSet[2]);
 // Previous       scalarVal =  rms_mag *log(pde_mag + 1E-10 );
+/*
+//      double coord[3];
+//      //double plane;
+//      V_coord(vertex,coord); 
+      double ptCheck[3]; // This is a point that should not be ref 38 11.5 4.93675
+      ptCheck[0]=38.025; //38.025 11.625 4.975
+      ptCheck[1]=11.625;
+      ptCheck[2]=4.975;
+      int stop;
+      double distTop = sqrt(dist(coord, ptCheck));
+      if(distTop < 16e-2) {
+         stop=1;
+      }  
+*/
      if(1) {
        double pgrad_p[3];
        double volInv=1.0/nodalErrorSet[0];

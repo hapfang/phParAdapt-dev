@@ -759,8 +759,10 @@ adapt(  // parallel mesh
       int nshg = M_numVertices(mesh);
       for(int inode=0;inode<nshg;inode++) {
          //WARNING: HARD CODED dwal overwriting the first diffusive flux:w
+/*   Bad hack from past fouling up pgrad calculation
          error_indicator[inode*10+4] = ybar_indicator[inode*13+12]; 
          error_indicator[inode*10+3] = dwal_indicator[inode]; 
+*/
        }
        delete [] dwal_indicator;
     }
