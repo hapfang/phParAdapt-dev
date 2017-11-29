@@ -135,6 +135,15 @@ void setIsotropicSizeField(pGModel model,
       cout<<"\nerror in setIsotropicSizeField(...) : no old mesh size data attached to vertex"<<endl;
       exit(0);
     }
+// before this point oldSize was computed based on averaging sizes of edges around a
+// node but Simmetrix has a function for that now.  Let's test to see if it is better
+//   int itype=2; // we want anisotropic
+// double anisosize[3][3];
+//   itest=V_estimateSize(vertex, itype, NULL, anisosize);
+   int itest,itype=1; // we want isotropic
+   double size;  
+   itest=V_estimateSize(vertex, itype, &size, NULL);
+   *oldSize=size; // replace oldSize with Simmetrix computation
     
     double newSize;
     if (option == 10){
@@ -294,6 +303,7 @@ void setIsotropicSizeField(pGModel model,
      EN_getDataPtr((pEntity)vertex,nodalSizeID ,
                       (void**)&h);
      sizeRat= h[0]/(*oldSize);
+     h[0]=*oldSize*sizeRatio;  // lets user control how much to reduce, not just 1/2
      icountVertsNotBL++;
 
      if(sizeRat<ratThresh){   // only set if size ratio under threshold

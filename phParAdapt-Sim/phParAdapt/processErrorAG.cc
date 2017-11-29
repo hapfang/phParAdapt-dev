@@ -73,7 +73,7 @@ processErrorAG(double* nodalErrorSet, double* nodalSolutionSet, int nvar, int op
 //       scalarVal =  30.0*nodalSolutionSet[5];
        scalarVal =  90.0*nodalSolutionSet[5];
 // flat plate hack       if(0.8*(coord[0]-0.4)-0.45*(coord[1]-17.0) > 0){
-       if(0.8*(coord[0]-40.4)-0.45*(coord[1]-17.0) > 0) {
+       if(1) { //0.8*(coord[0]-40.4)-0.45*(coord[1]-17.0) > 0) {
        scalarVal = max(scalarVal,log10(maggradp + 1E-10 ));
 //       scalarVal *= log10(maggradp + 1E-10 );
 //Check         scalarVal=max(scalarVal,1.0);  // beyond this plane pick up pgrad without evisc weight but only when it is bigger than the product
