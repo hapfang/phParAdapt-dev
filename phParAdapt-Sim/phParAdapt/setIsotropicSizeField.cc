@@ -303,17 +303,40 @@ void setIsotropicSizeField(pGModel model,
      EN_getDataPtr((pEntity)vertex,nodalSizeID ,
                       (void**)&h);
      sizeRat= h[0]/(*oldSize);
-     h[0]=*oldSize*sizeRatio;  // lets user control how much to reduce, not just 1/2
      icountVertsNotBL++;
-
      if(sizeRat<ratThresh){   // only set if size ratio under threshold
-      MSA_setVertexSize(simAdapter, 
+         sizeRat=sizeRatio; // flat plate suggests that Simm overestimates sizes this and the 1.32 below correct to expected size but not sure if universal
+       icountIsotrop++;
+       if(1) { // gaps in BL's are being missed in the else
+         int itype=2; // we want anisotropic
+         double size;  // failed so I passed null
+         double anisosize[3][3];
+         int itest=V_estimateSize(vertex, itype, NULL, anisosize);
+         if(itest) {
+         anisosize[0][0]*= sizeRat;
+         anisosize[0][1]*= sizeRat;
+         anisosize[0][2]*= sizeRat;
+         anisosize[1][0]*= sizeRat;
+         anisosize[1][1]*= sizeRat;
+         anisosize[1][2]*= sizeRat;
+         anisosize[2][0]*= sizeRat;
+         anisosize[2][1]*= sizeRat;
+         anisosize[2][2]*= sizeRat;
+         MSA_setAnisoVertexSize(simAdapter, 
+                            vertex,
+                           anisosize);
+        } else {
+           cout<<" V_estimateSize returned 0: "<<endl;
+        }  
+       }  else {
+         h[0]=*oldSize*sizeRatio;  // lets user control how much to reduce, not just 1/2
+         MSA_setVertexSize(simAdapter, 
 			vertex,
 			h[0]);
-      icountIsotrop++;
-      }
-    }
-  }
+      } // else
+     } // sizeRat < ratThresh
+    } // not a bl entity
+  } // vertex iterator
   VIter_delete(vIter);
 
 //now set sizes with simmetrix inside of the BL
@@ -382,6 +405,7 @@ void setIsotropicSizeField(pGModel model,
          void *iter = 0; // must initialize to 0
          double sizeRatMin=1.0;
          pVertex ent;
+         pVertex entlast;
          while(ent = (pVertex)PList_next(verStack, &iter)){
              // process each item in list
            EN_getDataPtr((pEntity)ent,oldMeshSizeID,(void**)&oldSize);
@@ -389,6 +413,7 @@ void setIsotropicSizeField(pGModel model,
                       (void**)&h);
            sizeRat= h[0]/(*oldSize);
            sizeRatMin=min(sizeRat,sizeRatMin);
+           entlast=ent;
           }
           sizeRat=sizeRatMin;
           PList_delete(verStack);
@@ -414,10 +439,11 @@ void setIsotropicSizeField(pGModel model,
                      +anisosize[0][1]*anisosize[0][1]
                      +anisosize[0][2]*anisosize[0][2]);
               double sizeRat1=1.0; // /1.32;
-              if(AnisoSimmetrix==2) sizeRat1=sizeRatio;
+              if(AnisoSimmetrix>1) sizeRat1=sizeRatio;
               double sizeRat0=sizeRat1; // /1.32;
               if(sizeRat1*l1>sizeRat*l2) sizeRat1*=l2*sizeRat/l1;
               if(sizeRat0*l0>sizeRat*l2) sizeRat0*=l2*sizeRat/l0;
+              if(AnisoSimmetrix>2) sizeRat0=sizeRatio;
               anisosize[2][0]*= sizeRat;
               anisosize[2][1]*= sizeRat;
               anisosize[2][2]*= sizeRat;
@@ -429,6 +455,20 @@ void setIsotropicSizeField(pGModel model,
               anisosize[0][2]*= sizeRat0;
               MSA_setAnisoVertexSize(simAdapter, 
                             vertex,
+                           anisosize);
+// also set on the top of the blstack
+              itest=V_estimateSize(entlast, itype, NULL, anisosize);
+              anisosize[2][0]*= sizeRat;
+              anisosize[2][1]*= sizeRat;
+              anisosize[2][2]*= sizeRat;
+              anisosize[1][0]*= sizeRat1;
+              anisosize[1][1]*= sizeRat1;
+              anisosize[1][2]*= sizeRat1;
+              anisosize[0][0]*= sizeRat0;
+              anisosize[0][1]*= sizeRat0;
+              anisosize[0][2]*= sizeRat0;
+              MSA_setAnisoVertexSize(simAdapter, 
+                            entlast,
                            anisosize);
               icountAnisotrop++;
             } else {
