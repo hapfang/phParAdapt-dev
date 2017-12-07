@@ -624,8 +624,9 @@ adapt(  // parallel mesh
     // (for 2, load in solution for error, although it is not used)
     if(strategy == 5) {
       if(option==1 || option==10 || option==11) { 
-        sprintf(error_tag,"errors");
-        if(PMU_size()==1) {
+// HACK KEJ        sprintf(error_tag,"errors");
+        sprintf(error_tag,"solution");
+        if(PMU_size()==-1) {
            sprintf(error_indicator_file,"errors.%i.%i",lstep,PMU_rank()+1);
         } else {
            sprintf(error_indicator_file,"restart.%i.%i",lstep,PMU_rank()+1);
@@ -752,6 +753,7 @@ adapt(  // parallel mesh
        delete [] ybar_indicator;
     }
     else if (option==11) {
+/*   Bad hack from past fouling up pgrad calculation
       double *dwal_indicator;
       readArrayFromFile(error_indicator_file,"dwal",dwal_indicator);
       double *ybar_indicator;
@@ -759,12 +761,11 @@ adapt(  // parallel mesh
       int nshg = M_numVertices(mesh);
       for(int inode=0;inode<nshg;inode++) {
          //WARNING: HARD CODED dwal overwriting the first diffusive flux:w
-/*   Bad hack from past fouling up pgrad calculation
          error_indicator[inode*10+4] = ybar_indicator[inode*13+12]; 
          error_indicator[inode*10+3] = dwal_indicator[inode]; 
-*/
        }
        delete [] dwal_indicator;
+*/
     }
        
 
