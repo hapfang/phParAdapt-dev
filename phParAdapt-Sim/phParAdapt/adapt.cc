@@ -754,6 +754,7 @@ adapt(  // parallel mesh
     }
     else if (option==11) {
 /*   Bad hack from past fouling up pgrad calculation
+*/  // have to put it back on to do the Boeing CalTech case  WE WILL HAVE TO RECOMMENT to get pgrad working again.
       double *dwal_indicator;
       readArrayFromFile(error_indicator_file,"dwal",dwal_indicator);
       double *ybar_indicator;
@@ -761,11 +762,11 @@ adapt(  // parallel mesh
       int nshg = M_numVertices(mesh);
       for(int inode=0;inode<nshg;inode++) {
          //WARNING: HARD CODED dwal overwriting the first diffusive flux:w
-         error_indicator[inode*10+4] = ybar_indicator[inode*13+12]; 
+         error_indicator[inode*10+4] = ybar_indicator[inode*13+12]; // check but I think this is EVBAR 
          error_indicator[inode*10+3] = dwal_indicator[inode]; 
        }
        delete [] dwal_indicator;
-*/
+/* */
     }
        
 

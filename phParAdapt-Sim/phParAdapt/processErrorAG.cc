@@ -61,7 +61,7 @@ processErrorAG(double* nodalErrorSet, double* nodalSolutionSet, int nvar, int op
          stop=1;
       }  
 */
-     if(1) {
+     if(0) {   // this was what was used for CRM
        double pgrad_p[3];
        double volInv=1.0/nodalErrorSet[0];
        pgrad_p[0]=nodalErrorSet[3]*volInv;
@@ -80,13 +80,18 @@ processErrorAG(double* nodalErrorSet, double* nodalSolutionSet, int nvar, int op
        }
     } else {
 
-      scalarVal =  (rms_mag *log(pde_mag + 1E-10 )*0.4 +0.2)*nodalSolutionSet[5];
-   }
+// Boeing CalTech   Using Dwal and ybar requires us to HACK STRONGLY the creation of the only two vectors this code gets passed-- 
+// nodalErrorSet and nodalSolution set.   This is done in  adapt (search for Bad hack)  THIS BREAKS PGRAD ABOVE WHICH DOES SAME HACK IN PHASTA
+
+// pasted from ParaView 
+// EVbar*2e7+0.5e-1*pde-res_Z*dwal = 2e5
+     scalarVal =  nodalErrorSet[4]*2e7+0.05*nodalErrorSet[2]*nodalErrorSet[3];
 // pasted from ParaView with value 0.01 for HLCRM-16degrees Simmmetrix Coarse-Mixed
 // mag(rms-vel)*log10(mag(pde-res)+1.0e-10)*EVbar*0.4 + 0.2*EVbari
+// Previous Riccardo CRM work      scalarVal =  (rms_mag *log(pde_mag + 1E-10 )*0.4 +0.2)*nodalSolutionSet[5];
 //       scalarVal =  nodalSolutionSet[5];
     }
-    
+    }
     else {
     // using linear weights provided by input file adapt.inp
     for(int i=0; i<nvar;i++){
