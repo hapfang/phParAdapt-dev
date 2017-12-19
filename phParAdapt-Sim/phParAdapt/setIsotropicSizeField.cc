@@ -151,19 +151,20 @@ void setIsotropicSizeField(pGModel model,
       else newSize = *oldSize;
     }
     else if (option == 11 ){
-/*      double coord[3];
+
+      double coord[3];
       //double plane;
       V_coord(vertex,coord); 
       double ptCheck[3]; // This is a point that should not be ref 38 11.5 4.93675
-      ptCheck[0]=38.025; //38.025 11.625 4.975
-      ptCheck[1]=11.625;
-      ptCheck[2]=4.975;
+      ptCheck[0]=0.99; //38.025 11.625 4.975
+      ptCheck[1]=0.40;
+      ptCheck[2]=0.05;
       int stop;
       double distTop = sqrt(dist(coord, ptCheck));
-      if(distTop < 1e-2) {
+      if(distTop < 5e-2) {
          stop=1;
       }  
-*/
+
       //plane = -0.516616558513076*coord[0]+0.787121033907457*coord[1]+0.336968558548957*coord[2]+0.761858682657;
       //if (*nodalValue > factor && plane >= 0.0) newSize = *oldSize/2;
       //else  newSize = *oldSize;
@@ -284,20 +285,20 @@ void setIsotropicSizeField(pGModel model,
   double *oldSize;
 //now set sizes with simmetrix outside of the BL
   while ( vertex=VIter_next(vIter)) {
-/*
+
       double coord[3];
       //double plane;
       V_coord(vertex,coord); 
       double ptCheck[3]; // This is a point that should not be ref 38 11.5 4.93675
-      ptCheck[0]=38.025; //38.025 11.625 4.975
-      ptCheck[1]=11.625;
-      ptCheck[2]=4.975;
+      ptCheck[0]=0.99; //38.025 11.625 4.975
+      ptCheck[1]=0.40;
+      ptCheck[2]=0.05;
       int stop;
       double distTop = sqrt(dist(coord, ptCheck));
-      if(distTop < 1e-2) {
+      if(distTop < 5e-2) {
          stop=1;
-      }  
-*/
+      }
+
    if(!EN_isBLEntity((pEntity)vertex)) { // true if this is a NOT BL entity
      EN_getDataPtr((pEntity)vertex,oldMeshSizeID,(void**)&oldSize);
      EN_getDataPtr((pEntity)vertex,nodalSizeID ,
@@ -312,7 +313,7 @@ void setIsotropicSizeField(pGModel model,
          double anisosize[3][3];
          int itest=V_estimateSize(vertex, itype, NULL, anisosize);
          if(itest) {
-           if(1) { // attempt to make isotropic to the middle size
+           if(AnisoSimmetrix==0) { // pre-adapt to make isotropic to the middle size
              double l0,l1,l2;
              l1=sqrt(anisosize[1][0]*anisosize[1][0] +anisosize[1][1]*anisosize[1][1] +anisosize[1][2]*anisosize[1][2]);
              l2=sqrt(anisosize[2][0]*anisosize[2][0] +anisosize[2][1]*anisosize[2][1] +anisosize[2][2]*anisosize[2][2]);
@@ -320,15 +321,12 @@ void setIsotropicSizeField(pGModel model,
              double lrat=l2/l1;
              if(lrat>2.) {
                icountIsotrop++;
-//               sizeRat=l1/l2; 
-//               anisosize[2][0]*= sizeRat; anisosize[2][1]*= sizeRat; anisosize[2][2]*= sizeRat;
-//               sizeRat=l1/l0; 
                sizeRat=sizeRatio;
                anisosize[0][0]*= sizeRat; anisosize[0][1]*= sizeRat; anisosize[0][2]*= sizeRat;
                anisosize[1][0]*= sizeRat; anisosize[1][1]*= sizeRat; anisosize[1][2]*= sizeRat;
                MSA_setAnisoVertexSize(simAdapter, vertex, anisosize);
              } // end lrat > 2   
-           } else { //end of the forced  
+           } else { //end of pre-adapt start of previous error adapt 
              icountIsotrop++;
              anisosize[0][0]*= sizeRat; anisosize[0][1]*= sizeRat; anisosize[0][2]*= sizeRat;
              anisosize[1][0]*= sizeRat; anisosize[1][1]*= sizeRat; anisosize[1][2]*= sizeRat;
@@ -383,16 +381,16 @@ void setIsotropicSizeField(pGModel model,
    sizeRat=1;
    icountVertsOnFaces++;
 //
-/*      double ptCheck[3]; // This is a point that should not be ref 38 11.5 4.93675
-      ptCheck[0]=38.025; //38.025 11.625 4.975
-      ptCheck[1]=11.625;
-      ptCheck[2]=4.975;
+      double ptCheck[3]; // This is a point that should not be ref 38 11.5 4.93675
+      ptCheck[0]=0.99; //38.025 11.625 4.975
+      ptCheck[1]=0.40;
+      ptCheck[2]=0.05;
       int stop;
       double distTop = sqrt(dist(coordvcur, ptCheck));
-      if(distTop < 1e-2) {
+      if(distTop < 5e-2) {
          stop=1;
       }  
-*/
+
 //
    if(EN_isBLEntity((pEntity)vertex)) { // true if this is a BL entitGy
      if(BL_isBaseEntity((pEntity)vertex,(pGEntity)gface)) { // current vertex is base

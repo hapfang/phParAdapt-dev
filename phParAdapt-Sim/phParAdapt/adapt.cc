@@ -43,6 +43,7 @@ extern void fix4NodesOnSurface(pMesh mesh);
 // extern void MSA_setMaxIterations(pMSAdapt,int maxiter);
 extern int localAdapt;
 extern int coarsenMode;
+extern int AnisoSimmetrix;  // used to make error tag point at solution for pre-adapt
 
 #ifdef __cplusplus
 extern "C" {
@@ -624,8 +625,9 @@ adapt(  // parallel mesh
     // (for 2, load in solution for error, although it is not used)
     if(strategy == 5) {
       if(option==1 || option==10 || option==11) { 
-// HACK KEJ        sprintf(error_tag,"errors");
-        sprintf(error_tag,"solution");
+        sprintf(error_tag,"errors");
+        if(AnisoSimmetrix==0) sprintf(error_tag,"solution"); // pre-Adapt has no errors
+// Dumb that serial needed to copy restart file        
         if(PMU_size()==-1) {
            sprintf(error_indicator_file,"errors.%i.%i",lstep,PMU_rank()+1);
         } else {
@@ -753,20 +755,23 @@ adapt(  // parallel mesh
        delete [] ybar_indicator;
     }
     else if (option==11) {
-/*   Bad hack from past fouling up pgrad calculation
-*/  // have to put it back on to do the Boeing CalTech case  WE WILL HAVE TO RECOMMENT to get pgrad working again.
       double *dwal_indicator;
       readArrayFromFile(error_indicator_file,"dwal",dwal_indicator);
-      double *ybar_indicator;
-      readArrayFromFile(error_indicator_file,"ybar",ybar_indicator);
+      //double *ybar_indicator;
+      //readArrayFromFile(error_indicator_file,"ybar",ybar_indicator);
+      double *sol;
+      readArrayFromFile(solution_file,"solution",sol);
+
       int nshg = M_numVertices(mesh);
       for(int inode=0;inode<nshg;inode++) {
          //WARNING: HARD CODED dwal overwriting the first diffusive flux:w
-         error_indicator[inode*10+4] = ybar_indicator[inode*13+12]; // check but I think this is EVBAR 
+//         error_indicator[inode*10+4] = ybar_indicator[inode*13+12]; 
+//	Have to use eddy viscosity because EVbar cannot be properly reduced to 1-part mesh somehow 12/18/2017
+	 error_indicator[inode*10+4] = sol[inode*6+5]; //eddy viscosity is the 6th value in a 6-slot unit of solution array
          error_indicator[inode*10+3] = dwal_indicator[inode]; 
        }
        delete [] dwal_indicator;
-/* */
+       delete [] sol;
     }
        
 

@@ -41,26 +41,27 @@ processErrorAG(double* nodalErrorSet, double* nodalSolutionSet, int nvar, int op
        scalarVal = nodalErrorSet[3] * log( sqrt(nodalErrorSet[0]*nodalErrorSet[0]+nodalErrorSet[1]*nodalErrorSet[1]+nodalErrorSet[2]*nodalErrorSet[2]) + 1E-10 );
     }
     else if (option == 11) {
-       double rms_mag = 0.0; // HACK KEJ sqrt(nodalErrorSet[6]*nodalErrorSet[6]+nodalErrorSet[7]*nodalErrorSet[7]+nodalErrorSet[8]*nodalErrorSet[8]);
+       double rms_mag = 0.0; // HACK KEJ The following will go out of bounds when doing pre-adapt
+// since the solution has only 6 fields and error has been pointed at solution for pre-adapt
+//  sqrt(nodalErrorSet[6]*nodalErrorSet[6]+nodalErrorSet[7]*nodalErrorSet[7]+nodalErrorSet[8]*nodalErrorSet[8]);
 //       scalarVal = rms_mag * log( sqrt(nodalErrorSet[0]*nodalErrorSet[0]+nodalErrorSet[1]*nodalErrorSet[1]+nodalErrorSet[2]*nodalErrorSet[2]) + 1E-10 ) / (1e-2 + 100*nodalErrorSet[3]);
 // lastused       scalarVal = log( rms_mag*sqrt(nodalErrorSet[0]*nodalErrorSet[0]+nodalErrorSet[1]*nodalErrorSet[1]+nodalErrorSet[2]*nodalErrorSet[2]) + 1E-10 ) / (1e-0 + 10*nodalErrorSet[3])+500*nodalErrorSet[4];
 //       double pde_mag=sqrt(nodalErrorSet[0]*nodalErrorSet[0]+nodalErrorSet[1]*nodalErrorSet[1]+nodalErrorSet[2]*nodalErrorSet[2]);
        double pde_mag=sqrt(nodalErrorSet[0]*nodalErrorSet[0]+nodalErrorSet[1]*nodalErrorSet[1]+nodalErrorSet[2]*nodalErrorSet[2]);
 // Previous       scalarVal =  rms_mag *log(pde_mag + 1E-10 );
-/*
 //      double coord[3];
 //      //double plane;
 //      V_coord(vertex,coord); 
-      double ptCheck[3]; // This is a point that should not be ref 38 11.5 4.93675
-      ptCheck[0]=38.025; //38.025 11.625 4.975
-      ptCheck[1]=11.625;
-      ptCheck[2]=4.975;
+      double ptCheck[3]; // This is a point that should not be ref 
+      ptCheck[0]=0.99; //38.025 11.625 4.975
+      ptCheck[1]=0.40;
+      ptCheck[2]=0.05;
       int stop;
       double distTop = sqrt(dist(coord, ptCheck));
-      if(distTop < 16e-2) {
+      if(distTop < 5e-2) {
          stop=1;
       }  
-*/
+
      if(0) {   // this was what was used for CRM
        double pgrad_p[3];
        double volInv=1.0/nodalErrorSet[0];
