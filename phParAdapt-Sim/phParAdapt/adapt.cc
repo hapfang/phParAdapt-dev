@@ -41,6 +41,7 @@ extern "C" int procSize();
 // avoid elements at (bdry.) with no interior nodes/dofs
 extern void fix4NodesOnSurface(pMesh mesh);
 // extern void MSA_setMaxIterations(pMSAdapt,int maxiter);
+extern int AnisoSimmetrix;
 extern int localAdapt;
 extern int coarsenMode;
 extern int AnisoSimmetrix;  // used to make error tag point at solution for pre-adapt
@@ -626,9 +627,7 @@ adapt(  // parallel mesh
     if(strategy == 5) {
       if(option==1 || option==10 || option==11) { 
         sprintf(error_tag,"errors");
-        if(AnisoSimmetrix==0) sprintf(error_tag,"solution"); // pre-Adapt has no errors
-// Dumb that serial needed to copy restart file        
-        if(PMU_size()==-1) {
+        if(PMU_size()==1) {
            sprintf(error_indicator_file,"errors.%i.%i",lstep,PMU_rank()+1);
         } else {
            sprintf(error_indicator_file,"restart.%i.%i",lstep,PMU_rank()+1);
@@ -654,11 +653,13 @@ adapt(  // parallel mesh
     wtimePoints[6] = time(0);
 
     // args: pParMesh, 0/1 (tag/sizefield), 0/1 non-predictive/predictive load balancing
+    int AdaptType=1;
+    if (AnisoSimmetrix==4) AdaptType=0;
     if(PMU_size()==1) {
-        simAdapter = MSA_new(pmesh,1);
+        simAdapter = MSA_new(pmesh,AdaptType);
     }
     else {
-      simAdapter = MSA_new(pmesh,1);
+      simAdapter = MSA_new(pmesh,AdaptType);
    }
 
 #ifdef FMDB
@@ -1066,6 +1067,9 @@ adapt(  // parallel mesh
   // adaptation
 #ifdef SIM
   MSA_adapt(simAdapter, prog);
+  cout << "After MSA_adapt on Rank" <<PMU_rank() <<"\n";
+  MPI_Barrier(MPI_COMM_WORLD);
+  PM_write(pmesh, "mesh_soon.sms", prog);
 #else
   MSA_adapt(simAdapter);
 #endif

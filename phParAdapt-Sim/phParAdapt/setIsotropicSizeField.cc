@@ -151,7 +151,6 @@ void setIsotropicSizeField(pGModel model,
       else newSize = *oldSize;
     }
     else if (option == 11 ){
-
       double coord[3];
       //double plane;
       V_coord(vertex,coord); 
@@ -297,7 +296,7 @@ void setIsotropicSizeField(pGModel model,
       double distTop = sqrt(dist(coord, ptCheck));
       if(distTop < 5e-2) {
          stop=1;
-      }
+      }  
 
    if(!EN_isBLEntity((pEntity)vertex)) { // true if this is a NOT BL entity
      EN_getDataPtr((pEntity)vertex,oldMeshSizeID,(void**)&oldSize);
