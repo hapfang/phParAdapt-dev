@@ -44,7 +44,6 @@ extern void fix4NodesOnSurface(pMesh mesh);
 extern int AnisoSimmetrix;
 extern int localAdapt;
 extern int coarsenMode;
-extern int AnisoSimmetrix;  // used to make error tag point at solution for pre-adapt
 
 #ifdef __cplusplus
 extern "C" {
