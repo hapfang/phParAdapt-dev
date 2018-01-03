@@ -654,6 +654,10 @@ adapt(  // parallel mesh
     // args: pParMesh, 0/1 (tag/sizefield), 0/1 non-predictive/predictive load balancing
     int AdaptType=1;
     if (AnisoSimmetrix==4) AdaptType=0;
+    // write out mesh before MSA_new() for Simmetrix debugging
+//    cout << "Before MSA_new() on Rank" <<PMU_rank() <<"\n";
+//    MPI_Barrier(MPI_COMM_WORLD);
+//    PM_write(pmesh, "mesh_bnew.sms", prog);
     if(PMU_size()==1) {
         simAdapter = MSA_new(pmesh,AdaptType);
     }
@@ -1065,6 +1069,11 @@ adapt(  // parallel mesh
 
   // adaptation
 #ifdef SIM
+  // write out mesh before MSA_adapt for Simmetrix debugging
+ // cout << "Before MSA_adapt on Rank" <<PMU_rank() <<"\n";
+ // MPI_Barrier(MPI_COMM_WORLD);
+ // PM_write(pmesh, "mesh_badp.sms", prog);
+
   MSA_adapt(simAdapter, prog);
   cout << "After MSA_adapt on Rank" <<PMU_rank() <<"\n";
   MPI_Barrier(MPI_COMM_WORLD);
