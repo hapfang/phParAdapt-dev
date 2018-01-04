@@ -8,6 +8,7 @@
 #include <unistd.h>
 #include <math.h>
 #include "mpi.h"
+#include <strings.h>
 #ifdef SIM
 #include "SimMeshTools.h"
 #include "SimAdvMeshing.h"
@@ -282,9 +283,39 @@ void setIsotropicSizeField(pGModel model,
   icountAnisotrop=0;
   double* h = new double;
   double *oldSize;
+
+// START OF WRITING TAGS
+  char tfile[255];
+  bzero( (void*)tfile, 255 );
+  sprintf(tfile,"edgeids.%d", PMU_rank());
+  FILE * itf;
+  itf=fopen (tfile,"wt");
+//  openfile_(tfile,"write",&itf);
+  int taggedInt;
+//CWS  Std:vector <int> vals;
+//  int icountTags=0;
+//END OF WRITING TAGS
+/* from CWS   
+
+int icountTags=0;
+Std:vector<int> vals;
+inside of the Loop that finds the write ints {
+  vals.push_back(anInt)
+  icountTags++
+}
+
+Then when it is time to write after the loop is complete:
+           fprintf(itf,"%d \n",icountTags);
+followed by this command which writes all the ints collected.
+fwrite(&Vals[0], sizeof(int), Vals.size(), filehandle)
+
+Use fread to read them:
+http://www.cplusplus.com/reference/cstdio/fread/
+
+The vector knows it's size and will resize itself as needed.
+*/
 //now set sizes with simmetrix outside of the BL
   while ( vertex=VIter_next(vIter)) {
-
       double coord[3];
       //double plane;
       V_coord(vertex,coord); 
@@ -314,6 +345,13 @@ void setIsotropicSizeField(pGModel model,
          for (int i=0; i < numEdges; i++) {
 	   edge = V_edge(vertex,i);
            MSA_setRefineLevel(simAdapter, (pEntity)edge, level);	
+// START INT PER LINE
+//CWS           vals.push_back(EN_id((pEntity)edge));
+//           icountTags++;
+           taggedInt=EN_id( (pEntity)edge);
+           fprintf(itf,"%d \n",taggedInt);
+// END INT PER LINE
+
            if(0){ 
 // recurse one level out
            pEdge edgeO;
@@ -359,6 +397,9 @@ void setIsotropicSizeField(pGModel model,
     } // not a bl entity
   } // vertex iterator
   VIter_delete(vIter);
+//  fprintf(itf,"%d \n",icountTags);
+//CWS  fwrite(&vals[0], sizeof(int), vals.size(),itf);
+  fclose (itf);
 
 //now set sizes with simmetrix inside of the BL
   int maxE,minE,midE;
