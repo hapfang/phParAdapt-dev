@@ -52,7 +52,7 @@ processErrorAG(double* nodalErrorSet, double* nodalSolutionSet, int nvar, int op
 //      double coord[3];
 //      //double plane;
 //      V_coord(vertex,coord); 
-      double ptCheck[3]; // This is a point that should not be ref 
+/*      double ptCheck[3]; // This is a point that should not be ref 
       ptCheck[0]=0.99; //38.025 11.625 4.975
       ptCheck[1]=0.40;
       ptCheck[2]=0.05;
@@ -61,7 +61,7 @@ processErrorAG(double* nodalErrorSet, double* nodalSolutionSet, int nvar, int op
       if(distTop < 5e-2) {
          stop=1;
       }  
-
+*/
      if(0) {   // this was what was used for CRM
        double pgrad_p[3];
        double volInv=1.0/nodalErrorSet[0];

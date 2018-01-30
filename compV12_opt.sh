@@ -2,33 +2,15 @@ export DEVROOT=`pwd`
 #export VERS=dbg
 export VERS=opt
 
-#BGQ
-#export PARALLEL=bgmpi
-#export ARCHOS=ibm-bg
-#export MESHSIM=/home/chitak/meshSim/9.0-130517/
-
-#export CC=mpixlc
-#export CXX=mpixlcxx
-#export FC=mpixlf90
-
-# UCB
-#export PARALLEL=openmpi
-#export ARCHOS=x86_64_linux
-#export MESHSIM=/users/mrasquin/develop/Meshing/simmodsuite-9.0-140724/9.0-140724
-
-#export CC=mpicc
-#export CXX=mpicxx
-#export FC=gfortran
-
-# Janus
+export MESHSIM=/projects/tools/SimmetrixTest/12.0-171109dev
 export PARALLEL=openmpi
-export ARCHOS=x86_64_linux
-export MESHSIM=/projects/mira5007/Simmetrix/simmodsuite-9.0-140920/9.0-140920
+export PATH=/usr/local/openmpi/1.10.6-gnu49-thread/bin:$PATH
+export LD_LIBRARY_PATH=/usr/local/openmpi/1.10.6-gnu49-thread/lib:$LD_LIBRARY_PATH
+
 
 export CC=mpicc
 export CXX=mpicxx
 export FC=gfortran
-
 
 #export CXXFLAGS='-fsanitize=address -fno-omit-frame-pointer -g'
 #export CFLAGS='-fsanitize=address -fno-omit-frame-pointer -g'

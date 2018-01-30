@@ -155,7 +155,7 @@ void setIsotropicSizeField(pGModel model,
       double coord[3];
       //double plane;
       V_coord(vertex,coord); 
-      double ptCheck[3]; // This is a point that should not be ref 38 11.5 4.93675
+/*      double ptCheck[3]; // This is a point that should not be ref 38 11.5 4.93675
       ptCheck[0]=0.99; //38.025 11.625 4.975
       ptCheck[1]=0.40;
       ptCheck[2]=0.05;
@@ -164,7 +164,7 @@ void setIsotropicSizeField(pGModel model,
       if(distTop < 5e-2) {
          stop=1;
       }  
-
+*/
       //plane = -0.516616558513076*coord[0]+0.787121033907457*coord[1]+0.336968558548957*coord[2]+0.761858682657;
       //if (*nodalValue > factor && plane >= 0.0) newSize = *oldSize/2;
       //else  newSize = *oldSize;
@@ -319,7 +319,7 @@ The vector knows it's size and will resize itself as needed.
       double coord[3];
       //double plane;
       V_coord(vertex,coord); 
-      double ptCheck[3]; // This is a point that should not be ref 38 11.5 4.93675
+/*      double ptCheck[3]; // This is a point that should not be ref 38 11.5 4.93675
       ptCheck[0]=0.99; //38.025 11.625 4.975
       ptCheck[1]=0.40;
       ptCheck[2]=0.05;
@@ -328,7 +328,7 @@ The vector knows it's size and will resize itself as needed.
       if(distTop < 5e-2) {
          stop=1;
       }  
-
+*/
    if(!EN_isBLEntity((pEntity)vertex)) { // true if this is a NOT BL entity
      EN_getDataPtr((pEntity)vertex,oldMeshSizeID,(void**)&oldSize);
      EN_getDataPtr((pEntity)vertex,nodalSizeID ,
@@ -399,7 +399,7 @@ The vector knows it's size and will resize itself as needed.
   VIter_delete(vIter);
 //  fprintf(itf,"%d \n",icountTags);
 //CWS  fwrite(&vals[0], sizeof(int), vals.size(),itf);
-  fclose (itf);
+//  fclose (itf);
 
 //now set sizes with simmetrix inside of the BL
   int maxE,minE,midE;
@@ -435,7 +435,7 @@ The vector knows it's size and will resize itself as needed.
    sizeRat=1;
    icountVertsOnFaces++;
 //
-      double ptCheck[3]; // This is a point that should not be ref 38 11.5 4.93675
+/*      double ptCheck[3]; // This is a point that should not be ref 38 11.5 4.93675
       ptCheck[0]=0.99; //38.025 11.625 4.975
       ptCheck[1]=0.40;
       ptCheck[2]=0.05;
@@ -444,7 +444,7 @@ The vector knows it's size and will resize itself as needed.
       if(distTop < 5e-2) {
          stop=1;
       }  
-
+*/
 //
    if(EN_isBLEntity((pEntity)vertex)) { // true if this is a BL entitGy
      if(BL_isBaseEntity((pEntity)vertex,(pGEntity)gface)) { // current vertex is base
@@ -493,7 +493,10 @@ The vector knows it's size and will resize itself as needed.
                 int level=1;
                 for (int i=0; i < numEdges; i++) {
 	          edge = V_edge(vertex,i);
-                  MSA_setRefineLevel(simAdapter, (pEntity)edge, level);	
+                  MSA_setRefineLevel(simAdapter, (pEntity)edge, level);
+// Test tag driven adapation following Saurabh's advice
+                  taggedInt=EN_id( (pEntity)edge); 
+                  fprintf(itf,"%d \n",taggedInt);	
 // recurse one level out
                   if(0) {
                   pEdge edgeO;
@@ -509,7 +512,10 @@ The vector knows it's size and will resize itself as needed.
                 numEdges = V_numEdges(entlast);
                 for (int i=0; i < numEdges; i++) {
 	          edge = V_edge(entlast,i);
-                  MSA_setRefineLevel(simAdapter, (pEntity)edge, level);	
+                  MSA_setRefineLevel(simAdapter, (pEntity)edge, level);
+// Test tag driven adapation following Saurabh's advice
+                  taggedInt=EN_id( (pEntity)edge);
+                  fprintf(itf,"%d \n",taggedInt);	
 // recurse one level out
                   if(0) {
                   pEdge edgeO;
@@ -852,6 +858,7 @@ The vector knows it's size and will resize itself as needed.
   GRIter_delete(grIter);
 //  5 lines above make a vertex iterator over model faces below is all
 //  VIter_delete(vIter);
+  fclose(itf);
   delete [] h;
 //  if(PMU_rank()==0) {
     cout << "icountVertsNotBL " << PMU_rank() << " "  << icountVertsNotBL << endl;
